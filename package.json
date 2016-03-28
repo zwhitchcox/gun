@@ -1,0 +1,24 @@
+{
+  "name": "gun-graph",
+  "version": "0.1.0-alpha",
+  "description": "GUN core's data structure and conflict resolution",
+  "main": "index.js",
+  "dependencies": {
+    "object-assign-deep": "^0.0.4"
+  },
+  "devDependencies": {
+    "json-loader": "^0.5.4"
+  },
+  "scripts": {
+    "test": "jasmine",
+    "build": "webpack --watch"
+  },
+  "keywords": [
+    "gunDB",
+    "gun",
+    "conflict-resolution",
+    "gun-core"
+  ],
+  "author": "Jesse Gibson <jesse@gundb.io> (http://techllama.com)",
+  "license": "(Apache-2.0 OR Zlib OR MIT)"
+}
