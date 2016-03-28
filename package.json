@@ -3,9 +3,7 @@
   "version": "0.1.0-alpha",
   "description": "GUN core's data structure and conflict resolution",
   "main": "index.js",
-  "dependencies": {
-    "object-assign-deep": "^0.0.4"
-  },
+  "dependencies": {},
   "devDependencies": {
     "json-loader": "^0.5.4"
   },

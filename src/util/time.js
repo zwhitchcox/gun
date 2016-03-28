@@ -11,4 +11,4 @@ function time() {
 	return (last = now);
 }
 
-module.exports = time;
+module.exports = window.time = time;

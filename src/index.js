@@ -1,5 +1,6 @@
 /*jslint node: true*/
 module.exports = {
-	Graph: window.Graph = require('./Graph'),
-	Node: window.Node = require('./Node')
+	Graph: require('./Graph'),
+	Node: require('./Node'),
+	Gun: window.Gun = require('./API')
 };

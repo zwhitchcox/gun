@@ -22,10 +22,10 @@ API.get = function (query, cb, opt) {
 	matching = this[soul];
 	self = this;
 	if (matching) {
-		cb(matching, query);
+		cb(null, matching);
 		return this;
 	}
-	this.emit('request', query, function (err, node) {
+	this.emit('get', query, function (err, node) {
 		if (!node) {
 			return;
 		}

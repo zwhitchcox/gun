@@ -46,8 +46,9 @@
 
 	/*jslint node: true*/
 	module.exports = {
-		Graph: window.Graph = __webpack_require__(1),
-		Node: window.Node = __webpack_require__(3)
+		Graph: __webpack_require__(1),
+		Node: __webpack_require__(3),
+		Gun: window.Gun = __webpack_require__(8)
 	};
 
 
@@ -79,10 +80,10 @@
 		matching = this[soul];
 		self = this;
 		if (matching) {
-			cb(matching, query);
+			cb(null, matching);
 			return this;
 		}
-		this.emit('request', query, function (err, node) {
+		this.emit('get', query, function (err, node) {
 			if (!node) {
 				return;
 			}
@@ -439,7 +440,7 @@
 	var UID = __webpack_require__(4);
 	var Emitter = __webpack_require__(2);
 	var terms = __webpack_require__(5);
-	var time = window.time = __webpack_require__(6);
+	var time = __webpack_require__(6);
 
 	function Node(obj, ID) {
 		var key, soul, now = time();
@@ -479,7 +480,6 @@
 		var key;
 		for (key in this) {
 			if (this.hasOwnProperty(key) && key !== terms.meta && key !== '_events') {
-				console.log(key);
 				cb(this[key], key, this);
 			}
 		}
@@ -487,23 +487,33 @@
 	};
 
 	API.update = function (field, value, state) {
+		var added = !this.hasOwnProperty(field);
 		this[field] = value;
 		this._[terms.HAM][field] = state;
-		this.emit('change', value, field);
+		this.emit('change', value, field, this);
+		if (added) {
+			this.emit('add', value, field, this);
+		}
 		return this;
 	};
 
 	API.merge = function (node) {
-		var self = this;
 		if (!(node instanceof Node)) {
-			node = new Node(node);
+			node = new Node(node, this.getSoul());
 		}
+		var now, self = this;
+		now = time();
+
 		node.each(function (value, name) {
 			var incoming, present, successor;
 			present = self.state(name);
 			incoming = node.state(name);
 			if (present > incoming) {
 				return self.emit('historical', node, name);
+			}
+			if (incoming > now) {
+				console.log('Present:', now, 'Incoming:', incoming);
+				return self.emit('deferred', node, name);
 			}
 			if (present < incoming) {
 				return self.update(name, value, incoming);
@@ -518,6 +528,17 @@
 		});
 		return self;
 	};
+
+	API.primitive = function () {
+		var obj = {};
+		this.each(function (value, field) {
+			obj[field] = value;
+		});
+		obj._ = this._;
+		return obj;
+	};
+
+	API.toJSON = API.primitive;
 
 	module.exports = Node;
 
@@ -571,7 +592,7 @@
 		return (last = now);
 	}
 
-	module.exports = time;
+	module.exports = window.time = time;
 
 
 /***/ },
@@ -581,14 +602,184 @@
 	/*jslint node: true*/
 	'use strict';
 
-	module.exports = function (obj, cb) {
+	function map(obj, cb) {
 		var key;
 		for (key in obj) {
 			if (obj.hasOwnProperty(key)) {
 				cb(obj[key], key, obj);
 			}
 		}
+	}
+
+	module.exports = map;
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*jslint node: true, nomen: true*/
+	'use strict';
+
+	var Graph = __webpack_require__(1);
+	var Node = __webpack_require__(3);
+	var Emitter = __webpack_require__(2);
+	var map = __webpack_require__(7);
+
+	function Gun(opt) {
+		if (!(this instanceof Gun)) {
+			return new Gun(opt);
+		}
+		this._ = new Emitter();
+		this.__ = {
+			opt: opt || {},
+			graph: new Graph()
+		};
+		this.back = this;
+	}
+
+	Gun.Node = Node;
+	Gun.Graph = Graph;
+
+	Gun.each = function (gun, cb) {
+		var length = 1;
+		cb(gun);
+		while (gun !== gun.back) {
+			if (cb(gun = gun.back) === true) {
+				break;
+			}
+			length += 1;
+		}
+		return length;
 	};
+
+	var API = Gun.prototype;
+
+	API.chain = function (back) {
+		var gun, last = this;
+		gun = new this.constructor(this.__.opt);
+		gun.back = back || last;
+		return gun;
+	};
+
+	API.get = function (lex, cb) {
+		var gun = this.chain();
+		lex = typeof lex === 'object' ? lex : {
+			'#': lex
+		};
+		this._.root = true;
+		gun._.lex = lex;
+		this.__.graph.get(lex, function (err, node) {
+			gun._.node = node;
+			gun._.emit('chain', node);
+			if (cb) {
+				cb(err, node);
+			}
+		});
+		return gun;
+	};
+
+	API.put = function (obj, cb) {
+		// flatten... pipline.deploy(obj) ?
+		var node, graph, soul, self = this;
+		soul = this._.lex['#'];
+		if (soul) {
+			graph = {};
+			node = new Node(obj, soul);
+			graph[soul] = node;
+			this.__.graph.put(graph, cb);
+			this._.node = node;
+		} else {
+			this._.on('chain', function () {
+				self.put(obj, cb);
+			});
+		}
+		return this;
+	};
+
+	function log(node, field) {
+		var args = [node];
+		if (typeof field === 'string') {
+			args.unshift(field);
+		}
+		console.log.apply(console, args);
+	}
+
+	API.val = function (cb) {
+
+		cb = cb || log;
+		var node = this._.node;
+
+		if (node) {
+			cb(node.primitive());
+		} else {
+			this._.once('chain', function (node) {
+				cb(node.primitive());
+			});
+		}
+
+		return this;
+	};
+
+	API._resolve = function () {
+		var graph, chain, lex = {};
+		chain = [];
+		graph = this.__.graph;
+		Gun.each(this, function (gun) {
+			var built = gun._.lex;
+			lex['#'] = lex['#'] || built['#'];
+			lex['.'] = lex['.'] || built['.'];
+			chain.push(gun);
+			return gun._.root;
+		});
+		chain = chain.reverse();
+		// this isn't responsive
+		function resolve(gun) {
+			graph.get(lex, function (node) {
+				gun._.emit('chain', node);
+			});
+		}
+		map(chain, function (gun) {
+			graph.get(lex, function (node) {
+				gun._.emit('chain', node);
+			});
+		});
+	};
+
+	API.on = function (cb) {
+		var node, gun = this;
+		node = gun._.node;
+		if (node) {
+			cb.call(this, node.primitive(), null);
+			node.on('change', function () {
+				cb.call(this, node.primitive(), null);
+			});
+			return this;
+		}
+		this._.on('chain', function (node) {
+			cb(node.primitive());
+			node.on('change', cb);
+		});
+		return this;
+	};
+
+	API.map = function (cb) {
+		var gun, node = this._.node;
+		gun = this;
+		function each(value, field) {
+			cb.call(gun, value, field, node);
+		}
+		if (node) {
+			node.each(each).on('add', each);
+			return this;
+		}
+		this._.once('chain', function (node) {
+			node.each(each).on('add', each);
+		});
+		return this;
+	};
+
+	module.exports = Gun;
 
 
 /***/ }
