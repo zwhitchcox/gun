@@ -2,7 +2,7 @@
 'use strict';
 
 var Emitter = require('events');
-var Node = require('./Node');
+var NODE = require('./Node');
 var map = require('./util/map');
 
 function Graph(graph) {
@@ -29,8 +29,8 @@ API.get = function (query, cb, opt) {
 		if (!node) {
 			return;
 		}
-		if (!(node instanceof Node)) {
-			node = new Node(node);
+		if (!(node instanceof NODE)) {
+			node = NODE(node);
 		}
 		var graph = {};
 		graph[node.getSoul()] = node;
@@ -41,8 +41,8 @@ API.get = function (query, cb, opt) {
 };
 
 API.add = function (node, soul) {
-	if (!(node instanceof Node)) {
-		node = new Node(node, soul);
+	if (!(node instanceof NODE)) {
+		node = NODE(node, soul);
 	}
 	if (this[soul]) {
 		return this[soul].merge(node);

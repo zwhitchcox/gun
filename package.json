@@ -3,7 +3,9 @@
   "version": "0.1.0-alpha",
   "description": "GUN core's data structure and conflict resolution",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "socket.io": "^1.4.5"
+  },
   "devDependencies": {
     "json-loader": "^0.5.4"
   },

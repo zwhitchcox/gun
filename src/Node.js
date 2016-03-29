@@ -5,26 +5,39 @@ var UID = require('./util/random');
 var Emitter = require('events');
 var time = require('./util/time');
 
-function Node(obj, ID) {
-	var key, _ham, ham, now = time();
-	this._ = {};
-	this._['>'] = {};
+var universe = {};
+
+function Node(obj, soul) {
+	var node, key, from, to, now = time();
+	soul = soul || (obj && obj._ && obj._['#']);
+	if (!(this instanceof Node)) {
+		if (universe[soul]) {
+			return universe[soul];
+		}
+		node = new Node(obj, soul);
+		return (universe[node._['#']] = node);
+	}
+	this._ = {
+		'>': {},
+		'#': soul || UID()
+	};
 
 	if (obj && typeof obj === 'object') {
 		obj._ = obj._ || {};
-		this._['#'] = obj._['#'] = obj._['#'] || ID || UID();
+		obj._['#'] = this._['#'];
 		obj._['>'] = obj._['>'] || {};
-		ham = obj._['>'];
-	}
-
-	_ham = this._['>'];
-	for (key in obj) {
-		if (obj.hasOwnProperty(key) && key !== '_') {
-			this[key] = obj[key];
-			ham[key] = _ham[key] = ham[key] || now;
+		from = obj._['>'];
+		to = this._['>'];
+		for (key in obj) {
+			if (obj.hasOwnProperty(key) && key !== '_') {
+				this[key] = obj[key];
+				from[key] = to[key] = from[key] || now;
+			}
 		}
 	}
 }
+
+Node.universe = universe;
 
 Node.prototype = Emitter.prototype;
 
@@ -63,7 +76,7 @@ API.update = function (field, value, state) {
 
 API.merge = function (node) {
 	if (!(node instanceof Node)) {
-		node = new Node(node, this.getSoul());
+		node = new Node(node, null);
 	}
 	var now, self = this;
 	now = time();
