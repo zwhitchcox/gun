@@ -40,29 +40,39 @@ API.get = function (query, cb, opt) {
 	return this;
 };
 
-API.put = function (graph) {
-	var self = this;
-	map(graph, function (node, soul) {
-		if (!node || typeof node !== 'object' || soul === '_events') {
-			return;
-		}
-		if (!(node instanceof Node)) {
-			node = new Node(node, soul);
-		}
-		var ID = node.getSoul();
-		if (self[ID]) {
-			return self[ID].merge(node);
-		}
-		self[ID] = node;
-		// notify addition
-		self.emit('update', node, soul);
-
-		// Listen for changes
-		node.on('change', function (value, field) {
-			self.emit('update', node, soul);
-		});
-	});
+API.add = function (node, soul) {
+	if (!(node instanceof Node)) {
+		node = new Node(node, soul);
+	}
+	if (this[soul]) {
+		return this[soul].merge(node);
+	}
+	this[soul] = node;
+	this.emit('add', node, soul, this);
 	return this;
 };
+
+API.put = function (graph) {
+	var soul;
+	for (soul in graph) {
+		if (graph.hasOwnProperty(soul) && soul !== '_events') {
+			this.add(graph[soul], soul);
+		}
+	}
+	return this;
+};
+
+API.every = function (cb) {
+	var key;
+	for (key in this) {
+		if (this.hasOwnProperty(key) && key !== '_events') {
+			cb(this[key], key, this);
+		}
+	}
+	this.on('add', cb);
+	return this;
+};
+
+
 
 module.exports = Graph;

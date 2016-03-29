@@ -48,7 +48,7 @@
 	module.exports = {
 		Graph: __webpack_require__(1),
 		Node: __webpack_require__(3),
-		Gun: window.Gun = __webpack_require__(8)
+		Gun: window.Gun = __webpack_require__(7)
 	};
 
 
@@ -61,7 +61,7 @@
 
 	var Emitter = __webpack_require__(2);
 	var Node = __webpack_require__(3);
-	var map = __webpack_require__(7);
+	var map = __webpack_require__(6);
 
 	function Graph(graph) {
 		var soul, self = this;
@@ -98,30 +98,40 @@
 		return this;
 	};
 
-	API.put = function (graph) {
-		var self = this;
-		map(graph, function (node, soul) {
-			if (!node || typeof node !== 'object' || soul === '_events') {
-				return;
-			}
-			if (!(node instanceof Node)) {
-				node = new Node(node, soul);
-			}
-			var ID = node.getSoul();
-			if (self[ID]) {
-				return self[ID].merge(node);
-			}
-			self[ID] = node;
-			// notify addition
-			self.emit('update', node, soul);
-
-			// Listen for changes
-			node.on('change', function (value, field) {
-				self.emit('update', node, soul);
-			});
-		});
+	API.add = function (node, soul) {
+		if (!(node instanceof Node)) {
+			node = new Node(node, soul);
+		}
+		if (this[soul]) {
+			return this[soul].merge(node);
+		}
+		this[soul] = node;
+		this.emit('add', node, soul, this);
 		return this;
 	};
+
+	API.put = function (graph) {
+		var soul;
+		for (soul in graph) {
+			if (graph.hasOwnProperty(soul) && soul !== '_events') {
+				this.add(graph[soul], soul);
+			}
+		}
+		return this;
+	};
+
+	API.every = function (cb) {
+		var key;
+		for (key in this) {
+			if (this.hasOwnProperty(key) && key !== '_events') {
+				cb(this[key], key, this);
+			}
+		}
+		this.on('add', cb);
+		return this;
+	};
+
+
 
 	module.exports = Graph;
 
@@ -439,25 +449,25 @@
 
 	var UID = __webpack_require__(4);
 	var Emitter = __webpack_require__(2);
-	var terms = __webpack_require__(5);
-	var time = __webpack_require__(6);
+	var time = __webpack_require__(5);
 
 	function Node(obj, ID) {
-		var key, soul, now = time();
+		var key, _ham, ham, now = time();
 		this._ = {};
 		this._['>'] = {};
-		
+
 		if (obj && typeof obj === 'object') {
 			obj._ = obj._ || {};
-			obj._[terms.HAM] = obj._[terms.HAM] || {};
-			soul = obj._['#'];
+			this._['#'] = obj._['#'] = obj._['#'] || ID || UID();
+			obj._['>'] = obj._['>'] || {};
+			ham = obj._['>'];
 		}
-		this._[terms.soul] = ID || soul || UID();
 
+		_ham = this._['>'];
 		for (key in obj) {
-			if (obj.hasOwnProperty(key) && key !== terms.meta) {
+			if (obj.hasOwnProperty(key) && key !== '_') {
 				this[key] = obj[key];
-				this._[terms.HAM][key] = obj._[terms.HAM][key] || now;
+				ham[key] = _ham[key] = ham[key] || now;
 			}
 		}
 	}
@@ -469,17 +479,17 @@
 	API.constructor = Node;
 
 	API.getSoul = function () {
-		return this._[terms.soul];
+		return this._['#'];
 	};
 
 	API.state = function (prop) {
-		return this._[terms.HAM][prop] || null;
+		return this._['>'][prop] || null;
 	};
 
 	API.each = function (cb) {
 		var key;
 		for (key in this) {
-			if (this.hasOwnProperty(key) && key !== terms.meta && key !== '_events') {
+			if (this.hasOwnProperty(key) && key !== '_' && key !== '_events') {
 				cb(this[key], key, this);
 			}
 		}
@@ -489,7 +499,7 @@
 	API.update = function (field, value, state) {
 		var added = !this.hasOwnProperty(field);
 		this[field] = value;
-		this._[terms.HAM][field] = state;
+		this._['>'][field] = state;
 		this.emit('change', value, field, this);
 		if (added) {
 			this.emit('add', value, field, this);
@@ -515,10 +525,10 @@
 				console.log('Present:', now, 'Incoming:', incoming);
 				return self.emit('deferred', node, name);
 			}
-			if (present < incoming) {
+			if (incoming > present) {
 				return self.update(name, value, incoming);
 			}
-			if (present === incoming) {
+			if (incoming === present) {
 				if (String(self[name]) === String(value)) {
 					return 'Equal state and value';
 				}
@@ -569,16 +579,6 @@
 /* 5 */
 /***/ function(module, exports) {
 
-	module.exports = {
-		"soul": "#",
-		"HAM": ">",
-		"meta": "_"
-	};
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
 	/*jslint node: true*/
 	'use strict';
 
@@ -596,7 +596,7 @@
 
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports) {
 
 	/*jslint node: true*/
@@ -615,7 +615,7 @@
 
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true, nomen: true*/
@@ -624,7 +624,7 @@
 	var Graph = __webpack_require__(1);
 	var Node = __webpack_require__(3);
 	var Emitter = __webpack_require__(2);
-	var map = __webpack_require__(7);
+	var map = __webpack_require__(6);
 
 	function Gun(opt) {
 		if (!(this instanceof Gun)) {

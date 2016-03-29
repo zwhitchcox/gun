@@ -3,25 +3,25 @@
 
 var UID = require('./util/random');
 var Emitter = require('events');
-var terms = require('./terms');
 var time = require('./util/time');
 
 function Node(obj, ID) {
-	var key, soul, now = time();
+	var key, _ham, ham, now = time();
 	this._ = {};
 	this._['>'] = {};
-	
+
 	if (obj && typeof obj === 'object') {
 		obj._ = obj._ || {};
-		obj._[terms.HAM] = obj._[terms.HAM] || {};
-		soul = obj._['#'];
+		this._['#'] = obj._['#'] = obj._['#'] || ID || UID();
+		obj._['>'] = obj._['>'] || {};
+		ham = obj._['>'];
 	}
-	this._[terms.soul] = ID || soul || UID();
 
+	_ham = this._['>'];
 	for (key in obj) {
-		if (obj.hasOwnProperty(key) && key !== terms.meta) {
+		if (obj.hasOwnProperty(key) && key !== '_') {
 			this[key] = obj[key];
-			this._[terms.HAM][key] = obj._[terms.HAM][key] || now;
+			ham[key] = _ham[key] = ham[key] || now;
 		}
 	}
 }
@@ -33,17 +33,17 @@ var API = Node.prototype;
 API.constructor = Node;
 
 API.getSoul = function () {
-	return this._[terms.soul];
+	return this._['#'];
 };
 
 API.state = function (prop) {
-	return this._[terms.HAM][prop] || null;
+	return this._['>'][prop] || null;
 };
 
 API.each = function (cb) {
 	var key;
 	for (key in this) {
-		if (this.hasOwnProperty(key) && key !== terms.meta && key !== '_events') {
+		if (this.hasOwnProperty(key) && key !== '_' && key !== '_events') {
 			cb(this[key], key, this);
 		}
 	}
@@ -53,7 +53,7 @@ API.each = function (cb) {
 API.update = function (field, value, state) {
 	var added = !this.hasOwnProperty(field);
 	this[field] = value;
-	this._[terms.HAM][field] = state;
+	this._['>'][field] = state;
 	this.emit('change', value, field, this);
 	if (added) {
 		this.emit('add', value, field, this);
@@ -79,10 +79,10 @@ API.merge = function (node) {
 			console.log('Present:', now, 'Incoming:', incoming);
 			return self.emit('deferred', node, name);
 		}
-		if (present < incoming) {
+		if (incoming > present) {
 			return self.update(name, value, incoming);
 		}
-		if (present === incoming) {
+		if (incoming === present) {
 			if (String(self[name]) === String(value)) {
 				return 'Equal state and value';
 			}
