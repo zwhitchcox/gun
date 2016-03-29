@@ -12,7 +12,11 @@ function Node(obj, soul) {
 	soul = soul || (obj && obj._ && obj._['#']);
 	if (!(this instanceof Node)) {
 		if (universe[soul]) {
-			return universe[soul];
+			node = universe[soul];
+			if (obj && typeof obj === 'object') {
+				node.merge(obj);
+			}
+			return node;
 		}
 		node = new Node(obj, soul);
 		return (universe[node._['#']] = node);
@@ -56,7 +60,7 @@ API.state = function (prop) {
 API.each = function (cb) {
 	var key;
 	for (key in this) {
-		if (this.hasOwnProperty(key) && key !== '_' && key !== '_events') {
+		if (this.hasOwnProperty(key) && key !== '_' && key !== '_events' && key !== '_maxListeners') {
 			cb(this[key], key, this);
 		}
 	}

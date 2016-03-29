@@ -18,26 +18,12 @@ var API = Graph.prototype;
 
 API.constructor = Graph;
 
-API.get = function (query, cb, opt) {
-	var self, matching, soul = query['#'];
-	matching = this[soul];
-	self = this;
+API.get = function (query, target) {
+	var matching, soul = query['#'];
+	matching = NODE.universe[soul];
 	if (matching) {
-		cb(null, matching);
-		return this;
+		(target || this).add(matching, soul);
 	}
-	this.emit('get', query, function (err, node) {
-		if (!node) {
-			return;
-		}
-		if (!(node instanceof NODE)) {
-			node = NODE(node);
-		}
-		var graph = {};
-		graph[node.getSoul()] = node;
-		self.update(graph);
-		cb(err, node);
-	}, opt || {});
 	return this;
 };
 
@@ -45,6 +31,7 @@ API.add = function (node, soul) {
 	if (!(node instanceof NODE)) {
 		node = NODE(node, soul);
 	}
+	soul = node.getSoul();
 	if (this[soul]) {
 		return this[soul].merge(node);
 	}

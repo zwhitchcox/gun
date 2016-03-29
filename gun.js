@@ -76,26 +76,12 @@
 
 	API.constructor = Graph;
 
-	API.get = function (query, cb, opt) {
-		var self, matching, soul = query['#'];
-		matching = this[soul];
-		self = this;
+	API.get = function (query, target) {
+		var matching, soul = query['#'];
+		matching = NODE.universe[soul];
 		if (matching) {
-			cb(null, matching);
-			return this;
+			(target || this).add(matching, soul);
 		}
-		this.emit('get', query, function (err, node) {
-			if (!node) {
-				return;
-			}
-			if (!(node instanceof NODE)) {
-				node = NODE(node);
-			}
-			var graph = {};
-			graph[node.getSoul()] = node;
-			self.update(graph);
-			cb(err, node);
-		}, opt || {});
 		return this;
 	};
 
@@ -103,6 +89,7 @@
 		if (!(node instanceof NODE)) {
 			node = NODE(node, soul);
 		}
+		soul = node.getSoul();
 		if (this[soul]) {
 			return this[soul].merge(node);
 		}
@@ -458,7 +445,11 @@
 		soul = soul || (obj && obj._ && obj._['#']);
 		if (!(this instanceof Node)) {
 			if (universe[soul]) {
-				return universe[soul];
+				node = universe[soul];
+				if (obj && typeof obj === 'object') {
+					node.merge(obj);
+				}
+				return node;
 			}
 			node = new Node(obj, soul);
 			return (universe[node._['#']] = node);
@@ -502,7 +493,7 @@
 	API.each = function (cb) {
 		var key;
 		for (key in this) {
-			if (this.hasOwnProperty(key) && key !== '_' && key !== '_events') {
+			if (this.hasOwnProperty(key) && key !== '_' && key !== '_events' && key !== '_maxListeners') {
 				cb(this[key], key, this);
 			}
 		}
@@ -648,7 +639,10 @@
 			opt: opt || {},
 			graph: graph
 		};
-		this._ = graph;
+		this._ = {
+			lex: {},
+			graph: graph
+		};
 		Gun.events.emit('opt', this, opt);
 		this.back = this;
 	}
@@ -687,13 +681,7 @@
 		};
 		this._.root = true;
 		gun._.lex = lex;
-		this.__.graph.get(lex, function (err, node) {
-			gun._.node = node;
-			gun._.emit('chain', node);
-			if (cb) {
-				cb(err, node);
-			}
-		});
+		this.__.graph.get(lex, gun._.graph);
 		return gun;
 	};
 
@@ -709,7 +697,7 @@
 
 		cb = cb || log;
 		var gun = this;
-		gun._.every(function (node, soul) {
+		gun._.graph.every(function (node, soul) {
 			cb(node.primitive(), soul, gun);
 		});
 
@@ -718,7 +706,7 @@
 
 	API.on = function (cb) {
 		var gun = this;
-		gun._.every(function (node, soul) {
+		gun._.graph.every(function (node, soul) {
 			cb.call(gun, node.primitive(), soul, gun);
 			node.on('change', function (val, field) {
 				cb.call(gun, node.primitive(), field, gun);
@@ -727,10 +715,10 @@
 		return this;
 	};
 
-	API.put = function (obj, cb) {
+	API.put = function (obj) {
 		// Flatten
-		var node = Gun.Node(obj);
-		this._.add(node, cb);
+		var node = Gun.Node(obj, this._.lex['#']);
+		this._.graph.add(node);
 		return this;
 	};
 
@@ -741,8 +729,21 @@
 			cb.call(gun, value, field, node);
 		}
 
-		gun._.every(function (node, soul) {
+		gun._.graph.every(function (node, soul) {
 			node.each(each).on('change', each);
+		});
+
+		return this;
+	};
+
+	API.path = function (path) {
+		var gun = this;
+		if (typeof path === 'string') {
+			path = path.split('.');
+		}
+		map(path, function (prop) {
+			gun = gun.chain();
+			gun._.lex['.'] = prop;
 		});
 
 		return this;
