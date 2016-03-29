@@ -7,6 +7,7 @@ var map = require('./util/map');
 
 function Graph(graph) {
 	var soul, self = this;
+	this.setMaxListeners(Infinity);
 	if (graph && typeof graph === 'object') {
 		this.put(graph);
 	}
@@ -55,7 +56,7 @@ API.add = function (node, soul) {
 API.put = function (graph) {
 	var soul;
 	for (soul in graph) {
-		if (graph.hasOwnProperty(soul) && soul !== '_events') {
+		if (graph.hasOwnProperty(soul) && soul !== '_events' && soul !== '_maxListeners') {
 			this.add(graph[soul], soul);
 		}
 	}
@@ -63,14 +64,13 @@ API.put = function (graph) {
 };
 
 API.every = function (cb) {
-	var key;
-	for (key in this) {
-		if (this.hasOwnProperty(key) && key !== '_events') {
-			cb(this[key], key, this);
+	var soul;
+	for (soul in this) {
+		if (this.hasOwnProperty(soul) && soul !== '_events' && soul !== '_maxListeners') {
+			cb(this[soul], soul, this);
 		}
 	}
-	this.on('add', cb);
-	return this;
+	return this.on('add', cb);
 };
 
 
