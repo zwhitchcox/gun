@@ -89,6 +89,9 @@ API.merge = function (node) {
 			return self.emit('historical', node, name);
 		}
 		if (incoming > now) {
+			setTimeout(function () {
+				self.merge(node);
+			}, incoming - now);
 			return self.emit('deferred', node, name);
 		}
 		if (incoming > present) {
