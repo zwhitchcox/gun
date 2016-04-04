@@ -89,28 +89,32 @@ Gun.prototype = {
 	},
 
 	map: function (cb) {
-		var gun = this.chain(true);
+		var add, gun, root = this;
+		gun = this.chain(true);
+		add = gun._.chain.add.bind(gun._.chain);
 
-		function add(val, field, node) {
-			gun._.chain.add({
-				value: val,
-				field: field,
-				node: node
-			});
-		}
 		this._.chain.listen(function (value, field, node) {
-			if (value instanceof Node) {
-				value.each(add).on('add', add);
-			} else if (value instanceof Object) {
-				gun._.chain.resolve(value);
-			} else {
-				add(value, field, node);
+			if (!(value instanceof Node)) {
+				return;
 			}
+
+			value.each(function (val, field) {
+				root.path(field).val(add);
+			});
 		});
+
 		if (cb instanceof Function) {
 			gun._.chain.listen(cb);
 		}
 		return gun;
+	},
+
+	on: function (cb) {
+		this._.chain.listen(function (value, field, node) {
+			node.each(cb).on('change', cb);
+		});
+
+		return this;
 	},
 
 	val: function (cb) {
