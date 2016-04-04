@@ -1,37 +1,47 @@
-/*jslint node: true*/
+/*jslint node: true, nomen: true, forin: true*/
 'use strict';
 
-var Emitter = require('events');
-var NODE = require('./Node');
+var Emitter = require('eventemitter3');
+var Node = require('./Node');
 var map = require('./util/map');
+var string = require('./util/lex-string');
+var lexers = {};
 
-function Graph(graph) {
-	var soul, self = this;
-	this.setMaxListeners(Infinity);
-	if (graph && typeof graph === 'object') {
-		this.put(graph);
+function flatten(obj, graph) {
+	var key, tmp, node, soul;
+	for (key in obj) {
+		if (obj.hasOwnProperty(key) && key !== '_events' && key !== '_' && (tmp = obj[key]) instanceof Object) {
+			delete obj[key];
+			tmp = flatten(tmp, graph);
+			node = new Node(tmp);
+			soul = node._['#'];
+			graph[soul] = node;
+			obj[key] = { '#': soul };
+		}
+	}
+	return obj;
+}
+
+function Graph(obj) {
+	this._events = {};
+	if (obj instanceof Object) {
+		flatten(obj, this);
+		var node = new Node(obj);
+		this[node._['#']] = node;
 	}
 }
 
-Graph.prototype = Emitter.prototype;
+Graph.prototype = new Emitter();
+
 var API = Graph.prototype;
 
 API.constructor = Graph;
 
-API.get = function (query, target) {
-	var matching, soul = query['#'];
-	matching = NODE.universe[soul];
-	if (matching) {
-		(target || this).add(matching, soul);
+API.add = function (node) {
+	if (!(node instanceof Node)) {
+		node = new Node(node);
 	}
-	return this;
-};
-
-API.add = function (node, soul) {
-	if (!(node instanceof NODE)) {
-		node = NODE(node, soul);
-	}
-	soul = node.getSoul();
+	var soul = node.getSoul();
 	if (this[soul]) {
 		return this[soul].merge(node);
 	}
@@ -40,26 +50,54 @@ API.add = function (node, soul) {
 	return this;
 };
 
-API.put = function (graph) {
+API.merge = function (graph) {
 	var soul;
 	for (soul in graph) {
-		if (graph.hasOwnProperty(soul) && soul !== '_events' && soul !== '_maxListeners') {
+		if (graph.hasOwnProperty(soul) && soul !== '_events') {
 			this.add(graph[soul], soul);
 		}
 	}
 	return this;
 };
 
-API.every = function (cb) {
+API.each = function (cb) {
 	var soul;
 	for (soul in this) {
-		if (this.hasOwnProperty(soul) && soul !== '_events' && soul !== '_maxListeners') {
+		if (this.hasOwnProperty(soul) && soul !== '_events') {
 			cb(this[soul], soul, this);
 		}
 	}
-	return this.on('add', cb);
+	return this;
 };
 
+API.get = function (lex, cb, opt) {
+	var graph, soul = lex['#'];
+	graph = this;
+	if (!this[soul] && Node.universe[soul]) {
+		this.add(Node.universe[soul], soul);
+	}
+	if (this[soul]) {
+		cb(null, this[soul]);
+		return this;
+	}
+	graph.emit('get', lex, function (err, val) {
+		if (!err && val && !(val instanceof Node)) {
+			val = new Node(val);
+		}
+		if (!err && val) {
+			graph.add(val);
+		}
+		cb(err, val);
+	}, opt || {});
 
+	return this;
+};
+
+API.watch = function (cb) {
+	function watch(node) {
+		node.on('change', cb);
+	}
+	return this.each(watch).on('add', watch);
+};
 
 module.exports = Graph;

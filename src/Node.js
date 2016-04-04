@@ -2,28 +2,23 @@
 'use strict';
 
 var UID = require('./util/random');
-var Emitter = require('events');
+var Emitter = require('eventemitter3');
 var time = require('./util/time');
 
 var universe = {};
 
 function Node(obj, soul) {
 	var node, key, from, to, now = time();
-	soul = soul || (obj && obj._ && obj._['#']);
-	if (!(this instanceof Node)) {
-		if (universe[soul]) {
-			node = universe[soul];
-			if (obj && typeof obj === 'object') {
-				node.merge(obj);
-			}
-			return node;
-		}
-		node = new Node(obj, soul);
-		return (universe[node._['#']] = node);
+	soul = soul || (obj && obj._ && obj._['#']) || UID();
+	if (universe[soul]) {
+		node = universe[soul];
+		return obj instanceof Object ? node.merge(obj) : node;
 	}
+	universe[soul] = this;
+	this._events = {};
 	this._ = {
 		'>': {},
-		'#': soul || UID()
+		'#': soul
 	};
 
 	if (obj && typeof obj === 'object') {
@@ -33,7 +28,7 @@ function Node(obj, soul) {
 		from = obj._['>'];
 		to = this._['>'];
 		for (key in obj) {
-			if (obj.hasOwnProperty(key) && key !== '_') {
+			if (obj.hasOwnProperty(key) && key !== '_' && key !== '_events') {
 				this[key] = obj[key];
 				from[key] = to[key] = from[key] || now;
 			}
@@ -43,7 +38,7 @@ function Node(obj, soul) {
 
 Node.universe = universe;
 
-Node.prototype = Emitter.prototype;
+Node.prototype = new Emitter();
 
 var API = Node.prototype;
 
@@ -60,7 +55,7 @@ API.state = function (prop) {
 API.each = function (cb) {
 	var key;
 	for (key in this) {
-		if (this.hasOwnProperty(key) && key !== '_' && key !== '_events' && key !== '_maxListeners') {
+		if (this.hasOwnProperty(key) && key !== '_' && key !== '_events') {
 			cb(this[key], key, this);
 		}
 	}
@@ -79,21 +74,21 @@ API.update = function (field, value, state) {
 };
 
 API.merge = function (node) {
-	if (!(node instanceof Node)) {
-		node = new Node(node, null);
+	if (this === node || !node) {
+		return this;
 	}
-	var now, self = this;
+	var primitive, now, self = this;
 	now = time();
+	primitive = !(node instanceof Node);
 
-	node.each(function (value, name) {
+	this.each.call(node, function (value, name) {
 		var incoming, present, successor;
 		present = self.state(name);
-		incoming = node.state(name);
+		incoming = primitive ? now : node.state(name);
 		if (present > incoming) {
 			return self.emit('historical', node, name);
 		}
 		if (incoming > now) {
-			console.log('Present:', now, 'Incoming:', incoming);
 			return self.emit('deferred', node, name);
 		}
 		if (incoming > present) {
@@ -116,9 +111,19 @@ API.primitive = function () {
 		obj[field] = value;
 	});
 	obj._ = this._;
-	return obj;
+	return (obj);
 };
 
-API.toJSON = API.primitive;
+API.match = function (lex) {
+	var state, value, field, arr = [];
+	field = lex['.'];
+	value = lex['='];
+	state = lex['>'];
+};
+
+API.toJSON = function () {
+	return JSON.stringify(this.primitive());
+};
+API.toString = API.toJSON;
 
 module.exports = Node;

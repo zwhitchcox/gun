@@ -1,5 +1,10 @@
 {
 	"soul": "#",
-	"HAM": ">",
-	"meta": "_"
+	"state": ">",
+	"meta": "_",
+	"field": ".",
+	".": "field",
+	"#": "soul",
+	">": "state",
+	"_": "meta"
 }

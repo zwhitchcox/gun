@@ -1,6 +1,9 @@
 /*jslint node: true*/
 module.exports = {
-	Graph: require('./Graph'),
+	Gun: require('./API'),
+	Chain: require('./Chain'),
 	Node: require('./Node'),
-	Gun: window.Gun = require('./API')
+	Graph: require('./Graph')
 };
+
+Object.assign(window, module.exports);

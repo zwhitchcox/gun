@@ -40,56 +40,111 @@
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true*/
 	module.exports = {
-		Graph: __webpack_require__(1),
-		Node: __webpack_require__(3),
-		Gun: window.Gun = __webpack_require__(7)
+		Gun: __webpack_require__(1),
+		Chain: __webpack_require__(9),
+		Node: __webpack_require__(4),
+		Graph: __webpack_require__(2)
 	};
+
+	Object.assign(window, module.exports);
 
 
 /***/ },
-/* 1 */
+
+/***/ 1:
 /***/ function(module, exports, __webpack_require__) {
 
-	/*jslint node: true*/
+	/*jslint node: true, nomen: true*/
 	'use strict';
 
-	var Emitter = __webpack_require__(2);
-	var NODE = __webpack_require__(3);
-	var map = __webpack_require__(6);
+	var Graph = __webpack_require__(2);
+	var Node = __webpack_require__(4);
+	var Emitter = __webpack_require__(3);
+	var Chain = __webpack_require__(9);
 
-	function Graph(graph) {
-		var soul, self = this;
-		this.setMaxListeners(Infinity);
-		if (graph && typeof graph === 'object') {
-			this.put(graph);
+	var emitter = new Emitter();
+
+	function Gun(opt) {
+		if (!(this instanceof Gun)) {
+			return new Gun(opt);
+		}
+		this.back = this;
+		this.__ = {
+			opt: opt || {},
+			graph: new Graph()
+		};
+		this._ = {};
+		this._.chain = new Chain(this);
+		emitter.emit('opt', this, this.__.opt);
+	}
+	Gun.events = emitter;
+
+	Gun.Graph = Graph;
+	Gun.Node = Node;
+
+	module.exports = Gun;
+
+	__webpack_require__(61);
+	__webpack_require__(10);
+	__webpack_require__(11);
+
+
+/***/ },
+
+/***/ 2:
+/***/ function(module, exports, __webpack_require__) {
+
+	/*jslint node: true, nomen: true, forin: true*/
+	'use strict';
+
+	var Emitter = __webpack_require__(3);
+	var Node = __webpack_require__(4);
+	var map = __webpack_require__(7);
+	var string = __webpack_require__(8);
+	var lexers = {};
+
+	function flatten(obj, graph) {
+		var key, tmp, node, soul;
+		for (key in obj) {
+			if (obj.hasOwnProperty(key) && key !== '_events' && key !== '_' && (tmp = obj[key]) instanceof Object) {
+				delete obj[key];
+				tmp = flatten(tmp, graph);
+				node = new Node(tmp);
+				soul = node._['#'];
+				graph[soul] = node;
+				obj[key] = { '#': soul };
+			}
+		}
+		return obj;
+	}
+
+	function Graph(obj) {
+		this._events = {};
+		if (obj instanceof Object) {
+			flatten(obj, this);
+			var node = new Node(obj);
+			this[node._['#']] = node;
 		}
 	}
 
-	Graph.prototype = Emitter.prototype;
+	Graph.prototype = new Emitter();
+
 	var API = Graph.prototype;
 
 	API.constructor = Graph;
 
-	API.get = function (query, target) {
-		var matching, soul = query['#'];
-		matching = NODE.universe[soul];
-		if (matching) {
-			(target || this).add(matching, soul);
+	API.add = function (node) {
+		if (!(node instanceof Node)) {
+			node = new Node(node);
 		}
-		return this;
-	};
-
-	API.add = function (node, soul) {
-		if (!(node instanceof NODE)) {
-			node = NODE(node, soul);
-		}
-		soul = node.getSoul();
+		var soul = node.getSoul();
 		if (this[soul]) {
 			return this[soul].merge(node);
 		}
@@ -98,365 +153,381 @@
 		return this;
 	};
 
-	API.put = function (graph) {
+	API.merge = function (graph) {
 		var soul;
 		for (soul in graph) {
-			if (graph.hasOwnProperty(soul) && soul !== '_events' && soul !== '_maxListeners') {
+			if (graph.hasOwnProperty(soul) && soul !== '_events') {
 				this.add(graph[soul], soul);
 			}
 		}
 		return this;
 	};
 
-	API.every = function (cb) {
+	API.each = function (cb) {
 		var soul;
 		for (soul in this) {
-			if (this.hasOwnProperty(soul) && soul !== '_events' && soul !== '_maxListeners') {
+			if (this.hasOwnProperty(soul) && soul !== '_events') {
 				cb(this[soul], soul, this);
 			}
 		}
-		return this.on('add', cb);
+		return this;
 	};
 
+	API.get = function (lex, cb, opt) {
+		var graph, soul = lex['#'];
+		graph = this;
+		if (!this[soul] && Node.universe[soul]) {
+			this.add(Node.universe[soul], soul);
+		}
+		if (this[soul]) {
+			cb(null, this[soul]);
+			return this;
+		}
+		graph.emit('get', lex, function (err, val) {
+			if (!err && val && !(val instanceof Node)) {
+				val = new Node(val);
+			}
+			if (!err && val) {
+				graph.add(val);
+			}
+			cb(err, val);
+		}, opt || {});
 
+		return this;
+	};
+
+	API.watch = function (cb) {
+		function watch(node) {
+			node.on('change', cb);
+		}
+		return this.each(watch).on('add', watch);
+	};
 
 	module.exports = Graph;
 
 
 /***/ },
-/* 2 */
-/***/ function(module, exports) {
 
-	// Copyright Joyent, Inc. and other Node contributors.
-	//
-	// Permission is hereby granted, free of charge, to any person obtaining a
-	// copy of this software and associated documentation files (the
-	// "Software"), to deal in the Software without restriction, including
-	// without limitation the rights to use, copy, modify, merge, publish,
-	// distribute, sublicense, and/or sell copies of the Software, and to permit
-	// persons to whom the Software is furnished to do so, subject to the
-	// following conditions:
-	//
-	// The above copyright notice and this permission notice shall be included
-	// in all copies or substantial portions of the Software.
-	//
-	// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-	// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-	// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-	// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-	// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-	// USE OR OTHER DEALINGS IN THE SOFTWARE.
+/***/ 3:
+/***/ function(module, exports, __webpack_require__) {
 
-	function EventEmitter() {
-	  this._events = this._events || {};
-	  this._maxListeners = this._maxListeners || undefined;
+	'use strict';
+
+	var has = Object.prototype.hasOwnProperty;
+
+	//
+	// We store our EE objects in a plain object whose properties are event names.
+	// If `Object.create(null)` is not supported we prefix the event names with a
+	// `~` to make sure that the built-in object properties are not overridden or
+	// used as an attack vector.
+	// We also assume that `Object.create(null)` is available when the event name
+	// is an ES6 Symbol.
+	//
+	var prefix = typeof Object.create !== 'function' ? '~' : false;
+
+	/**
+	 * Representation of a single EventEmitter function.
+	 *
+	 * @param {Function} fn Event handler to be called.
+	 * @param {Mixed} context Context for function execution.
+	 * @param {Boolean} [once=false] Only emit once
+	 * @api private
+	 */
+	function EE(fn, context, once) {
+	  this.fn = fn;
+	  this.context = context;
+	  this.once = once || false;
 	}
-	module.exports = EventEmitter;
 
-	// Backwards-compat with node 0.10.x
-	EventEmitter.EventEmitter = EventEmitter;
+	/**
+	 * Minimal EventEmitter interface that is molded against the Node.js
+	 * EventEmitter interface.
+	 *
+	 * @constructor
+	 * @api public
+	 */
+	function EventEmitter() { /* Nothing to set */ }
 
+	/**
+	 * Hold the assigned EventEmitters by name.
+	 *
+	 * @type {Object}
+	 * @private
+	 */
 	EventEmitter.prototype._events = undefined;
-	EventEmitter.prototype._maxListeners = undefined;
 
-	// By default EventEmitters will print a warning if more than 10 listeners are
-	// added to it. This is a useful default which helps finding memory leaks.
-	EventEmitter.defaultMaxListeners = 10;
+	/**
+	 * Return an array listing the events for which the emitter has registered
+	 * listeners.
+	 *
+	 * @returns {Array}
+	 * @api public
+	 */
+	EventEmitter.prototype.eventNames = function eventNames() {
+	  var events = this._events
+	    , names = []
+	    , name;
 
-	// Obviously not all Emitters should be limited to 10. This function allows
-	// that to be increased. Set to zero for unlimited.
-	EventEmitter.prototype.setMaxListeners = function(n) {
-	  if (!isNumber(n) || n < 0 || isNaN(n))
-	    throw TypeError('n must be a positive number');
-	  this._maxListeners = n;
-	  return this;
-	};
+	  if (!events) return names;
 
-	EventEmitter.prototype.emit = function(type) {
-	  var er, handler, len, args, i, listeners;
-
-	  if (!this._events)
-	    this._events = {};
-
-	  // If there is no 'error' event listener then throw.
-	  if (type === 'error') {
-	    if (!this._events.error ||
-	        (isObject(this._events.error) && !this._events.error.length)) {
-	      er = arguments[1];
-	      if (er instanceof Error) {
-	        throw er; // Unhandled 'error' event
-	      }
-	      throw TypeError('Uncaught, unspecified "error" event.');
-	    }
+	  for (name in events) {
+	    if (has.call(events, name)) names.push(prefix ? name.slice(1) : name);
 	  }
 
-	  handler = this._events[type];
+	  if (Object.getOwnPropertySymbols) {
+	    return names.concat(Object.getOwnPropertySymbols(events));
+	  }
 
-	  if (isUndefined(handler))
-	    return false;
+	  return names;
+	};
 
-	  if (isFunction(handler)) {
-	    switch (arguments.length) {
-	      // fast cases
-	      case 1:
-	        handler.call(this);
-	        break;
-	      case 2:
-	        handler.call(this, arguments[1]);
-	        break;
-	      case 3:
-	        handler.call(this, arguments[1], arguments[2]);
-	        break;
-	      // slower
-	      default:
-	        args = Array.prototype.slice.call(arguments, 1);
-	        handler.apply(this, args);
+	/**
+	 * Return a list of assigned event listeners.
+	 *
+	 * @param {String} event The events that should be listed.
+	 * @param {Boolean} exists We only need to know if there are listeners.
+	 * @returns {Array|Boolean}
+	 * @api public
+	 */
+	EventEmitter.prototype.listeners = function listeners(event, exists) {
+	  var evt = prefix ? prefix + event : event
+	    , available = this._events && this._events[evt];
+
+	  if (exists) return !!available;
+	  if (!available) return [];
+	  if (available.fn) return [available.fn];
+
+	  for (var i = 0, l = available.length, ee = new Array(l); i < l; i++) {
+	    ee[i] = available[i].fn;
+	  }
+
+	  return ee;
+	};
+
+	/**
+	 * Emit an event to all registered event listeners.
+	 *
+	 * @param {String} event The name of the event.
+	 * @returns {Boolean} Indication if we've emitted an event.
+	 * @api public
+	 */
+	EventEmitter.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
+	  var evt = prefix ? prefix + event : event;
+
+	  if (!this._events || !this._events[evt]) return false;
+
+	  var listeners = this._events[evt]
+	    , len = arguments.length
+	    , args
+	    , i;
+
+	  if ('function' === typeof listeners.fn) {
+	    if (listeners.once) this.removeListener(event, listeners.fn, undefined, true);
+
+	    switch (len) {
+	      case 1: return listeners.fn.call(listeners.context), true;
+	      case 2: return listeners.fn.call(listeners.context, a1), true;
+	      case 3: return listeners.fn.call(listeners.context, a1, a2), true;
+	      case 4: return listeners.fn.call(listeners.context, a1, a2, a3), true;
+	      case 5: return listeners.fn.call(listeners.context, a1, a2, a3, a4), true;
+	      case 6: return listeners.fn.call(listeners.context, a1, a2, a3, a4, a5), true;
 	    }
-	  } else if (isObject(handler)) {
-	    args = Array.prototype.slice.call(arguments, 1);
-	    listeners = handler.slice();
-	    len = listeners.length;
-	    for (i = 0; i < len; i++)
-	      listeners[i].apply(this, args);
+
+	    for (i = 1, args = new Array(len -1); i < len; i++) {
+	      args[i - 1] = arguments[i];
+	    }
+
+	    listeners.fn.apply(listeners.context, args);
+	  } else {
+	    var length = listeners.length
+	      , j;
+
+	    for (i = 0; i < length; i++) {
+	      if (listeners[i].once) this.removeListener(event, listeners[i].fn, undefined, true);
+
+	      switch (len) {
+	        case 1: listeners[i].fn.call(listeners[i].context); break;
+	        case 2: listeners[i].fn.call(listeners[i].context, a1); break;
+	        case 3: listeners[i].fn.call(listeners[i].context, a1, a2); break;
+	        default:
+	          if (!args) for (j = 1, args = new Array(len -1); j < len; j++) {
+	            args[j - 1] = arguments[j];
+	          }
+
+	          listeners[i].fn.apply(listeners[i].context, args);
+	      }
+	    }
 	  }
 
 	  return true;
 	};
 
-	EventEmitter.prototype.addListener = function(type, listener) {
-	  var m;
+	/**
+	 * Register a new EventListener for the given event.
+	 *
+	 * @param {String} event Name of the event.
+	 * @param {Function} fn Callback function.
+	 * @param {Mixed} [context=this] The context of the function.
+	 * @api public
+	 */
+	EventEmitter.prototype.on = function on(event, fn, context) {
+	  var listener = new EE(fn, context || this)
+	    , evt = prefix ? prefix + event : event;
 
-	  if (!isFunction(listener))
-	    throw TypeError('listener must be a function');
+	  if (!this._events) this._events = prefix ? {} : Object.create(null);
+	  if (!this._events[evt]) this._events[evt] = listener;
+	  else {
+	    if (!this._events[evt].fn) this._events[evt].push(listener);
+	    else this._events[evt] = [
+	      this._events[evt], listener
+	    ];
+	  }
 
-	  if (!this._events)
-	    this._events = {};
+	  return this;
+	};
 
-	  // To avoid recursion in the case that type === "newListener"! Before
-	  // adding it to the listeners, first emit "newListener".
-	  if (this._events.newListener)
-	    this.emit('newListener', type,
-	              isFunction(listener.listener) ?
-	              listener.listener : listener);
+	/**
+	 * Add an EventListener that's only called once.
+	 *
+	 * @param {String} event Name of the event.
+	 * @param {Function} fn Callback function.
+	 * @param {Mixed} [context=this] The context of the function.
+	 * @api public
+	 */
+	EventEmitter.prototype.once = function once(event, fn, context) {
+	  var listener = new EE(fn, context || this, true)
+	    , evt = prefix ? prefix + event : event;
 
-	  if (!this._events[type])
-	    // Optimize the case of one listener. Don't need the extra array object.
-	    this._events[type] = listener;
-	  else if (isObject(this._events[type]))
-	    // If we've already got an array, just append.
-	    this._events[type].push(listener);
-	  else
-	    // Adding the second element, need to change to array.
-	    this._events[type] = [this._events[type], listener];
+	  if (!this._events) this._events = prefix ? {} : Object.create(null);
+	  if (!this._events[evt]) this._events[evt] = listener;
+	  else {
+	    if (!this._events[evt].fn) this._events[evt].push(listener);
+	    else this._events[evt] = [
+	      this._events[evt], listener
+	    ];
+	  }
 
-	  // Check for listener leak
-	  if (isObject(this._events[type]) && !this._events[type].warned) {
-	    if (!isUndefined(this._maxListeners)) {
-	      m = this._maxListeners;
+	  return this;
+	};
+
+	/**
+	 * Remove event listeners.
+	 *
+	 * @param {String} event The event we want to remove.
+	 * @param {Function} fn The listener that we need to find.
+	 * @param {Mixed} context Only remove listeners matching this context.
+	 * @param {Boolean} once Only remove once listeners.
+	 * @api public
+	 */
+	EventEmitter.prototype.removeListener = function removeListener(event, fn, context, once) {
+	  var evt = prefix ? prefix + event : event;
+
+	  if (!this._events || !this._events[evt]) return this;
+
+	  var listeners = this._events[evt]
+	    , events = [];
+
+	  if (fn) {
+	    if (listeners.fn) {
+	      if (
+	           listeners.fn !== fn
+	        || (once && !listeners.once)
+	        || (context && listeners.context !== context)
+	      ) {
+	        events.push(listeners);
+	      }
 	    } else {
-	      m = EventEmitter.defaultMaxListeners;
-	    }
-
-	    if (m && m > 0 && this._events[type].length > m) {
-	      this._events[type].warned = true;
-	      console.error('(node) warning: possible EventEmitter memory ' +
-	                    'leak detected. %d listeners added. ' +
-	                    'Use emitter.setMaxListeners() to increase limit.',
-	                    this._events[type].length);
-	      if (typeof console.trace === 'function') {
-	        // not supported in IE 10
-	        console.trace();
+	      for (var i = 0, length = listeners.length; i < length; i++) {
+	        if (
+	             listeners[i].fn !== fn
+	          || (once && !listeners[i].once)
+	          || (context && listeners[i].context !== context)
+	        ) {
+	          events.push(listeners[i]);
+	        }
 	      }
 	    }
 	  }
 
-	  return this;
-	};
-
-	EventEmitter.prototype.on = EventEmitter.prototype.addListener;
-
-	EventEmitter.prototype.once = function(type, listener) {
-	  if (!isFunction(listener))
-	    throw TypeError('listener must be a function');
-
-	  var fired = false;
-
-	  function g() {
-	    this.removeListener(type, g);
-
-	    if (!fired) {
-	      fired = true;
-	      listener.apply(this, arguments);
-	    }
-	  }
-
-	  g.listener = listener;
-	  this.on(type, g);
-
-	  return this;
-	};
-
-	// emits a 'removeListener' event iff the listener was removed
-	EventEmitter.prototype.removeListener = function(type, listener) {
-	  var list, position, length, i;
-
-	  if (!isFunction(listener))
-	    throw TypeError('listener must be a function');
-
-	  if (!this._events || !this._events[type])
-	    return this;
-
-	  list = this._events[type];
-	  length = list.length;
-	  position = -1;
-
-	  if (list === listener ||
-	      (isFunction(list.listener) && list.listener === listener)) {
-	    delete this._events[type];
-	    if (this._events.removeListener)
-	      this.emit('removeListener', type, listener);
-
-	  } else if (isObject(list)) {
-	    for (i = length; i-- > 0;) {
-	      if (list[i] === listener ||
-	          (list[i].listener && list[i].listener === listener)) {
-	        position = i;
-	        break;
-	      }
-	    }
-
-	    if (position < 0)
-	      return this;
-
-	    if (list.length === 1) {
-	      list.length = 0;
-	      delete this._events[type];
-	    } else {
-	      list.splice(position, 1);
-	    }
-
-	    if (this._events.removeListener)
-	      this.emit('removeListener', type, listener);
+	  //
+	  // Reset the array, or remove it completely if we have no more listeners.
+	  //
+	  if (events.length) {
+	    this._events[evt] = events.length === 1 ? events[0] : events;
+	  } else {
+	    delete this._events[evt];
 	  }
 
 	  return this;
 	};
 
-	EventEmitter.prototype.removeAllListeners = function(type) {
-	  var key, listeners;
+	/**
+	 * Remove all listeners or only the listeners for the specified event.
+	 *
+	 * @param {String} event The event want to remove all listeners for.
+	 * @api public
+	 */
+	EventEmitter.prototype.removeAllListeners = function removeAllListeners(event) {
+	  if (!this._events) return this;
 
-	  if (!this._events)
-	    return this;
-
-	  // not listening for removeListener, no need to emit
-	  if (!this._events.removeListener) {
-	    if (arguments.length === 0)
-	      this._events = {};
-	    else if (this._events[type])
-	      delete this._events[type];
-	    return this;
-	  }
-
-	  // emit removeListener for all listeners on all events
-	  if (arguments.length === 0) {
-	    for (key in this._events) {
-	      if (key === 'removeListener') continue;
-	      this.removeAllListeners(key);
-	    }
-	    this.removeAllListeners('removeListener');
-	    this._events = {};
-	    return this;
-	  }
-
-	  listeners = this._events[type];
-
-	  if (isFunction(listeners)) {
-	    this.removeListener(type, listeners);
-	  } else if (listeners) {
-	    // LIFO order
-	    while (listeners.length)
-	      this.removeListener(type, listeners[listeners.length - 1]);
-	  }
-	  delete this._events[type];
+	  if (event) delete this._events[prefix ? prefix + event : event];
+	  else this._events = prefix ? {} : Object.create(null);
 
 	  return this;
 	};
 
-	EventEmitter.prototype.listeners = function(type) {
-	  var ret;
-	  if (!this._events || !this._events[type])
-	    ret = [];
-	  else if (isFunction(this._events[type]))
-	    ret = [this._events[type]];
-	  else
-	    ret = this._events[type].slice();
-	  return ret;
+	//
+	// Alias methods names because people roll like that.
+	//
+	EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
+	EventEmitter.prototype.addListener = EventEmitter.prototype.on;
+
+	//
+	// This function doesn't apply anymore.
+	//
+	EventEmitter.prototype.setMaxListeners = function setMaxListeners() {
+	  return this;
 	};
 
-	EventEmitter.prototype.listenerCount = function(type) {
-	  if (this._events) {
-	    var evlistener = this._events[type];
+	//
+	// Expose the prefix.
+	//
+	EventEmitter.prefixed = prefix;
 
-	    if (isFunction(evlistener))
-	      return 1;
-	    else if (evlistener)
-	      return evlistener.length;
-	  }
-	  return 0;
-	};
-
-	EventEmitter.listenerCount = function(emitter, type) {
-	  return emitter.listenerCount(type);
-	};
-
-	function isFunction(arg) {
-	  return typeof arg === 'function';
-	}
-
-	function isNumber(arg) {
-	  return typeof arg === 'number';
-	}
-
-	function isObject(arg) {
-	  return typeof arg === 'object' && arg !== null;
-	}
-
-	function isUndefined(arg) {
-	  return arg === void 0;
+	//
+	// Expose the module.
+	//
+	if (true) {
+	  module.exports = EventEmitter;
 	}
 
 
 /***/ },
-/* 3 */
+
+/***/ 4:
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true, nomen: true*/
 	'use strict';
 
-	var UID = __webpack_require__(4);
-	var Emitter = __webpack_require__(2);
-	var time = __webpack_require__(5);
+	var UID = __webpack_require__(5);
+	var Emitter = __webpack_require__(3);
+	var time = __webpack_require__(6);
 
 	var universe = {};
 
 	function Node(obj, soul) {
 		var node, key, from, to, now = time();
-		soul = soul || (obj && obj._ && obj._['#']);
-		if (!(this instanceof Node)) {
-			if (universe[soul]) {
-				node = universe[soul];
-				if (obj && typeof obj === 'object') {
-					node.merge(obj);
-				}
-				return node;
-			}
-			node = new Node(obj, soul);
-			return (universe[node._['#']] = node);
+		soul = soul || (obj && obj._ && obj._['#']) || UID();
+		if (universe[soul]) {
+			node = universe[soul];
+			return obj instanceof Object ? node.merge(obj) : node;
 		}
+		universe[soul] = this;
+		this._events = {};
 		this._ = {
 			'>': {},
-			'#': soul || UID()
+			'#': soul
 		};
 
 		if (obj && typeof obj === 'object') {
@@ -466,7 +537,7 @@
 			from = obj._['>'];
 			to = this._['>'];
 			for (key in obj) {
-				if (obj.hasOwnProperty(key) && key !== '_') {
+				if (obj.hasOwnProperty(key) && key !== '_' && key !== '_events') {
 					this[key] = obj[key];
 					from[key] = to[key] = from[key] || now;
 				}
@@ -476,7 +547,7 @@
 
 	Node.universe = universe;
 
-	Node.prototype = Emitter.prototype;
+	Node.prototype = new Emitter();
 
 	var API = Node.prototype;
 
@@ -493,7 +564,7 @@
 	API.each = function (cb) {
 		var key;
 		for (key in this) {
-			if (this.hasOwnProperty(key) && key !== '_' && key !== '_events' && key !== '_maxListeners') {
+			if (this.hasOwnProperty(key) && key !== '_' && key !== '_events') {
 				cb(this[key], key, this);
 			}
 		}
@@ -512,21 +583,21 @@
 	};
 
 	API.merge = function (node) {
-		if (!(node instanceof Node)) {
-			node = new Node(node, null);
+		if (this === node || !node) {
+			return this;
 		}
-		var now, self = this;
+		var primitive, now, self = this;
 		now = time();
+		primitive = !(node instanceof Node);
 
-		node.each(function (value, name) {
+		this.each.call(node, function (value, name) {
 			var incoming, present, successor;
 			present = self.state(name);
-			incoming = node.state(name);
+			incoming = primitive ? now : node.state(name);
 			if (present > incoming) {
 				return self.emit('historical', node, name);
 			}
 			if (incoming > now) {
-				console.log('Present:', now, 'Incoming:', incoming);
 				return self.emit('deferred', node, name);
 			}
 			if (incoming > present) {
@@ -549,16 +620,27 @@
 			obj[field] = value;
 		});
 		obj._ = this._;
-		return obj;
+		return (obj);
 	};
 
-	API.toJSON = API.primitive;
+	API.match = function (lex) {
+		var state, value, field, arr = [];
+		field = lex['.'];
+		value = lex['='];
+		state = lex['>'];
+	};
+
+	API.toJSON = function () {
+		return JSON.stringify(this.primitive());
+	};
+	API.toString = API.toJSON;
 
 	module.exports = Node;
 
 
 /***/ },
-/* 4 */
+
+/***/ 5:
 /***/ function(module, exports) {
 
 	/*jslint node: true*/
@@ -580,7 +662,8 @@
 
 
 /***/ },
-/* 5 */
+
+/***/ 6:
 /***/ function(module, exports) {
 
 	/*jslint node: true*/
@@ -600,18 +683,31 @@
 
 
 /***/ },
-/* 6 */
+
+/***/ 7:
 /***/ function(module, exports) {
 
 	/*jslint node: true*/
 	'use strict';
 
-	function map(obj, cb) {
-		var key;
+	Object.keys = Object.keys || function (obj) {
+		var key, arr = [];
 		for (key in obj) {
 			if (obj.hasOwnProperty(key)) {
-				cb(obj[key], key, obj);
+				arr.push(key);
 			}
+		}
+		return arr;
+	};
+
+
+
+	function map(obj, cb) {
+		var i, key, keys = Object.keys(obj);
+		i = keys.length;
+		while (i--) {
+			key = keys[i];
+			cb(obj[key], key, obj);
 		}
 	}
 
@@ -619,40 +715,37 @@
 
 
 /***/ },
-/* 7 */
+
+/***/ 8:
+/***/ function(module, exports) {
+
+	/*jslint node: true*/
+	'use strict';
+
+	function sort(lex) {
+		var keys = Object.keys(lex).sort().map(function (key) {
+			return [key, lex[key] instanceof Object ? sort(lex[key]) : lex[key]];
+		});
+		return keys;
+	}
+
+	module.exports = function (lex) {
+		return JSON.stringify(sort(lex));
+	};
+
+
+/***/ },
+
+/***/ 9:
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true, nomen: true*/
 	'use strict';
 
-	var Graph = __webpack_require__(1);
-	var Node = __webpack_require__(3);
-	var Emitter = __webpack_require__(2);
-	var map = __webpack_require__(6);
+	var Emitter = __webpack_require__(3);
+	var Gun = __webpack_require__(1);
 
-	function Gun(opt) {
-		if (!(this instanceof Gun)) {
-			return new Gun(opt);
-		}
-		var graph = new Graph();
-		this.__ = {
-			opt: opt || {},
-			graph: graph
-		};
-		this._ = {
-			lex: {},
-			graph: graph
-		};
-		Gun.events.emit('opt', this, opt);
-		this.back = this;
-	}
-
-	Gun.events = new Emitter();
-
-	Gun.Node = Node;
-	Gun.Graph = Graph;
-
-	Gun.each = function (gun, cb) {
+	function scan(gun, cb) {
 		var length = 1;
 		cb(gun);
 		while (gun !== gun.back) {
@@ -662,95 +755,302 @@
 			length += 1;
 		}
 		return length;
-	};
-
-	var API = Gun.prototype;
-
-	API.chain = function (back) {
-		var gun, last = this;
-		gun = new this.constructor(this.__.opt);
-		gun.__ = last.__;
-		gun.back = back || last;
-		return gun;
-	};
-
-	API.get = function (lex, cb) {
-		var gun = this.chain();
-		lex = typeof lex === 'object' ? lex : {
-			'#': lex
-		};
-		this._.root = true;
-		gun._.lex = lex;
-		this.__.graph.get(lex, gun._.graph);
-		return gun;
-	};
-
-	function log(node, field) {
-		var args = [node];
-		if (typeof field === 'string') {
-			args.unshift(field);
-		}
-		console.log.apply(console, args);
 	}
 
-	API.val = function (cb) {
+	function Chain(gun) {
+		var chain = this;
 
-		cb = cb || log;
-		var gun = this;
-		gun._.graph.every(function (node, soul) {
-			cb(node.primitive(), soul, gun);
+		this.graph = gun.__.graph;
+		this.split = false;
+
+		scan(gun, function (instance) {
+			if (instance._.split) {
+				return (chain.split = true);
+			}
+			return instance._.root;
 		});
+
+		this.resolved = (this.split) ? [] : null;
+	}
+
+	Chain.prototype = new Emitter();
+	var API = Chain.prototype;
+
+	API.listen = function (cb) {
+
+		function handle(result) {
+			cb(result.value, result.field, result.node);
+		}
+
+		if (this.split) {
+			this.resolved.forEach(handle);
+			this.on('add', handle);
+		} else if (this.resolved) {
+			handle(this.resolved);
+		} else {
+			this.once('add', handle);
+		}
 
 		return this;
 	};
 
-	API.on = function (cb) {
-		var gun = this;
-		gun._.graph.every(function (node, soul) {
-			cb.call(gun, node.primitive(), soul, gun);
-			node.on('change', function (val, field) {
-				cb.call(gun, node.primitive(), field, gun);
+	API.add = function (value, field, node) {
+		var result = {
+			value: value,
+			field: field,
+			node: node
+		};
+
+		if (this.split) {
+			this.resolved.push(result);
+		} else {
+			this.resolved = result;
+		}
+		this.emit('add', result);
+
+		return this;
+	};
+
+	module.exports = Chain;
+
+
+/***/ },
+
+/***/ 10:
+/***/ function(module, exports, __webpack_require__) {
+
+	/*jslint node: true, nomen: true*/
+	'use strict';
+
+	var Gun = __webpack_require__(1);
+	var Graph = __webpack_require__(2);
+	var Node = __webpack_require__(4);
+	var Emitter = __webpack_require__(3);
+	var map = __webpack_require__(7);
+	var Chain = __webpack_require__(9);
+	var time = __webpack_require__(6);
+
+	Gun.Node = Node;
+	Gun.Graph = Graph;
+	Gun.Chain = Chain;
+
+	Gun.prototype = {
+		constructor: Gun,
+
+		chain: function (split) {
+			var gun, last = this;
+			gun = new this.constructor(last.__.opt);
+			gun.back = last;
+			gun.__ = last.__;
+			gun._ = {};
+			gun._.split = split || false;
+			gun._.chain = new Chain(gun);
+			return gun;
+		},
+
+		/* Done! */
+		get: function (lex, cb) {
+			var res, gun = this.chain();
+			lex = lex instanceof Object ? lex : {
+				'#': lex
+			};
+
+			gun.__.graph.get(lex, function (err, node) {
+				res = cb && cb(err, node);
+				gun._.chain.add(node, node.getSoul(), node);
 			});
-		});
-		return this;
-	};
 
-	API.put = function (obj) {
-		// Flatten
-		var node = Gun.Node(obj, this._.lex['#']);
-		this._.graph.add(node);
-		return this;
-	};
+			return gun;
+		},
 
-	API.map = function (cb) {
-		var gun = this;
+		/* Done! */
+		put: function (val) {
+			if (val instanceof Object) {
+				var tmp = new Graph(val);
+			}
+			this._.chain.listen(function (v, f, node) {
+				if (val instanceof Object) {
+					node.merge(val);
+				} else {
+					node.update(f, val, time());
+				}
+			});
+			return this;
+		},
 
-		function each(value, field, node) {
-			cb.call(gun, value, field, node);
+		path: function (str) {
+			var gun = this.chain();
+
+			function add(val, field, node) {
+				gun._.chain.add(val, field, node);
+			}
+			this._.chain.listen(function (val, field, node) {
+				if (val && val[str] instanceof Object) {
+					gun._.chain.resolve(val[str]);
+				} else {
+					add(val && val[str], str, node);
+				}
+			});
+			return gun;
+		},
+
+		map: function (cb) {
+			var gun = this.chain(true);
+
+			function add(val, field, node) {
+				gun._.chain.add({
+					value: val,
+					field: field,
+					node: node
+				});
+			}
+			this._.chain.listen(function (value, field, node) {
+				if (value instanceof Node) {
+					value.each(add).on('add', add);
+				} else if (value instanceof Object) {
+					gun._.chain.resolve(value);
+				} else {
+					add(value, field, node);
+				}
+			});
+			if (cb instanceof Function) {
+				gun._.chain.listen(cb);
+			}
+			return gun;
+		},
+
+		val: function (cb) {
+			this._.chain.listen(cb || function (node, field) {
+				console.log(field, node);
+			});
+
+			return this;
 		}
-
-		gun._.graph.every(function (node, soul) {
-			node.each(each).on('change', each);
-		});
-
-		return this;
-	};
-
-	API.path = function (path) {
-		var gun = this;
-		if (typeof path === 'string') {
-			path = path.split('.');
-		}
-		map(path, function (prop) {
-			gun = gun.chain();
-			gun._.lex['.'] = prop;
-		});
-
-		return this;
 	};
 
 	module.exports = Gun;
 
 
+/***/ },
+
+/***/ 11:
+/***/ function(module, exports, __webpack_require__) {
+
+	/*jslint node: true*/
+
+	module.exports = {
+		'localStorage': __webpack_require__(12),
+		'socket.io': __webpack_require__(13)
+	};
+
+
+/***/ },
+
+/***/ 12:
+/***/ function(module, exports, __webpack_require__) {
+
+	/*jslint node: true, nomen: true*/
+	'use strict';
+
+	var Gun = __webpack_require__(1);
+
+	function save(node, soul, opt) {
+		opt = opt || {};
+		if (opt.localStorage === false) {
+			return;
+		}
+		var old, string = localStorage.getItem(soul);
+		if (string) {
+			old = JSON.parse(string);
+			node.merge(old);
+		}
+		localStorage.setItem('gun_' + soul, node);
+	}
+
+	Gun.events.on('opt', function (gun, opt) {
+		var prefix, storage = opt.localStorage;
+		prefix = (storage || {}).prefix || 'gun_';
+		if (storage === false || typeof localStorage === 'undefined') {
+			return;
+		}
+		gun.__.graph.on('put', function (graph, cb, opt) {
+			graph.each(save);
+			cb(null);
+		});
+
+		gun.__.graph.on('get', function (lex, cb, opt) {
+			var node, soul = prefix + lex['#'];
+			if (opt.localStorage === false) {
+				return;
+			}
+			node = localStorage.getItem(soul);
+			cb(null, node && JSON.parse(node));
+		});
+	});
+
+
+/***/ },
+
+/***/ 13:
+/***/ function(module, exports, __webpack_require__) {
+
+	/*jslint node: true, nomen: true*/
+	'use strict';
+
+	//var io = require('socket.io-client');
+	var Gun = __webpack_require__(1);
+	var map = __webpack_require__(7);
+
+	var peers = {};
+
+	Gun.events.on('create', function (gun, opt) {
+		if (!opt.peers) {
+			return;
+		}
+		map(opt.peers, function (config, url) {
+			peers[url] = peers[url] || io.connect(url);
+		});
+
+		gun.__.graph.on('update', function (graph, cb, opt) {
+			if (opt.peers === false) {
+				return;
+			}
+			map(opt.peers, function (config, url) {
+				peers[url].emit(graph, opt);
+			});
+		});
+	});
+
+
+/***/ },
+
+/***/ 61:
+/***/ function(module, exports, __webpack_require__) {
+
+	/*jslint node: true*/
+	'use strict';
+
+	var Gun = __webpack_require__(1);
+
+	Gun.production = false;
+	Gun.log = function (str) {
+		var history = Gun.log.history;
+		history[str] = history[str] || [];
+		history[str].push(new Date().getTime());
+		if (!Gun.production) {
+			console.log.apply(console, arguments);
+		}
+	};
+	Gun.log.once = function (str) {
+		if (!Gun.log.history[str]) {
+			Gun.log(str);
+		}
+	};
+	Gun.log.history = {};
+
+	module.exports = Gun;
+
+
 /***/ }
-/******/ ]);
+
+/******/ });
