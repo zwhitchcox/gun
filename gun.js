@@ -878,19 +878,34 @@
 			return this;
 		},
 
-		path: function (str) {
-			var gun = this.chain();
+		path: function (str, cb) {
+			var gun = this;
 
-			function add(val, field, node) {
-				gun._.chain.add(val, field, node);
+
+			if (!(str instanceof Array)) {
+				str = str.split('.');
 			}
+			if (str.length > 1) {
+				str.forEach(function (path) {
+					gun = gun.path(path);
+				});
+				return gun;
+			}
+			str = str[0];
+			gun = gun.chain();
+
 			this._.chain.listen(function (val, field, node) {
-				if (val && val[str] instanceof Object) {
-					gun._.chain.resolve(val[str]);
-				} else {
-					add(val && val[str], str, node);
+
+				var lex = (val && val[str] instanceof Object && val[str]);
+				if (!lex) {
+					return gun._.chain.add(val[str], str, node);
 				}
+				gun.__.graph.get(lex, function (err, node) {
+					var tmp = cb && cb(err, node);
+					gun._.chain.add(node, node.getSoul(), node);
+				});
 			});
+
 			return gun;
 		},
 
@@ -921,7 +936,7 @@
 
 		val: function (cb) {
 			this._.chain.listen(cb || function (node, field) {
-				console.log(field, node);
+				console.log(field + ':', node);
 			});
 
 			return this;
