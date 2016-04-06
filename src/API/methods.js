@@ -44,12 +44,14 @@ Gun.prototype = {
 
 	/* Done! */
 	put: function (val) {
+		var graph, gun = this;
 		if (val instanceof Object) {
-			var tmp = new Graph(val);
+			graph = new Graph(val);
 		}
 		this._.chain.listen(function (v, f, node) {
 			if (val instanceof Object) {
 				node.merge(val);
+				gun.__.graph.merge(graph);
 			} else {
 				node.update(f, val, time());
 			}
@@ -81,7 +83,9 @@ Gun.prototype = {
 			}
 			gun.__.graph.get(lex, function (err, node) {
 				var tmp = cb && cb(err, node);
-				gun._.chain.add(node, node.getSoul(), node);
+				if (!err && node) {
+					gun._.chain.add(node, node.getSoul(), node);
+				}
 			});
 		});
 

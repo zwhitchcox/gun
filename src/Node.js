@@ -63,28 +63,25 @@ API.each = function (cb) {
 };
 
 API.update = function (field, value, state) {
-	var added = !this.hasOwnProperty(field);
+	var type = this.hasOwnProperty(field) ? 'update' : 'add';
 	this[field] = value;
 	this._['>'][field] = state;
 	this.emit('change', value, field, this);
-	if (added) {
-		this.emit('add', value, field, this);
-	}
+	this.emit(type, value, field, this);
 	return this;
 };
 
 API.merge = function (node) {
-	if (this === node || !node) {
+	if (this === node || !(node instanceof Object)) {
 		return this;
 	}
-	var primitive, now, self = this;
+	var now, self = this;
 	now = time();
-	primitive = !(node instanceof Node);
 
 	this.each.call(node, function (value, name) {
 		var incoming, present, successor;
-		present = self.state(name);
-		incoming = primitive ? now : node.state(name);
+		present = self.state(name) || 0;
+		incoming = (node._ && node._['>'] && node._['>'][name]) || now;
 		if (present > incoming) {
 			return self.emit('historical', node, name);
 		}
@@ -105,6 +102,7 @@ API.merge = function (node) {
 			self.update(name, successor, incoming);
 		}
 	});
+
 	return self;
 };
 

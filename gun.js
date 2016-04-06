@@ -40,9 +40,8 @@
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true*/
@@ -50,15 +49,15 @@
 		Gun: __webpack_require__(1),
 		Chain: __webpack_require__(9),
 		Node: __webpack_require__(4),
-		Graph: __webpack_require__(2)
+		Graph: __webpack_require__(2),
+		time: __webpack_require__(6)
 	};
 
 	Object.assign(window, module.exports);
 
 
 /***/ },
-
-/***/ 1:
+/* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true, nomen: true*/
@@ -91,14 +90,13 @@
 
 	module.exports = Gun;
 
-	__webpack_require__(61);
 	__webpack_require__(10);
 	__webpack_require__(11);
+	__webpack_require__(12);
 
 
 /***/ },
-
-/***/ 2:
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true, nomen: true, forin: true*/
@@ -207,8 +205,7 @@
 
 
 /***/ },
-
-/***/ 3:
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -503,8 +500,7 @@
 
 
 /***/ },
-
-/***/ 4:
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true, nomen: true*/
@@ -572,32 +568,32 @@
 	};
 
 	API.update = function (field, value, state) {
-		var added = !this.hasOwnProperty(field);
+		var type = this.hasOwnProperty(field) ? 'update' : 'add';
 		this[field] = value;
 		this._['>'][field] = state;
 		this.emit('change', value, field, this);
-		if (added) {
-			this.emit('add', value, field, this);
-		}
+		this.emit(type, value, field, this);
 		return this;
 	};
 
 	API.merge = function (node) {
-		if (this === node || !node) {
+		if (this === node || !(node instanceof Object)) {
 			return this;
 		}
-		var primitive, now, self = this;
+		var now, self = this;
 		now = time();
-		primitive = !(node instanceof Node);
 
 		this.each.call(node, function (value, name) {
 			var incoming, present, successor;
-			present = self.state(name);
-			incoming = primitive ? now : node.state(name);
+			present = self.state(name) || 0;
+			incoming = (node._ && node._['>'] && node._['>'][name]) || now;
 			if (present > incoming) {
 				return self.emit('historical', node, name);
 			}
 			if (incoming > now) {
+				setTimeout(function () {
+					self.merge(node);
+				}, incoming - now);
 				return self.emit('deferred', node, name);
 			}
 			if (incoming > present) {
@@ -611,6 +607,7 @@
 				self.update(name, successor, incoming);
 			}
 		});
+
 		return self;
 	};
 
@@ -639,8 +636,7 @@
 
 
 /***/ },
-
-/***/ 5:
+/* 5 */
 /***/ function(module, exports) {
 
 	/*jslint node: true*/
@@ -662,8 +658,7 @@
 
 
 /***/ },
-
-/***/ 6:
+/* 6 */
 /***/ function(module, exports) {
 
 	/*jslint node: true*/
@@ -679,12 +674,11 @@
 		return (last = now);
 	}
 
-	module.exports = window.time = time;
+	module.exports = time;
 
 
 /***/ },
-
-/***/ 7:
+/* 7 */
 /***/ function(module, exports) {
 
 	/*jslint node: true*/
@@ -715,8 +709,7 @@
 
 
 /***/ },
-
-/***/ 8:
+/* 8 */
 /***/ function(module, exports) {
 
 	/*jslint node: true*/
@@ -735,8 +728,7 @@
 
 
 /***/ },
-
-/***/ 9:
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true, nomen: true*/
@@ -815,8 +807,35 @@
 
 
 /***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
 
-/***/ 10:
+	/*jslint node: true*/
+	'use strict';
+
+	var Gun = __webpack_require__(1);
+
+	Gun.production = false;
+	Gun.log = function (str) {
+		var history = Gun.log.history;
+		history[str] = history[str] || [];
+		history[str].push(new Date().getTime());
+		if (!Gun.production) {
+			console.log.apply(console, arguments);
+		}
+	};
+	Gun.log.once = function (str) {
+		if (!Gun.log.history[str]) {
+			Gun.log(str);
+		}
+	};
+	Gun.log.history = {};
+
+	module.exports = Gun;
+
+
+/***/ },
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true, nomen: true*/
@@ -865,12 +884,14 @@
 
 		/* Done! */
 		put: function (val) {
+			var graph, gun = this;
 			if (val instanceof Object) {
-				var tmp = new Graph(val);
+				graph = new Graph(val);
 			}
 			this._.chain.listen(function (v, f, node) {
 				if (val instanceof Object) {
 					node.merge(val);
+					gun.__.graph.merge(graph);
 				} else {
 					node.update(f, val, time());
 				}
@@ -902,7 +923,9 @@
 				}
 				gun.__.graph.get(lex, function (err, node) {
 					var tmp = cb && cb(err, node);
-					gun._.chain.add(node, node.getSoul(), node);
+					if (!err && node) {
+						gun._.chain.add(node, node.getSoul(), node);
+					}
 				});
 			});
 
@@ -910,28 +933,32 @@
 		},
 
 		map: function (cb) {
-			var gun = this.chain(true);
+			var add, gun, root = this;
+			gun = this.chain(true);
+			add = gun._.chain.add.bind(gun._.chain);
 
-			function add(val, field, node) {
-				gun._.chain.add({
-					value: val,
-					field: field,
-					node: node
-				});
-			}
 			this._.chain.listen(function (value, field, node) {
-				if (value instanceof Node) {
-					value.each(add).on('add', add);
-				} else if (value instanceof Object) {
-					gun._.chain.resolve(value);
-				} else {
-					add(value, field, node);
+				if (!(value instanceof Node)) {
+					return;
 				}
+
+				value.each(function (val, field) {
+					root.path(field).val(add);
+				});
 			});
+
 			if (cb instanceof Function) {
 				gun._.chain.listen(cb);
 			}
 			return gun;
+		},
+
+		on: function (cb) {
+			this._.chain.listen(function (value, field, node) {
+				node.each(cb).on('change', cb);
+			});
+
+			return this;
 		},
 
 		val: function (cb) {
@@ -947,40 +974,26 @@
 
 
 /***/ },
-
-/***/ 11:
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true*/
 
 	module.exports = {
-		'localStorage': __webpack_require__(12),
-		'socket.io': __webpack_require__(13)
+		'localStorage': __webpack_require__(13),
+		'socket.io': __webpack_require__(14)
 	};
 
 
 /***/ },
-
-/***/ 12:
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true, nomen: true*/
 	'use strict';
 
 	var Gun = __webpack_require__(1);
-
-	function save(node, soul, opt) {
-		opt = opt || {};
-		if (opt.localStorage === false) {
-			return;
-		}
-		var old, string = localStorage.getItem(soul);
-		if (string) {
-			old = JSON.parse(string);
-			node.merge(old);
-		}
-		localStorage.setItem('gun_' + soul, node);
-	}
+	var Node = __webpack_require__(4);
 
 	Gun.events.on('opt', function (gun, opt) {
 		var prefix, storage = opt.localStorage;
@@ -988,25 +1001,28 @@
 		if (storage === false || typeof localStorage === 'undefined') {
 			return;
 		}
-		gun.__.graph.on('put', function (graph, cb, opt) {
-			graph.each(save);
-			cb(null);
+
+		gun.__.graph.watch(function (value, field, node) {
+			var val, soul = node.getSoul();
+			val = localStorage.getItem(prefix + soul);
+			if (typeof val === 'string') {
+				node = new Node(JSON.parse(val));
+			}
+			localStorage.setItem(prefix + soul, node);
 		});
 
 		gun.__.graph.on('get', function (lex, cb, opt) {
-			var node, soul = prefix + lex['#'];
-			if (opt.localStorage === false) {
-				return;
+			var node, name = prefix + lex['#'];
+			if (opt.localStorage !== false) {
+				node = localStorage.getItem(name);
+				cb(null, node && JSON.parse(node));
 			}
-			node = localStorage.getItem(soul);
-			cb(null, node && JSON.parse(node));
 		});
 	});
 
 
 /***/ },
-
-/***/ 13:
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true, nomen: true*/
@@ -1037,35 +1053,5 @@
 	});
 
 
-/***/ },
-
-/***/ 61:
-/***/ function(module, exports, __webpack_require__) {
-
-	/*jslint node: true*/
-	'use strict';
-
-	var Gun = __webpack_require__(1);
-
-	Gun.production = false;
-	Gun.log = function (str) {
-		var history = Gun.log.history;
-		history[str] = history[str] || [];
-		history[str].push(new Date().getTime());
-		if (!Gun.production) {
-			console.log.apply(console, arguments);
-		}
-	};
-	Gun.log.once = function (str) {
-		if (!Gun.log.history[str]) {
-			Gun.log(str);
-		}
-	};
-	Gun.log.history = {};
-
-	module.exports = Gun;
-
-
 /***/ }
-
-/******/ });
+/******/ ]);

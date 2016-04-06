@@ -2,19 +2,7 @@
 'use strict';
 
 var Gun = require('../');
-
-function save(node, soul, opt) {
-	opt = opt || {};
-	if (opt.localStorage === false) {
-		return;
-	}
-	var old, string = localStorage.getItem(soul);
-	if (string) {
-		old = JSON.parse(string);
-		node.merge(old);
-	}
-	localStorage.setItem('gun_' + soul, node);
-}
+var Node = require('../../Node');
 
 Gun.events.on('opt', function (gun, opt) {
 	var prefix, storage = opt.localStorage;
@@ -22,17 +10,21 @@ Gun.events.on('opt', function (gun, opt) {
 	if (storage === false || typeof localStorage === 'undefined') {
 		return;
 	}
-	gun.__.graph.on('put', function (graph, cb, opt) {
-		graph.each(save);
-		cb(null);
+
+	gun.__.graph.watch(function (value, field, node) {
+		var val, soul = node.getSoul();
+		val = localStorage.getItem(prefix + soul);
+		if (typeof val === 'string') {
+			node = new Node(JSON.parse(val));
+		}
+		localStorage.setItem(prefix + soul, node);
 	});
 
 	gun.__.graph.on('get', function (lex, cb, opt) {
-		var node, soul = prefix + lex['#'];
-		if (opt.localStorage === false) {
-			return;
+		var node, name = prefix + lex['#'];
+		if (opt.localStorage !== false) {
+			node = localStorage.getItem(name);
+			cb(null, node && JSON.parse(node));
 		}
-		node = localStorage.getItem(soul);
-		cb(null, node && JSON.parse(node));
 	});
 });
