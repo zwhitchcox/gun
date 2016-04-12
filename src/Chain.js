@@ -32,8 +32,7 @@ function Chain(gun) {
 	this.resolved = (this.split) ? [] : null;
 }
 
-Chain.prototype = new Emitter();
-var API = Chain.prototype;
+var API = Chain.prototype = new Emitter();
 
 API.listen = function (cb) {
 

@@ -8,7 +8,7 @@ var time = require('./util/time');
 var universe = {};
 
 function Node(obj, soul) {
-	var node, key, from, to, now = time();
+	var copy, node, key, from, to, now = time();
 	soul = soul || (obj && obj._ && obj._['#']) || UID();
 	if (universe[soul]) {
 		node = universe[soul];
@@ -16,56 +16,70 @@ function Node(obj, soul) {
 	}
 	universe[soul] = this;
 	this._events = {};
-	this._ = {
-		'>': {},
-		'#': soul
+	this.raw = {
+		_: {
+			'#': soul,
+			'>': to = {}
+		}
 	};
+	copy = this.copy = {};
+	if (obj instanceof Node) {
+		obj = obj.raw;
+	}
 
-	if (obj && typeof obj === 'object') {
-		obj._ = obj._ || {};
-		obj._['#'] = this._['#'];
-		obj._['>'] = obj._['>'] || {};
-		from = obj._['>'];
-		to = this._['>'];
+	if (obj instanceof Object) {
+		from = (obj._ || {})['>'] || {};
 		for (key in obj) {
-			if (obj.hasOwnProperty(key) && key !== '_' && key !== '_events') {
-				this[key] = obj[key];
-				from[key] = to[key] = from[key] || now;
+			if (obj.hasOwnProperty(key) && key !== '_') {
+				this.raw[key] = obj[key];
+				to[key] = from[key] || now;
 			}
 		}
 	}
+	this.each(function (val, key) {
+		copy[key] = val;
+	});
+	copy._ = {
+		'#': soul
+	};
 }
 
 Node.universe = universe;
 
-Node.prototype = new Emitter();
-
-var API = Node.prototype;
+var API = Node.prototype = new Emitter();
 
 API.constructor = Node;
 
 API.getSoul = function () {
-	return this._['#'];
+	return this.raw._['#'];
+};
+
+API.getRel = function () {
+	return {
+		'#': this.getSoul()
+	};
 };
 
 API.state = function (prop) {
-	return this._['>'][prop] || null;
+	return this.raw._['>'][prop] || -Infinity;
 };
 
 API.each = function (cb) {
-	var key;
-	for (key in this) {
-		if (this.hasOwnProperty(key) && key !== '_' && key !== '_events') {
-			cb(this[key], key, this);
+	var key, raw = this.raw;
+	for (key in raw) {
+		if (raw.hasOwnProperty(key) && key !== '_') {
+			cb(raw[key], key, this);
 		}
 	}
 	return this;
 };
 
 API.update = function (field, value, state) {
-	var type = this.hasOwnProperty(field) ? 'update' : 'add';
-	this[field] = value;
-	this._['>'][field] = state;
+	var type, raw = this.raw;
+	type = raw.hasOwnProperty(field) ? 'update' : 'add';
+	raw[field] = value;
+	raw._['>'][field] = state;
+	this.copy[field] = value;
 	this.emit('change', value, field, this);
 	this.emit(type, value, field, this);
 	return this;
@@ -75,13 +89,22 @@ API.merge = function (node) {
 	if (this === node || !(node instanceof Object)) {
 		return this;
 	}
-	var now, self = this;
+	var state, now, self = this;
 	now = time();
 
+	if (!(node instanceof Node)) {
+		node = {
+			raw: node
+		};
+	}
+
+	state = (node.raw._ && node.raw._['>']);
+
 	this.each.call(node, function (value, name) {
-		var incoming, present, successor;
-		present = self.state(name) || 0;
-		incoming = (node._ && node._['>'] && node._['>'][name]) || now;
+		var incoming, present, fromStr, toStr;
+		present = self.state(name);
+		incoming = (state && state[name]) || now;
+
 		if (present > incoming) {
 			return self.emit('historical', node, name);
 		}
@@ -95,36 +118,24 @@ API.merge = function (node) {
 			return self.update(name, value, incoming);
 		}
 		if (incoming === present) {
-			if (String(self[name]) === String(value)) {
+			toStr = self[name] + '';
+			fromStr = value + '';
+			if (toStr === fromStr) {
 				return 'Equal state and value';
 			}
-			successor = (String(self[name]) > String(value)) ? self[name] : value;
-			self.update(name, successor, incoming);
+			self.update(name, (toStr > fromStr ? self[name] : value), incoming);
 		}
 	});
 
 	return self;
 };
 
-API.primitive = function () {
-	var obj = {};
-	this.each(function (value, field) {
-		obj[field] = value;
-	});
-	obj._ = this._;
-	return (obj);
-};
-
-API.match = function (lex) {
-	var state, value, field, arr = [];
-	field = lex['.'];
-	value = lex['='];
-	state = lex['>'];
-};
-
 API.toJSON = function () {
-	return JSON.stringify(this.primitive());
+	return this.raw;
 };
-API.toString = API.toJSON;
+
+API.toString = function () {
+	return JSON.stringify(this);
+};
 
 module.exports = Node;

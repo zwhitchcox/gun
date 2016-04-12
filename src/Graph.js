@@ -3,9 +3,6 @@
 
 var Emitter = require('eventemitter3');
 var Node = require('./Node');
-var map = require('./util/map');
-var string = require('./util/lex-string');
-var lexers = {};
 
 function flatten(obj, graph) {
 	var key, tmp, node, soul;
@@ -14,7 +11,7 @@ function flatten(obj, graph) {
 			delete obj[key];
 			tmp = flatten(tmp, graph);
 			node = new Node(tmp);
-			soul = node._['#'];
+			soul = node.getSoul();
 			graph[soul] = node;
 			obj[key] = { '#': soul };
 		}
@@ -24,26 +21,26 @@ function flatten(obj, graph) {
 
 function Graph(obj) {
 	this._events = {};
+
 	if (obj instanceof Object) {
 		flatten(obj, this);
 		var node = new Node(obj);
-		this[node._['#']] = node;
+		this[node.getSoul()] = node;
 	}
 }
 
-Graph.prototype = new Emitter();
-
-var API = Graph.prototype;
+var API = Graph.prototype = new Emitter();
 
 API.constructor = Graph;
 
-API.add = function (node) {
+API.add = function (node, soul) {
 	if (!(node instanceof Node)) {
-		node = new Node(node);
+		node = new Node(node, soul);
 	}
-	var soul = node.getSoul();
+	soul = node.getSoul();
 	if (this[soul]) {
-		return this[soul].merge(node);
+		this[soul].merge(node);
+		return this;
 	}
 	this[soul] = node;
 	this.emit('add', node, soul, this);
@@ -74,7 +71,7 @@ API.get = function (lex, cb, opt) {
 	var graph, soul = lex['#'];
 	graph = this;
 	if (!this[soul] && Node.universe[soul]) {
-		this.add(Node.universe[soul], soul);
+		this[soul] = Node.universe[soul];
 	}
 	if (this[soul]) {
 		cb(null, this[soul]);

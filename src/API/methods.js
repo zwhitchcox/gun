@@ -36,13 +36,14 @@ Gun.prototype = {
 
 		gun.__.graph.get(lex, function (err, node) {
 			res = cb && cb(err, node);
-			gun._.chain.add(node, node.getSoul(), node);
+			if (!err && node) {
+				gun._.chain.add(node.copy, node.getSoul(), node);
+			}
 		});
 
 		return gun;
 	},
 
-	/* Done! */
 	put: function (val) {
 		var graph, gun = this;
 		if (val instanceof Object) {
@@ -60,12 +61,8 @@ Gun.prototype = {
 	},
 
 	path: function (str, cb) {
-		var gun = this;
-
-
-		if (!(str instanceof Array)) {
-			str = str.split('.');
-		}
+		var add, gun = this;
+		str = (str instanceof Array) ? str : str.split('.');
 		if (str.length > 1) {
 			str.forEach(function (path) {
 				gun = gun.path(path);
@@ -74,19 +71,15 @@ Gun.prototype = {
 		}
 		str = str[0];
 		gun = gun.chain();
+		add = gun._.chain.add.bind(gun._.chain);
 
 		this._.chain.listen(function (val, field, node) {
 
-			var lex = (val && val[str] instanceof Object && val[str]);
+			var lex = (val && (val[str] instanceof Object) && val[str]);
 			if (!lex) {
-				return gun._.chain.add(val[str], str, node);
+				return add(val[str], str, node);
 			}
-			gun.__.graph.get(lex, function (err, node) {
-				var tmp = cb && cb(err, node);
-				if (!err && node) {
-					gun._.chain.add(node, node.getSoul(), node);
-				}
-			});
+			gun.get(lex, cb).val(add);
 		});
 
 		return gun;
@@ -98,13 +91,13 @@ Gun.prototype = {
 		add = gun._.chain.add.bind(gun._.chain);
 
 		this._.chain.listen(function (value, field, node) {
-			if (!(value instanceof Node)) {
-				return;
+			if (value instanceof Node) {
+				value.each(function (val, field) {
+					root.path(field).val(add);
+				}).on('add', function (val, field) {
+					root.path(field).val(add);
+				});
 			}
-
-			value.each(function (val, field) {
-				root.path(field).val(add);
-			});
 		});
 
 		if (cb instanceof Function) {
@@ -114,8 +107,12 @@ Gun.prototype = {
 	},
 
 	on: function (cb) {
+		function handle(value, field, node) {
+			cb(node, node.getSoul(), node);
+		}
 		this._.chain.listen(function (value, field, node) {
-			node.each(cb).on('change', cb);
+			handle(value, field, node);
+			node.on('change', handle);
 		});
 
 		return this;
@@ -123,7 +120,7 @@ Gun.prototype = {
 
 	val: function (cb) {
 		this._.chain.listen(cb || function (node, field) {
-			console.log(field + ':', node);
+			Gun.log(field + ':', node);
 		});
 
 		return this;

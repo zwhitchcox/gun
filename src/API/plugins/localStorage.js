@@ -3,6 +3,7 @@
 
 var Gun = require('../');
 var Node = require('../../Node');
+var read = {};
 
 Gun.events.on('opt', function (gun, opt) {
 	var prefix, storage = opt.localStorage;
@@ -13,10 +14,13 @@ Gun.events.on('opt', function (gun, opt) {
 
 	gun.__.graph.watch(function (value, field, node) {
 		var val, soul = node.getSoul();
-		val = localStorage.getItem(prefix + soul);
-		if (typeof val === 'string') {
-			node = new Node(JSON.parse(val));
+		if (!read[soul]) {
+			val = localStorage.getItem(prefix + soul);
+			if (typeof val === 'string') {
+				node = new Node(JSON.parse(val));
+			}
 		}
+		read[soul] = true;
 		localStorage.setItem(prefix + soul, node);
 	});
 

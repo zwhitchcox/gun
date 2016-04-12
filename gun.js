@@ -47,7 +47,7 @@
 	/*jslint node: true*/
 	module.exports = {
 		Gun: __webpack_require__(1),
-		Chain: __webpack_require__(9),
+		Chain: __webpack_require__(7),
 		Node: __webpack_require__(4),
 		Graph: __webpack_require__(2),
 		time: __webpack_require__(6)
@@ -66,7 +66,7 @@
 	var Graph = __webpack_require__(2);
 	var Node = __webpack_require__(4);
 	var Emitter = __webpack_require__(3);
-	var Chain = __webpack_require__(9);
+	var Chain = __webpack_require__(7);
 
 	var emitter = new Emitter();
 
@@ -90,9 +90,9 @@
 
 	module.exports = Gun;
 
-	__webpack_require__(10);
+	__webpack_require__(8);
+	__webpack_require__(9);
 	__webpack_require__(11);
-	__webpack_require__(12);
 
 
 /***/ },
@@ -104,9 +104,6 @@
 
 	var Emitter = __webpack_require__(3);
 	var Node = __webpack_require__(4);
-	var map = __webpack_require__(7);
-	var string = __webpack_require__(8);
-	var lexers = {};
 
 	function flatten(obj, graph) {
 		var key, tmp, node, soul;
@@ -115,7 +112,7 @@
 				delete obj[key];
 				tmp = flatten(tmp, graph);
 				node = new Node(tmp);
-				soul = node._['#'];
+				soul = node.getSoul();
 				graph[soul] = node;
 				obj[key] = { '#': soul };
 			}
@@ -125,26 +122,26 @@
 
 	function Graph(obj) {
 		this._events = {};
+
 		if (obj instanceof Object) {
 			flatten(obj, this);
 			var node = new Node(obj);
-			this[node._['#']] = node;
+			this[node.getSoul()] = node;
 		}
 	}
 
-	Graph.prototype = new Emitter();
-
-	var API = Graph.prototype;
+	var API = Graph.prototype = new Emitter();
 
 	API.constructor = Graph;
 
-	API.add = function (node) {
+	API.add = function (node, soul) {
 		if (!(node instanceof Node)) {
-			node = new Node(node);
+			node = new Node(node, soul);
 		}
-		var soul = node.getSoul();
+		soul = node.getSoul();
 		if (this[soul]) {
-			return this[soul].merge(node);
+			this[soul].merge(node);
+			return this;
 		}
 		this[soul] = node;
 		this.emit('add', node, soul, this);
@@ -175,7 +172,7 @@
 		var graph, soul = lex['#'];
 		graph = this;
 		if (!this[soul] && Node.universe[soul]) {
-			this.add(Node.universe[soul], soul);
+			this[soul] = Node.universe[soul];
 		}
 		if (this[soul]) {
 			cb(null, this[soul]);
@@ -513,7 +510,7 @@
 	var universe = {};
 
 	function Node(obj, soul) {
-		var node, key, from, to, now = time();
+		var copy, node, key, from, to, now = time();
 		soul = soul || (obj && obj._ && obj._['#']) || UID();
 		if (universe[soul]) {
 			node = universe[soul];
@@ -521,56 +518,70 @@
 		}
 		universe[soul] = this;
 		this._events = {};
-		this._ = {
-			'>': {},
-			'#': soul
+		this.raw = {
+			_: {
+				'#': soul,
+				'>': to = {}
+			}
 		};
+		copy = this.copy = {};
+		if (obj instanceof Node) {
+			obj = obj.raw;
+		}
 
-		if (obj && typeof obj === 'object') {
-			obj._ = obj._ || {};
-			obj._['#'] = this._['#'];
-			obj._['>'] = obj._['>'] || {};
-			from = obj._['>'];
-			to = this._['>'];
+		if (obj instanceof Object) {
+			from = (obj._ || {})['>'] || {};
 			for (key in obj) {
-				if (obj.hasOwnProperty(key) && key !== '_' && key !== '_events') {
-					this[key] = obj[key];
-					from[key] = to[key] = from[key] || now;
+				if (obj.hasOwnProperty(key) && key !== '_') {
+					this.raw[key] = obj[key];
+					to[key] = from[key] || now;
 				}
 			}
 		}
+		this.each(function (val, key) {
+			copy[key] = val;
+		});
+		copy._ = {
+			'#': soul
+		};
 	}
 
 	Node.universe = universe;
 
-	Node.prototype = new Emitter();
-
-	var API = Node.prototype;
+	var API = Node.prototype = new Emitter();
 
 	API.constructor = Node;
 
 	API.getSoul = function () {
-		return this._['#'];
+		return this.raw._['#'];
+	};
+
+	API.getRel = function () {
+		return {
+			'#': this.getSoul()
+		};
 	};
 
 	API.state = function (prop) {
-		return this._['>'][prop] || null;
+		return this.raw._['>'][prop] || -Infinity;
 	};
 
 	API.each = function (cb) {
-		var key;
-		for (key in this) {
-			if (this.hasOwnProperty(key) && key !== '_' && key !== '_events') {
-				cb(this[key], key, this);
+		var key, raw = this.raw;
+		for (key in raw) {
+			if (raw.hasOwnProperty(key) && key !== '_') {
+				cb(raw[key], key, this);
 			}
 		}
 		return this;
 	};
 
 	API.update = function (field, value, state) {
-		var type = this.hasOwnProperty(field) ? 'update' : 'add';
-		this[field] = value;
-		this._['>'][field] = state;
+		var type, raw = this.raw;
+		type = raw.hasOwnProperty(field) ? 'update' : 'add';
+		raw[field] = value;
+		raw._['>'][field] = state;
+		this.copy[field] = value;
 		this.emit('change', value, field, this);
 		this.emit(type, value, field, this);
 		return this;
@@ -580,13 +591,22 @@
 		if (this === node || !(node instanceof Object)) {
 			return this;
 		}
-		var now, self = this;
+		var state, now, self = this;
 		now = time();
 
+		if (!(node instanceof Node)) {
+			node = {
+				raw: node
+			};
+		}
+
+		state = (node.raw._ && node.raw._['>']);
+
 		this.each.call(node, function (value, name) {
-			var incoming, present, successor;
-			present = self.state(name) || 0;
-			incoming = (node._ && node._['>'] && node._['>'][name]) || now;
+			var incoming, present, fromStr, toStr;
+			present = self.state(name);
+			incoming = (state && state[name]) || now;
+
 			if (present > incoming) {
 				return self.emit('historical', node, name);
 			}
@@ -600,37 +620,25 @@
 				return self.update(name, value, incoming);
 			}
 			if (incoming === present) {
-				if (String(self[name]) === String(value)) {
+				toStr = self[name] + '';
+				fromStr = value + '';
+				if (toStr === fromStr) {
 					return 'Equal state and value';
 				}
-				successor = (String(self[name]) > String(value)) ? self[name] : value;
-				self.update(name, successor, incoming);
+				self.update(name, (toStr > fromStr ? self[name] : value), incoming);
 			}
 		});
 
 		return self;
 	};
 
-	API.primitive = function () {
-		var obj = {};
-		this.each(function (value, field) {
-			obj[field] = value;
-		});
-		obj._ = this._;
-		return (obj);
-	};
-
-	API.match = function (lex) {
-		var state, value, field, arr = [];
-		field = lex['.'];
-		value = lex['='];
-		state = lex['>'];
-	};
-
 	API.toJSON = function () {
-		return JSON.stringify(this.primitive());
+		return this.raw;
 	};
-	API.toString = API.toJSON;
+
+	API.toString = function () {
+		return JSON.stringify(this);
+	};
 
 	module.exports = Node;
 
@@ -679,56 +687,6 @@
 
 /***/ },
 /* 7 */
-/***/ function(module, exports) {
-
-	/*jslint node: true*/
-	'use strict';
-
-	Object.keys = Object.keys || function (obj) {
-		var key, arr = [];
-		for (key in obj) {
-			if (obj.hasOwnProperty(key)) {
-				arr.push(key);
-			}
-		}
-		return arr;
-	};
-
-
-
-	function map(obj, cb) {
-		var i, key, keys = Object.keys(obj);
-		i = keys.length;
-		while (i--) {
-			key = keys[i];
-			cb(obj[key], key, obj);
-		}
-	}
-
-	module.exports = map;
-
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	/*jslint node: true*/
-	'use strict';
-
-	function sort(lex) {
-		var keys = Object.keys(lex).sort().map(function (key) {
-			return [key, lex[key] instanceof Object ? sort(lex[key]) : lex[key]];
-		});
-		return keys;
-	}
-
-	module.exports = function (lex) {
-		return JSON.stringify(sort(lex));
-	};
-
-
-/***/ },
-/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true, nomen: true*/
@@ -765,8 +723,7 @@
 		this.resolved = (this.split) ? [] : null;
 	}
 
-	Chain.prototype = new Emitter();
-	var API = Chain.prototype;
+	var API = Chain.prototype = new Emitter();
 
 	API.listen = function (cb) {
 
@@ -807,7 +764,7 @@
 
 
 /***/ },
-/* 10 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true*/
@@ -817,10 +774,10 @@
 
 	Gun.production = false;
 	Gun.log = function (str) {
-		var history = Gun.log.history;
-		history[str] = history[str] || [];
-		history[str].push(new Date().getTime());
 		if (!Gun.production) {
+			var history = Gun.log.history;
+			history[str] = history[str] || [];
+			history[str].push(new Date().getTime());
 			console.log.apply(console, arguments);
 		}
 	};
@@ -835,7 +792,7 @@
 
 
 /***/ },
-/* 11 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true, nomen: true*/
@@ -845,8 +802,8 @@
 	var Graph = __webpack_require__(2);
 	var Node = __webpack_require__(4);
 	var Emitter = __webpack_require__(3);
-	var map = __webpack_require__(7);
-	var Chain = __webpack_require__(9);
+	var map = __webpack_require__(10);
+	var Chain = __webpack_require__(7);
 	var time = __webpack_require__(6);
 
 	Gun.Node = Node;
@@ -876,13 +833,14 @@
 
 			gun.__.graph.get(lex, function (err, node) {
 				res = cb && cb(err, node);
-				gun._.chain.add(node, node.getSoul(), node);
+				if (!err && node) {
+					gun._.chain.add(node.copy, node.getSoul(), node);
+				}
 			});
 
 			return gun;
 		},
 
-		/* Done! */
 		put: function (val) {
 			var graph, gun = this;
 			if (val instanceof Object) {
@@ -900,12 +858,8 @@
 		},
 
 		path: function (str, cb) {
-			var gun = this;
-
-
-			if (!(str instanceof Array)) {
-				str = str.split('.');
-			}
+			var add, gun = this;
+			str = (str instanceof Array) ? str : str.split('.');
 			if (str.length > 1) {
 				str.forEach(function (path) {
 					gun = gun.path(path);
@@ -914,19 +868,15 @@
 			}
 			str = str[0];
 			gun = gun.chain();
+			add = gun._.chain.add.bind(gun._.chain);
 
 			this._.chain.listen(function (val, field, node) {
 
-				var lex = (val && val[str] instanceof Object && val[str]);
+				var lex = (val && (val[str] instanceof Object) && val[str]);
 				if (!lex) {
-					return gun._.chain.add(val[str], str, node);
+					return add(val[str], str, node);
 				}
-				gun.__.graph.get(lex, function (err, node) {
-					var tmp = cb && cb(err, node);
-					if (!err && node) {
-						gun._.chain.add(node, node.getSoul(), node);
-					}
-				});
+				gun.get(lex, cb).val(add);
 			});
 
 			return gun;
@@ -938,13 +888,13 @@
 			add = gun._.chain.add.bind(gun._.chain);
 
 			this._.chain.listen(function (value, field, node) {
-				if (!(value instanceof Node)) {
-					return;
+				if (value instanceof Node) {
+					value.each(function (val, field) {
+						root.path(field).val(add);
+					}).on('add', function (val, field) {
+						root.path(field).val(add);
+					});
 				}
-
-				value.each(function (val, field) {
-					root.path(field).val(add);
-				});
 			});
 
 			if (cb instanceof Function) {
@@ -954,8 +904,12 @@
 		},
 
 		on: function (cb) {
+			function handle(value, field, node) {
+				cb(node, node.getSoul(), node);
+			}
 			this._.chain.listen(function (value, field, node) {
-				node.each(cb).on('change', cb);
+				handle(value, field, node);
+				node.on('change', handle);
 			});
 
 			return this;
@@ -963,7 +917,7 @@
 
 		val: function (cb) {
 			this._.chain.listen(cb || function (node, field) {
-				console.log(field + ':', node);
+				Gun.log(field + ':', node);
 			});
 
 			return this;
@@ -974,19 +928,50 @@
 
 
 /***/ },
-/* 12 */
+/* 10 */
+/***/ function(module, exports) {
+
+	/*jslint node: true*/
+	'use strict';
+
+	Object.keys = Object.keys || function (obj) {
+		var key, arr = [];
+		for (key in obj) {
+			if (obj.hasOwnProperty(key)) {
+				arr.push(key);
+			}
+		}
+		return arr;
+	};
+
+
+
+	function map(obj, cb) {
+		var i, key, keys = Object.keys(obj);
+		i = keys.length;
+		while (i--) {
+			key = keys[i];
+			cb(obj[key], key, obj);
+		}
+	}
+
+	module.exports = map;
+
+
+/***/ },
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true*/
 
 	module.exports = {
-		'localStorage': __webpack_require__(13),
-		'socket.io': __webpack_require__(14)
+		'localStorage': __webpack_require__(12),
+		'socket.io': __webpack_require__(13)
 	};
 
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true, nomen: true*/
@@ -994,6 +979,7 @@
 
 	var Gun = __webpack_require__(1);
 	var Node = __webpack_require__(4);
+	var read = {};
 
 	Gun.events.on('opt', function (gun, opt) {
 		var prefix, storage = opt.localStorage;
@@ -1004,10 +990,13 @@
 
 		gun.__.graph.watch(function (value, field, node) {
 			var val, soul = node.getSoul();
-			val = localStorage.getItem(prefix + soul);
-			if (typeof val === 'string') {
-				node = new Node(JSON.parse(val));
+			if (!read[soul]) {
+				val = localStorage.getItem(prefix + soul);
+				if (typeof val === 'string') {
+					node = new Node(JSON.parse(val));
+				}
 			}
+			read[soul] = true;
 			localStorage.setItem(prefix + soul, node);
 		});
 
@@ -1022,7 +1011,7 @@
 
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true, nomen: true*/
@@ -1030,7 +1019,7 @@
 
 	//var io = require('socket.io-client');
 	var Gun = __webpack_require__(1);
-	var map = __webpack_require__(7);
+	var map = __webpack_require__(10);
 
 	var peers = {};
 

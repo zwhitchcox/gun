@@ -22,44 +22,46 @@ describe('A node instance', function () {
 			merged: true,
 			success: true
 		});
-		expect(node.merged).toBe(true);
-		expect(node.success).toBe(true);
+		expect(node.raw.merged).toBe(true);
+		expect(node.raw.success).toBe(true);
 	});
 
 	it('should assign state to each new property', function () {
 		expect(node.state('success')).toEqual(jasmine.any(Number));
 	});
 
+	it('should return -Infinity for undefined state', function () {
+		expect(node.state('nothing here')).toBe(-Infinity);
+	});
+
 	it('should emit historical on stale updates', function (done) {
 		var update = new Node({
 			success: 'yep'
-		}).on('historical', done);
-		// node's "success" property is older
-		update.merge(node);
-	});
+		}).on('historical', done).merge(node);
+	}, 50);
 
 	it('should emit deferred on future updates', function (done) {
 		var incoming = new Node();
 		incoming.update('success', false, new Date().getTime() + 10000);
 		node.on('deferred', done).merge(incoming);
-	});
+	}, 50);
 
 	it('should reschedule deferred updates', function (done) {
 		var incoming = new Node();
 		incoming.update('success', 'yep', new Date().getTime() + 50);
 		node.merge(incoming);
-		expect(node.success).not.toBe('yep');
+		expect(node.raw.success).not.toBe('yep');
 		setTimeout(function () {
-			expect(node.success).toBe('yep');
+			expect(node.raw.success).toBe('yep');
 			done();
 		}, 60);
-	});
+	}, 100);
 
 	it('should immediately merge operating state changes', function () {
 		var incoming = new Node({
 			success: 'yep'
 		});
-		expect(node.merge(incoming).success).toBe('yep');
+		expect(node.merge(incoming).raw.success).toBe('yep');
 	});
 
 	it('should emit "change" on any mutation', function (done) {
@@ -67,25 +69,22 @@ describe('A node instance', function () {
 			success: 'yep',
 			newData: true
 		});
-		node.on('change', done);
-		node.merge(incoming);
-	});
+		node.on('change', done).merge(incoming);
+	}, 50);
 
 	it('should emit "add" on new properties', function (done) {
 		var incoming = new Node({
 			newProp: true
 		});
-		node.on('add', done);
-		node.merge(incoming);
-	});
+		node.on('add', done).merge(incoming);
+	}, 50);
 
 	it('should emit "update" existing property updates', function (done) {
 		var incoming = new Node({
 			success: 'yep'
 		});
-		node.on('update', done);
-		node.merge(incoming);
-	});
+		node.on('update', done).merge(incoming);
+	}, 50);
 
 	it('should return the same object when souls match', function () {
 		var node1, node2;
@@ -101,8 +100,8 @@ describe('A node instance', function () {
 		node = new Node({
 			prop2: true
 		}, 'same');
-		expect(node.prop1).toBe(true);
-		expect(node.prop2).toBe(true);
+		expect(node.raw.prop1).toBe(true);
+		expect(node.raw.prop2).toBe(true);
 	});
 
 	it('should respect the _["#"] field', function () {

@@ -5,10 +5,10 @@ var Gun = require('./');
 
 Gun.production = false;
 Gun.log = function (str) {
-	var history = Gun.log.history;
-	history[str] = history[str] || [];
-	history[str].push(new Date().getTime());
 	if (!Gun.production) {
+		var history = Gun.log.history;
+		history[str] = history[str] || [];
+		history[str].push(new Date().getTime());
 		console.log.apply(console, arguments);
 	}
 };

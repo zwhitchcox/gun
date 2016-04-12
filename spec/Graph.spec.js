@@ -8,14 +8,6 @@ var Node = require('../src/Node');
 describe('A graph', function () {
 	var graph, node;
 
-	function length(graph) {
-		var i = 0;
-		graph.each(function () {
-			i += 1;
-		});
-		return i;
-	}
-
 	beforeEach(function () {
 		graph = new Graph();
 	});
@@ -29,7 +21,7 @@ describe('A graph', function () {
 				value: 'success'
 			}
 		});
-		expect(graph.nested.value).toBe('success');
+		expect(graph.nested.raw.value).toBe('success');
 	});
 
 	it('should use the soul as the field name', function () {
@@ -47,7 +39,6 @@ describe('A graph', function () {
 
 	it('should emit "add" when a new node is added', function (done) {
 		node = new Node();
-		graph.on('add', done);
-		graph.add(node);
+		graph.on('add', done).add(node);
 	});
 });
