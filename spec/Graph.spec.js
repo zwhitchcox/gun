@@ -21,20 +21,20 @@ describe('A graph', function () {
 				value: 'success'
 			}
 		});
-		expect(graph.nested.raw.value).toBe('success');
+		expect(graph.nodes.nested.raw.value).toBe('success');
 	});
 
 	it('should use the soul as the field name', function () {
 		node = new Node(null, 'fieldName');
 		graph.add(node);
-		expect(graph.fieldName).toBe(node);
+		expect(graph.nodes.fieldName).toBe(node);
 	});
 
 	it('should turn each flat object into a Node', function () {
 		graph = new Graph({
 			_: { '#': 'nodify' }
 		});
-		expect(graph.nodify).toEqual(jasmine.any(Node));
+		expect(graph.nodes.nodify).toEqual(jasmine.any(Node));
 	});
 
 	it('should emit "add" when a new node is added', function (done) {

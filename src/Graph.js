@@ -21,11 +21,12 @@ function flatten(obj, graph) {
 
 function Graph(obj) {
 	this._events = {};
+	this.nodes = {};
 
 	if (obj instanceof Object) {
-		flatten(obj, this);
+		flatten(obj, this.nodes);
 		var node = new Node(obj);
-		this[node.getSoul()] = node;
+		this.nodes[node.getSoul()] = node;
 	}
 }
 
@@ -34,15 +35,16 @@ var API = Graph.prototype = new Emitter();
 API.constructor = Graph;
 
 API.add = function (node, soul) {
+	var nodes = this.nodes;
 	if (!(node instanceof Node)) {
 		node = new Node(node, soul);
 	}
 	soul = node.getSoul();
-	if (this[soul]) {
-		this[soul].merge(node);
+	if (nodes[soul]) {
+		nodes[soul].merge(node);
 		return this;
 	}
-	this[soul] = node;
+	nodes[soul] = node;
 	this.emit('add', node, soul, this);
 	return this;
 };
@@ -58,23 +60,24 @@ API.merge = function (graph) {
 };
 
 API.each = function (cb) {
-	var soul;
-	for (soul in this) {
-		if (this.hasOwnProperty(soul) && soul !== '_events') {
-			cb(this[soul], soul, this);
+	var soul, nodes = this.nodes;
+	for (soul in nodes) {
+		if (nodes.hasOwnProperty(soul)) {
+			cb(nodes[soul], soul, nodes);
 		}
 	}
 	return this;
 };
 
 API.get = function (lex, cb, opt) {
-	var graph, soul = lex['#'];
+	var graph, node, soul = lex['#'];
+	node = Node.universe[soul];
 	graph = this;
-	if (!this[soul] && Node.universe[soul]) {
-		this[soul] = Node.universe[soul];
-	}
-	if (this[soul]) {
-		cb(null, this[soul]);
+	if (node) {
+		if (!graph[soul]) {
+			graph[soul] = node;
+		}
+		cb(null, node);
 		return this;
 	}
 	graph.emit('get', lex, function (err, val) {
