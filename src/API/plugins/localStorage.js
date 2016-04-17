@@ -2,33 +2,35 @@
 'use strict';
 
 var Gun = require('../');
-var Node = require('../../Node');
 var read = {};
 
-Gun.events.on('opt', function (gun, opt) {
-	var prefix, storage = opt.localStorage;
-	prefix = (storage || {}).prefix || 'gun_';
-	if (storage === false || typeof localStorage === 'undefined') {
-		return;
-	}
-
-	gun.__.graph.watch(function (value, field, node) {
-		var val, soul = node.getSoul();
+function put(scope) {
+	var val, prefix;
+	prefix = scope.gun.__.opt.prefix || scope.opt.prefix || 'gun/';
+	scope.graph.each(function (node, soul) {
 		if (!read[soul]) {
 			val = localStorage.getItem(prefix + soul);
-			if (typeof val === 'string') {
-				node = new Node(JSON.parse(val));
+			if (val) {
+				node.merge(val);
 			}
+			read[soul] = true;
 		}
-		read[soul] = true;
 		localStorage.setItem(prefix + soul, node);
 	});
+}
 
-	gun.__.graph.on('get', function (lex, cb, opt) {
-		var node, name = prefix + lex['#'];
+function get(scope) {
+	var val, prefix;
+	prefix = scope.gun.__.opt.prefix || scope.opt.prefix || 'gun/';
+	val = localStorage.getItem(scope.lex['#']);
+	scope.cb(null, val);
+}
+
+if (typeof localStorage !== 'undefined') {
+	Gun.events.on('opt', function (gun, opt) {
 		if (opt.localStorage !== false) {
-			node = localStorage.getItem(name);
-			cb(null, node && JSON.parse(node));
+			gun.__.on('put', put);
+			gun.__.on('get', get);
 		}
 	});
-});
+}

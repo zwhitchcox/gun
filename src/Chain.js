@@ -2,69 +2,75 @@
 'use strict';
 
 var Emitter = require('eventemitter3');
-var Gun = require('./API');
 
-function scan(gun, cb) {
-	var length = 1;
-	cb(gun);
-	while (gun !== gun.back) {
-		if (cb(gun = gun.back) === true) {
-			break;
-		}
-		length += 1;
+function Chain(scope) {
+
+	if (!scope) {
+		this.children = {};
+		this.parent = this;
+		this.root = true;
+		return this;
 	}
-	return length;
-}
 
-function Chain(gun) {
-	var chain = this;
+	var parent, duplicate, str;
+	str = (this.ID = scope.ID).toString();
+	parent = this.parent = scope.parent || null;
 
-	this.graph = gun.__.graph;
-	this.split = false;
+	duplicate = parent.children[str];
+	if (duplicate) {
+		return duplicate;
+	} else {
+		parent.children[str] = this;
+	}
 
-	scan(gun, function (instance) {
-		if (instance._.split) {
-			return (chain.split = true);
-		}
-		return instance._.root;
-	});
+	this.value = scope.value;
+	this.split = scope.split || false;
+	this.children = {};
 
 	this.resolved = (this.split) ? [] : null;
 }
 
 var API = Chain.prototype = new Emitter();
 
-API.listen = function (cb) {
+API.has = function (ID) {
+	return this.children[ID.toString()] || false;
+};
 
-	function handle(result) {
-		cb(result.value, result.field, result.node);
+API.each = function (cb) {
+	var ID, children = this.children;
+	for (ID in children) {
+		if (children.hasOwnProperty(ID)) {
+			cb(children[ID], ID, this);
+		}
 	}
-
-	if (this.split) {
-		this.resolved.forEach(handle);
-		this.on('add', handle);
-	} else if (this.resolved) {
-		handle(this.resolved);
-	} else {
-		this.once('add', handle);
-	}
-
 	return this;
 };
 
-API.add = function (value, field, node) {
-	var result = {
-		value: value,
-		field: field,
-		node: node
-	};
-
+API.send = function (data) {
 	if (this.split) {
-		this.resolved.push(result);
+		this.resolved.push(data);
 	} else {
-		this.resolved = result;
+		this.resolved = data;
 	}
-	this.emit('add', result);
+	this.emit('resolved', data);
+	return this;
+};
+
+API.watch = function (scope) {
+	var cb = scope.cb;
+	function handle(res) {
+		scope.result = res;
+		cb(scope);
+	}
+
+	if (!this.split && this.resolved) {
+		scope.result = this.resolved;
+		cb(scope);
+	} else if (this.split) {
+		this.on('add', handle).resolved.forEach(handle);
+	} else {
+		this.once('add', handle);
+	}
 
 	return this;
 };

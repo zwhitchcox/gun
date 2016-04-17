@@ -4,7 +4,9 @@ module.exports = {
 	Chain: require('./Chain'),
 	Node: require('./Node'),
 	Graph: require('./Graph'),
-	time: require('./util/time')
+	time: require('./util/time'),
+	Lex: require('./Lex'),
+	UID: require('./util/random')
 };
 
 Object.assign(window, module.exports);

@@ -3,105 +3,75 @@
 
 var Gun = require('./');
 var Graph = require('../Graph');
-var Node = require('../Node');
-var Emitter = require('eventemitter3');
-var map = require('../util/map');
-var Chain = require('../Chain');
 var time = require('../util/time');
+var Chain = require('../Chain');
 
-Gun.Node = Node;
-Gun.Graph = Graph;
-Gun.Chain = Chain;
+function log(val, field) {
+	Gun.log(field + ':', val);
+}
 
 Gun.prototype = {
 	constructor: Gun,
 
-	chain: function (split) {
-		var gun, last = this;
-		gun = new this.constructor(last.__.opt);
-		gun.back = last;
-		gun.__ = last.__;
-		gun._ = {};
-		gun._.split = split || false;
-		gun._.chain = new Chain(gun);
+	chain: function (scope) {
+		var gun, cached, chain = this._.chain;
+		cached = chain.has(scope.ID);
+		if (cached) {
+			return cached.value;
+		}
+		scope.parent = chain;
+		scope.value = gun = new this.constructor(this, scope.split);
+		gun._.chain = new Chain(scope);
 		return gun;
 	},
 
-	/* Done! */
-	get: function (lex, cb) {
-		var res, gun = this.chain();
-		lex = lex instanceof Object ? lex : {
-			'#': lex
-		};
-
-		gun.__.graph.get(lex, function (err, node) {
-			res = cb && cb(err, node);
-			if (!err && node) {
-				gun._.chain.add(node.copy, node.getSoul(), node);
-			}
-		});
-
-		return gun;
-	},
-
-	put: function (val) {
+	put: function (val, cb) {
 		var graph, gun = this;
 		if (val instanceof Object) {
 			graph = new Graph(val);
 		}
-		this._.chain.listen(function (v, f, node) {
-			if (val instanceof Object) {
-				node.merge(val);
-				gun.__.graph.merge(graph);
-			} else {
-				node.update(f, val, time());
+		this._.chain.watch({
+			cb: function (v, f, node) {
+				var graph = new Graph().add(node);
+				if (val instanceof Object) {
+					node.merge(val);
+				} else {
+					node.update(f, val, time());
+				}
+				Gun.put({
+					gun: gun,
+					cb: cb,
+					graph: graph
+				});
 			}
 		});
 		return this;
 	},
 
-	path: function (str, cb) {
-		var add, gun = this;
-		str = (str instanceof Array) ? str : str.split('.');
-		if (str.length > 1) {
-			str.forEach(function (path) {
-				gun = gun.path(path);
-			});
-			return gun;
-		}
-		str = str[0];
-		gun = gun.chain();
-		add = gun._.chain.add.bind(gun._.chain);
-
-		this._.chain.listen(function (val, field, node) {
-
-			var lex = (val && (val[str] instanceof Object) && val[str]);
-			if (!lex) {
-				return add(val[str], str, node);
-			}
-			gun.get(lex, cb).val(add);
-		});
-
-		return gun;
-	},
-
 	map: function (cb) {
-		var add, gun, root = this;
-		gun = this.chain(true);
-		add = gun._.chain.add.bind(gun._.chain);
+		var root, gun = this.chain(true);
+		root = this;
 
-		this._.chain.listen(function (value, field, node) {
-			if (value instanceof Node) {
-				value.each(function (val, field) {
-					root.path(field).val(add);
-				}).on('add', function (val, field) {
-					root.path(field).val(add);
-				});
+		function add(val, prop, node) {
+			gun._.chain.set({
+				value: val,
+				field: prop,
+				node: node
+			});
+		}
+
+		function find(val, prop) {
+			root.path(prop).val(add);
+		}
+
+		this._.chain.watch({
+			cb: function handle(value, field, node) {
+				node.each(find).on('add', find);
 			}
 		});
 
 		if (cb instanceof Function) {
-			gun._.chain.listen(cb);
+			gun._.chain.watch(cb);
 		}
 		return gun;
 	},
@@ -110,17 +80,11 @@ Gun.prototype = {
 		function handle(value, field, node) {
 			cb(node, node.getSoul(), node);
 		}
-		this._.chain.listen(function (value, field, node) {
-			handle(value, field, node);
-			node.on('change', handle);
-		});
-
-		return this;
-	},
-
-	val: function (cb) {
-		this._.chain.listen(cb || function (node, field) {
-			Gun.log(field + ':', node);
+		this._.chain.watch({
+			cb: function (value, field, node) {
+				handle(value, field, node);
+				node.on('change', handle);
+			}
 		});
 
 		return this;
@@ -128,3 +92,4 @@ Gun.prototype = {
 };
 
 module.exports = Gun;
+require('./methods/');

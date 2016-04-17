@@ -7,7 +7,7 @@ var Node = require('./Node');
 function flatten(obj, graph) {
 	var key, tmp, node, soul;
 	for (key in obj) {
-		if (obj.hasOwnProperty(key) && key !== '_events' && key !== '_' && (tmp = obj[key]) instanceof Object) {
+		if (obj.hasOwnProperty(key) && key !== '_' && (tmp = obj[key]) instanceof Object) {
 			delete obj[key];
 			tmp = flatten(tmp, graph);
 			node = new Node(tmp);
@@ -69,35 +69,12 @@ API.each = function (cb) {
 	return this;
 };
 
-API.get = function (lex, cb, opt) {
-	var graph, node, soul = lex['#'];
-	node = Node.universe[soul];
-	graph = this;
-	if (node) {
-		if (!graph[soul]) {
-			graph[soul] = node;
-		}
-		cb(null, node);
-		return this;
-	}
-	graph.emit('get', lex, function (err, val) {
-		if (!err && val && !(val instanceof Node)) {
-			val = new Node(val);
-		}
-		if (!err && val) {
-			graph.add(val);
-		}
-		cb(err, val);
-	}, opt || {});
-
-	return this;
+API.toJSON = function () {
+	return this.nodes;
 };
 
-API.watch = function (cb) {
-	function watch(node) {
-		node.on('change', cb);
-	}
-	return this.each(watch).on('add', watch);
+API.toString = function () {
+	return JSON.stringify(this);
 };
 
 module.exports = Graph;

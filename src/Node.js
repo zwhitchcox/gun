@@ -4,17 +4,19 @@
 var UID = require('./util/random');
 var Emitter = require('eventemitter3');
 var time = require('./util/time');
+var Lex;
 
 var universe = {};
 
 function Node(obj, soul) {
-	var copy, node, key, from, to, now = time();
+	var node, key, from, to, val, now = time();
 	soul = soul || (obj && obj._ && obj._['#']) || UID();
-	if (universe[soul]) {
-		node = universe[soul];
+	node = universe[soul];
+	if (node) {
 		return obj instanceof Object ? node.merge(obj) : node;
 	}
 	universe[soul] = this;
+	this.cp = null;
 	this._events = {};
 	this.raw = {
 		_: {
@@ -22,26 +24,10 @@ function Node(obj, soul) {
 			'>': to = {}
 		}
 	};
-	copy = this.copy = {};
-	if (obj instanceof Node) {
-		obj = obj.raw;
-	}
 
 	if (obj instanceof Object) {
-		from = (obj._ || {})['>'] || {};
-		for (key in obj) {
-			if (obj.hasOwnProperty(key) && key !== '_') {
-				this.raw[key] = obj[key];
-				to[key] = from[key] || now;
-			}
-		}
+		this.merge(obj);
 	}
-	this.each(function (val, key) {
-		copy[key] = val;
-	});
-	copy._ = {
-		'#': soul
-	};
 }
 
 Node.universe = universe;
@@ -58,6 +44,19 @@ API.getRel = function () {
 	return {
 		'#': this.getSoul()
 	};
+};
+
+API.copy = function () {
+	if (!this.cp) {
+		var node = this;
+		node.cp = {
+			_: node.getRel()
+		};
+		node.each(function (val, field) {
+			node.cp[field] = val;
+		});
+	}
+	return this.cp;
 };
 
 API.state = function (prop) {
@@ -77,11 +76,15 @@ API.each = function (cb) {
 API.update = function (field, value, state) {
 	var type, raw = this.raw;
 	type = raw.hasOwnProperty(field) ? 'update' : 'add';
+	if (value instanceof Object) {
+		value = new Lex(value);
+	}
 	raw[field] = value;
 	raw._['>'][field] = state;
-	this.copy[field] = value;
+	this.cp = null;
 	this.emit('change', value, field, this);
 	this.emit(type, value, field, this);
+	this.emit(field, value, field, this);
 	return this;
 };
 
@@ -101,7 +104,7 @@ API.merge = function (node) {
 	state = (node.raw._ && node.raw._['>']);
 
 	this.each.call(node, function (value, name) {
-		var incoming, present, fromStr, toStr;
+		var incoming, present, fromStr, val, toStr;
 		present = self.state(name);
 		incoming = (state && state[name]) || now;
 
@@ -118,8 +121,9 @@ API.merge = function (node) {
 			return self.update(name, value, incoming);
 		}
 		if (incoming === present) {
-			toStr = self[name] + '';
-			fromStr = value + '';
+			val = self[name];
+			toStr = val ? val.toString() : String(val);
+			fromStr = value ? value.toString() : String(value);
 			if (toStr === fromStr) {
 				return 'Equal state and value';
 			}
@@ -138,4 +142,14 @@ API.toString = function () {
 	return JSON.stringify(this);
 };
 
+API.valueOf = function () {
+	var node, num = -Infinity;
+	node = this;
+	this.each(function (val, field) {
+		num = Math.max(num, node.state(field));
+	});
+	return num;
+};
+
 module.exports = Node;
+Lex = require('./Lex');

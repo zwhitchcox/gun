@@ -47,10 +47,12 @@
 	/*jslint node: true*/
 	module.exports = {
 		Gun: __webpack_require__(1),
-		Chain: __webpack_require__(7),
+		Chain: __webpack_require__(8),
 		Node: __webpack_require__(4),
 		Graph: __webpack_require__(2),
-		time: __webpack_require__(6)
+		time: __webpack_require__(6),
+		Lex: __webpack_require__(7),
+		UID: __webpack_require__(5)
 	};
 
 	Object.assign(window, module.exports);
@@ -66,33 +68,76 @@
 	var Graph = __webpack_require__(2);
 	var Node = __webpack_require__(4);
 	var Emitter = __webpack_require__(3);
-	var Chain = __webpack_require__(7);
+	var Chain = __webpack_require__(8);
+	var Lex = __webpack_require__(7);
+	var count = localStorage.getItem('project plea');
 
 	var emitter = new Emitter();
 
-	function Gun(opt) {
+	function noop() {}
+
+	function Gun(opt, split) {
 		if (!(this instanceof Gun)) {
 			return new Gun(opt);
 		}
-		this.back = this;
-		this.__ = {
-			opt: opt || {},
-			graph: new Graph()
-		};
-		this._ = {};
-		this._.chain = new Chain(this);
-		emitter.emit('opt', this, this.__.opt);
+		if (opt instanceof Gun) {
+			this.back = opt;
+			this.__ = opt.__;
+			this._ = {};
+			this._.split = split === undefined ? opt._.split : split;
+		} else {
+			this.back = this;
+			this.__ = new Emitter();
+			this.__.opt = opt || {};
+			this.__.graph = new Graph();
+			this._ = {
+				split: false,
+				chain: new Chain()
+			};
+			emitter.emit('opt', this, this.__.opt);
+		}
 	}
 	Gun.events = emitter;
 
+	Gun.get = function (scope) {
+		if (!(scope.lex instanceof Lex)) {
+			scope.lex = new Lex(scope.lex || {});
+		}
+		var node, soul = scope.lex['#'];
+		node = scope.gun.__.graph[soul] || Node.universe[soul];
+		if (node) {
+			scope.result = node;
+			scope.gun.__.emit('incoming', scope);
+			scope.cb(null, scope);
+			return true;
+		} else {
+			scope.opt = scope.opt || {};
+			scope.gun.__.emit('get', scope);
+		}
+		return false;
+	};
+
+	Gun.put = function (scope) {
+		scope.gun.__.graph.merge(scope.graph);
+		if (!(scope.cb instanceof Function)) {
+			scope.cb = noop;
+		}
+		if (!scope.gun.__.opt.peers) {
+			scope.cb(null, true);
+		}
+		return scope.gun.__.emit('put', scope);
+	};
+
 	Gun.Graph = Graph;
+	Gun.Chain = Chain;
 	Gun.Node = Node;
+	Gun.Lex = Lex;
 
 	module.exports = Gun;
 
-	__webpack_require__(8);
 	__webpack_require__(9);
-	__webpack_require__(11);
+	__webpack_require__(10);
+	__webpack_require__(15);
 
 
 /***/ },
@@ -108,7 +153,7 @@
 	function flatten(obj, graph) {
 		var key, tmp, node, soul;
 		for (key in obj) {
-			if (obj.hasOwnProperty(key) && key !== '_events' && key !== '_' && (tmp = obj[key]) instanceof Object) {
+			if (obj.hasOwnProperty(key) && key !== '_' && (tmp = obj[key]) instanceof Object) {
 				delete obj[key];
 				tmp = flatten(tmp, graph);
 				node = new Node(tmp);
@@ -122,11 +167,12 @@
 
 	function Graph(obj) {
 		this._events = {};
+		this.nodes = {};
 
 		if (obj instanceof Object) {
-			flatten(obj, this);
+			flatten(obj, this.nodes);
 			var node = new Node(obj);
-			this[node.getSoul()] = node;
+			this.nodes[node.getSoul()] = node;
 		}
 	}
 
@@ -135,15 +181,16 @@
 	API.constructor = Graph;
 
 	API.add = function (node, soul) {
+		var nodes = this.nodes;
 		if (!(node instanceof Node)) {
 			node = new Node(node, soul);
 		}
 		soul = node.getSoul();
-		if (this[soul]) {
-			this[soul].merge(node);
+		if (nodes[soul]) {
+			nodes[soul].merge(node);
 			return this;
 		}
-		this[soul] = node;
+		nodes[soul] = node;
 		this.emit('add', node, soul, this);
 		return this;
 	};
@@ -159,43 +206,21 @@
 	};
 
 	API.each = function (cb) {
-		var soul;
-		for (soul in this) {
-			if (this.hasOwnProperty(soul) && soul !== '_events') {
-				cb(this[soul], soul, this);
+		var soul, nodes = this.nodes;
+		for (soul in nodes) {
+			if (nodes.hasOwnProperty(soul)) {
+				cb(nodes[soul], soul, nodes);
 			}
 		}
 		return this;
 	};
 
-	API.get = function (lex, cb, opt) {
-		var graph, soul = lex['#'];
-		graph = this;
-		if (!this[soul] && Node.universe[soul]) {
-			this[soul] = Node.universe[soul];
-		}
-		if (this[soul]) {
-			cb(null, this[soul]);
-			return this;
-		}
-		graph.emit('get', lex, function (err, val) {
-			if (!err && val && !(val instanceof Node)) {
-				val = new Node(val);
-			}
-			if (!err && val) {
-				graph.add(val);
-			}
-			cb(err, val);
-		}, opt || {});
-
-		return this;
+	API.toJSON = function () {
+		return this.nodes;
 	};
 
-	API.watch = function (cb) {
-		function watch(node) {
-			node.on('change', cb);
-		}
-		return this.each(watch).on('add', watch);
+	API.toString = function () {
+		return JSON.stringify(this);
 	};
 
 	module.exports = Graph;
@@ -506,17 +531,19 @@
 	var UID = __webpack_require__(5);
 	var Emitter = __webpack_require__(3);
 	var time = __webpack_require__(6);
+	var Lex;
 
 	var universe = {};
 
 	function Node(obj, soul) {
-		var copy, node, key, from, to, now = time();
+		var node, key, from, to, val, now = time();
 		soul = soul || (obj && obj._ && obj._['#']) || UID();
-		if (universe[soul]) {
-			node = universe[soul];
+		node = universe[soul];
+		if (node) {
 			return obj instanceof Object ? node.merge(obj) : node;
 		}
 		universe[soul] = this;
+		this.cp = null;
 		this._events = {};
 		this.raw = {
 			_: {
@@ -524,26 +551,10 @@
 				'>': to = {}
 			}
 		};
-		copy = this.copy = {};
-		if (obj instanceof Node) {
-			obj = obj.raw;
-		}
 
 		if (obj instanceof Object) {
-			from = (obj._ || {})['>'] || {};
-			for (key in obj) {
-				if (obj.hasOwnProperty(key) && key !== '_') {
-					this.raw[key] = obj[key];
-					to[key] = from[key] || now;
-				}
-			}
+			this.merge(obj);
 		}
-		this.each(function (val, key) {
-			copy[key] = val;
-		});
-		copy._ = {
-			'#': soul
-		};
 	}
 
 	Node.universe = universe;
@@ -560,6 +571,19 @@
 		return {
 			'#': this.getSoul()
 		};
+	};
+
+	API.copy = function () {
+		if (!this.cp) {
+			var node = this;
+			node.cp = {
+				_: node.getRel()
+			};
+			node.each(function (val, field) {
+				node.cp[field] = val;
+			});
+		}
+		return this.cp;
 	};
 
 	API.state = function (prop) {
@@ -579,11 +603,15 @@
 	API.update = function (field, value, state) {
 		var type, raw = this.raw;
 		type = raw.hasOwnProperty(field) ? 'update' : 'add';
+		if (value instanceof Object) {
+			value = new Lex(value);
+		}
 		raw[field] = value;
 		raw._['>'][field] = state;
-		this.copy[field] = value;
+		this.cp = null;
 		this.emit('change', value, field, this);
 		this.emit(type, value, field, this);
+		this.emit(field, value, field, this);
 		return this;
 	};
 
@@ -603,7 +631,7 @@
 		state = (node.raw._ && node.raw._['>']);
 
 		this.each.call(node, function (value, name) {
-			var incoming, present, fromStr, toStr;
+			var incoming, present, fromStr, val, toStr;
 			present = self.state(name);
 			incoming = (state && state[name]) || now;
 
@@ -620,8 +648,9 @@
 				return self.update(name, value, incoming);
 			}
 			if (incoming === present) {
-				toStr = self[name] + '';
-				fromStr = value + '';
+				val = self[name];
+				toStr = val ? val.toString() : String(val);
+				fromStr = value ? value.toString() : String(value);
 				if (toStr === fromStr) {
 					return 'Equal state and value';
 				}
@@ -640,7 +669,17 @@
 		return JSON.stringify(this);
 	};
 
+	API.valueOf = function () {
+		var node, num = -Infinity;
+		node = this;
+		this.each(function (val, field) {
+			num = Math.max(num, node.state(field));
+		});
+		return num;
+	};
+
 	module.exports = Node;
+	Lex = __webpack_require__(7);
 
 
 /***/ },
@@ -689,73 +728,155 @@
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*jslint node: true*/
+	'use strict';
+
+	var Node, API, str = JSON.stringify;
+
+	function Lex(lex) {
+		var type = typeof lex;
+		if (type === 'undefined') {
+			return this;
+		}
+		if (type === 'string') {
+			return new Lex.Partial('#', lex);
+		}
+		if (lex instanceof Node) {
+			return new Lex.Partial('#', lex.getSoul());
+		}
+		this['#'] = lex['#'] || lex.soul;
+		this['.'] = lex['.'] || lex.field;
+		this['='] = lex['='] || lex.value;
+		this['>'] = lex['>'] || lex.state;
+
+		this.ID = null;
+	}
+
+	Lex.prototype = {
+		constructor: Lex,
+
+		toString: function () {
+			if (!this.ID) {
+				var soul, field, value, state;
+				soul = '#' + (this['#'] || '');
+				field = '.' + (this['.'] || '');
+				value = '=' + (this['='] || '');
+				state = '>' + (this['>'] || '');
+				this.ID = soul + field + value + state;
+			}
+			return this.ID;
+		},
+
+		toJSON: function () {
+			return {
+				'#': this['#'],
+				'.': this['.'],
+				'=': this['='],
+				'>': this['>']
+			};
+		}
+	};
+
+	Lex.Partial = function (type, value) {
+		if (value instanceof Lex) {
+			return value;
+		}
+		this[type] = value;
+		this.ID = null;
+		this.type = type;
+	};
+
+	API = Lex.Partial.prototype = new Lex();
+	API.toString = function () {
+		if (!this.ID) {
+			var type, value = this[this.type];
+			type = typeof value;
+			this.ID = this.type + (type === 'string' ? value : str(value));
+		}
+		return this.ID;
+	};
+
+	module.exports = Lex;
+	Node = __webpack_require__(4);
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/*jslint node: true, nomen: true*/
 	'use strict';
 
 	var Emitter = __webpack_require__(3);
-	var Gun = __webpack_require__(1);
 
-	function scan(gun, cb) {
-		var length = 1;
-		cb(gun);
-		while (gun !== gun.back) {
-			if (cb(gun = gun.back) === true) {
-				break;
-			}
-			length += 1;
+	function Chain(scope) {
+
+		if (!scope) {
+			this.children = {};
+			this.parent = this;
+			this.root = true;
+			return this;
 		}
-		return length;
-	}
 
-	function Chain(gun) {
-		var chain = this;
+		var parent, duplicate, str;
+		str = (this.ID = scope.ID).toString();
+		parent = this.parent = scope.parent || null;
 
-		this.graph = gun.__.graph;
-		this.split = false;
+		duplicate = parent.children[str];
+		if (duplicate) {
+			return duplicate;
+		} else {
+			parent.children[str] = this;
+		}
 
-		scan(gun, function (instance) {
-			if (instance._.split) {
-				return (chain.split = true);
-			}
-			return instance._.root;
-		});
+		this.value = scope.value;
+		this.split = scope.split || false;
+		this.children = {};
 
 		this.resolved = (this.split) ? [] : null;
 	}
 
 	var API = Chain.prototype = new Emitter();
 
-	API.listen = function (cb) {
+	API.has = function (ID) {
+		return this.children[ID.toString()] || false;
+	};
 
-		function handle(result) {
-			cb(result.value, result.field, result.node);
+	API.each = function (cb) {
+		var ID, children = this.children;
+		for (ID in children) {
+			if (children.hasOwnProperty(ID)) {
+				cb(children[ID], ID, this);
+			}
 		}
-
-		if (this.split) {
-			this.resolved.forEach(handle);
-			this.on('add', handle);
-		} else if (this.resolved) {
-			handle(this.resolved);
-		} else {
-			this.once('add', handle);
-		}
-
 		return this;
 	};
 
-	API.add = function (value, field, node) {
-		var result = {
-			value: value,
-			field: field,
-			node: node
-		};
-
+	API.send = function (data) {
 		if (this.split) {
-			this.resolved.push(result);
+			this.resolved.push(data);
 		} else {
-			this.resolved = result;
+			this.resolved = data;
 		}
-		this.emit('add', result);
+		this.emit('resolved', data);
+		return this;
+	};
+
+	API.watch = function (scope) {
+		var cb = scope.cb;
+		function handle(res) {
+			scope.result = res;
+			cb(scope);
+		}
+
+		if (!this.split && this.resolved) {
+			scope.result = this.resolved;
+			cb(scope);
+		} else if (this.split) {
+			this.on('add', handle).resolved.forEach(handle);
+		} else {
+			this.once('add', handle);
+		}
 
 		return this;
 	};
@@ -764,7 +885,7 @@
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true*/
@@ -792,7 +913,7 @@
 
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true, nomen: true*/
@@ -800,105 +921,75 @@
 
 	var Gun = __webpack_require__(1);
 	var Graph = __webpack_require__(2);
-	var Node = __webpack_require__(4);
-	var Emitter = __webpack_require__(3);
-	var map = __webpack_require__(10);
-	var Chain = __webpack_require__(7);
 	var time = __webpack_require__(6);
+	var Chain = __webpack_require__(8);
 
-	Gun.Node = Node;
-	Gun.Graph = Graph;
-	Gun.Chain = Chain;
+	function log(val, field) {
+		Gun.log(field + ':', val);
+	}
 
 	Gun.prototype = {
 		constructor: Gun,
 
-		chain: function (split) {
-			var gun, last = this;
-			gun = new this.constructor(last.__.opt);
-			gun.back = last;
-			gun.__ = last.__;
-			gun._ = {};
-			gun._.split = split || false;
-			gun._.chain = new Chain(gun);
+		chain: function (scope) {
+			var gun, cached, chain = this._.chain;
+			cached = chain.has(scope.ID);
+			if (cached) {
+				return cached.value;
+			}
+			scope.parent = chain;
+			scope.value = gun = new this.constructor(this, scope.split);
+			gun._.chain = new Chain(scope);
 			return gun;
 		},
 
-		/* Done! */
-		get: function (lex, cb) {
-			var res, gun = this.chain();
-			lex = lex instanceof Object ? lex : {
-				'#': lex
-			};
-
-			gun.__.graph.get(lex, function (err, node) {
-				res = cb && cb(err, node);
-				if (!err && node) {
-					gun._.chain.add(node.copy, node.getSoul(), node);
-				}
-			});
-
-			return gun;
-		},
-
-		put: function (val) {
+		put: function (val, cb) {
 			var graph, gun = this;
 			if (val instanceof Object) {
 				graph = new Graph(val);
 			}
-			this._.chain.listen(function (v, f, node) {
-				if (val instanceof Object) {
-					node.merge(val);
-					gun.__.graph.merge(graph);
-				} else {
-					node.update(f, val, time());
+			this._.chain.watch({
+				cb: function (v, f, node) {
+					var graph = new Graph().add(node);
+					if (val instanceof Object) {
+						node.merge(val);
+					} else {
+						node.update(f, val, time());
+					}
+					Gun.put({
+						gun: gun,
+						cb: cb,
+						graph: graph
+					});
 				}
 			});
 			return this;
 		},
 
-		path: function (str, cb) {
-			var add, gun = this;
-			str = (str instanceof Array) ? str : str.split('.');
-			if (str.length > 1) {
-				str.forEach(function (path) {
-					gun = gun.path(path);
-				});
-				return gun;
-			}
-			str = str[0];
-			gun = gun.chain();
-			add = gun._.chain.add.bind(gun._.chain);
-
-			this._.chain.listen(function (val, field, node) {
-
-				var lex = (val && (val[str] instanceof Object) && val[str]);
-				if (!lex) {
-					return add(val[str], str, node);
-				}
-				gun.get(lex, cb).val(add);
-			});
-
-			return gun;
-		},
-
 		map: function (cb) {
-			var add, gun, root = this;
-			gun = this.chain(true);
-			add = gun._.chain.add.bind(gun._.chain);
+			var root, gun = this.chain(true);
+			root = this;
 
-			this._.chain.listen(function (value, field, node) {
-				if (value instanceof Node) {
-					value.each(function (val, field) {
-						root.path(field).val(add);
-					}).on('add', function (val, field) {
-						root.path(field).val(add);
-					});
+			function add(val, prop, node) {
+				gun._.chain.set({
+					value: val,
+					field: prop,
+					node: node
+				});
+			}
+
+			function find(val, prop) {
+				root.path(prop).val(add);
+			}
+
+			this._.chain.watch({
+				cb: function handle(value, field, node) {
+					node.each(find).on('add', find);
 				}
 			});
 
 			if (cb instanceof Function) {
-				gun._.chain.listen(cb);
+				gun._.chain.watch(cb);
 			}
 			return gun;
 		},
@@ -907,17 +998,11 @@
 			function handle(value, field, node) {
 				cb(node, node.getSoul(), node);
 			}
-			this._.chain.listen(function (value, field, node) {
-				handle(value, field, node);
-				node.on('change', handle);
-			});
-
-			return this;
-		},
-
-		val: function (cb) {
-			this._.chain.listen(cb || function (node, field) {
-				Gun.log(field + ':', node);
+			this._.chain.watch({
+				cb: function (value, field, node) {
+					handle(value, field, node);
+					node.on('change', handle);
+				}
 			});
 
 			return this;
@@ -925,37 +1010,7 @@
 	};
 
 	module.exports = Gun;
-
-
-/***/ },
-/* 10 */
-/***/ function(module, exports) {
-
-	/*jslint node: true*/
-	'use strict';
-
-	Object.keys = Object.keys || function (obj) {
-		var key, arr = [];
-		for (key in obj) {
-			if (obj.hasOwnProperty(key)) {
-				arr.push(key);
-			}
-		}
-		return arr;
-	};
-
-
-
-	function map(obj, cb) {
-		var i, key, keys = Object.keys(obj);
-		i = keys.length;
-		while (i--) {
-			key = keys[i];
-			cb(obj[key], key, obj);
-		}
-	}
-
-	module.exports = map;
+	__webpack_require__(11);
 
 
 /***/ },
@@ -963,10 +1018,10 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true*/
-
 	module.exports = {
-		'localStorage': __webpack_require__(12),
-		'socket.io': __webpack_require__(13)
+		val: __webpack_require__(12),
+		get: __webpack_require__(13),
+		path: __webpack_require__(14)
 	};
 
 
@@ -978,36 +1033,23 @@
 	'use strict';
 
 	var Gun = __webpack_require__(1);
-	var Node = __webpack_require__(4);
-	var read = {};
 
-	Gun.events.on('opt', function (gun, opt) {
-		var prefix, storage = opt.localStorage;
-		prefix = (storage || {}).prefix || 'gun_';
-		if (storage === false || typeof localStorage === 'undefined') {
-			return;
+	function handle(scope) {
+		var result = scope.result;
+		if (scope.raw) {
+			scope.raw(result.value, result.field, result.node);
+		} else {
+			Gun.log(result.field + ':', result.value);
 		}
+	}
 
-		gun.__.graph.watch(function (value, field, node) {
-			var val, soul = node.getSoul();
-			if (!read[soul]) {
-				val = localStorage.getItem(prefix + soul);
-				if (typeof val === 'string') {
-					node = new Node(JSON.parse(val));
-				}
-			}
-			read[soul] = true;
-			localStorage.setItem(prefix + soul, node);
+	module.exports = Gun.prototype.val = function val(cb) {
+		this._.chain.watch({
+			cb: handle,
+			raw: cb
 		});
-
-		gun.__.graph.on('get', function (lex, cb, opt) {
-			var node, name = prefix + lex['#'];
-			if (opt.localStorage !== false) {
-				node = localStorage.getItem(name);
-				cb(null, node && JSON.parse(node));
-			}
-		});
-	});
+		return this;
+	};
 
 
 /***/ },
@@ -1017,29 +1059,157 @@
 	/*jslint node: true, nomen: true*/
 	'use strict';
 
-	//var io = require('socket.io-client');
 	var Gun = __webpack_require__(1);
-	var map = __webpack_require__(10);
+	var Lex = __webpack_require__(7);
 
-	var peers = {};
+	function add(chain, scope) {
+		var node = scope.result;
+		chain.set({
+			value: node.copy(),
+			field: node.getSoul(),
+			node: node
+		});
+	}
 
-	Gun.events.on('create', function (gun, opt) {
-		if (!opt.peers) {
-			return;
+	function resolve(chain, lex) {
+		Gun.get({
+			chain: chain,
+			any: chain.vars.cb,
+			cb: add
+		});
+	}
+
+	module.exports = Gun.prototype.get = function get(lex, cb) {
+		if (!(lex instanceof Lex)) {
+			lex = new Lex(lex);
 		}
-		map(opt.peers, function (config, url) {
-			peers[url] = peers[url] || io.connect(url);
-		});
+		return this.chain({
+			ID: lex,
+			resolve: resolve,
+			parent: this.__.root,
 
-		gun.__.graph.on('update', function (graph, cb, opt) {
-			if (opt.peers === false) {
-				return;
+			vars: {
+				cb: cb
 			}
-			map(opt.peers, function (config, url) {
-				peers[url].emit(graph, opt);
-			});
 		});
-	});
+	};
+
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*jslint node: true, nomen: true*/
+	'use strict';
+
+	var Gun = __webpack_require__(1);
+	var Lex = __webpack_require__(7);
+
+	function resolve(chain) {
+		var node, field, value, gun;
+		gun = chain.value;
+		node = chain.data.node;
+		field = chain.ID['.'];
+
+		value = node.raw[field];
+		if (value instanceof Lex) {
+			gun.get(value).val(function (value, field, node) {
+				chain.set({
+					value: value,
+					field: field,
+					node: node
+				});
+			});
+		} else {
+			chain.set({
+				value: value,
+				field: field,
+				node: node
+			});
+		}
+	}
+
+	module.exports = Gun.prototype.path = function (arr, cb) {
+		var gun = this;
+
+		// <validation>
+		if (typeof arr === 'string') {
+			arr = arr.split('.');
+		}
+		if (!(arr instanceof Array)) {
+			arr = [arr];
+		}
+		if (arr.length > 1) {
+			arr.forEach(function (path) {
+				gun = gun.path(path);
+			});
+			return gun;
+		}
+		// </validation>
+
+		return this.chain({
+			name: new Lex.Partial('.', arr[0]),
+
+			resolve: resolve,
+			raw: {
+				cb: cb,
+				cached: true
+			}
+		});
+	};
+
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*jslint node: true*/
+
+	module.exports = {
+		'localStorage': __webpack_require__(16)
+	};
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*jslint node: true, nomen: true*/
+	'use strict';
+
+	var Gun = __webpack_require__(1);
+	var read = {};
+
+	function put(scope) {
+		var val, prefix;
+		prefix = scope.gun.__.opt.prefix || scope.opt.prefix || 'gun/';
+		scope.graph.each(function (node, soul) {
+			if (!read[soul]) {
+				val = localStorage.getItem(prefix + soul);
+				if (val) {
+					node.merge(val);
+				}
+				read[soul] = true;
+			}
+			localStorage.setItem(prefix + soul, node);
+		});
+	}
+
+	function get(scope) {
+		var val, prefix;
+		prefix = scope.gun.__.opt.prefix || scope.opt.prefix || 'gun/';
+		val = localStorage.getItem(scope.lex['#']);
+		scope.cb(null, val);
+	}
+
+	if (typeof localStorage !== 'undefined') {
+		Gun.events.on('opt', function (gun, opt) {
+			if (opt.localStorage !== false) {
+				gun.__.on('put', put);
+				gun.__.on('get', get);
+			}
+		});
+	}
 
 
 /***/ }
