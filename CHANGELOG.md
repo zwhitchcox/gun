@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 0.4.0
+
+ - Rebuild for major performance improvements.
+ - Rebuilt internal API
+ 	- removed type-checking utilities.
+	 - added data manipulation tools (Graph, Node, Lex)
+	 - added reactive chain pipeline tooling (Chain).
+ - `.path` no longer attempts to split all input on period delimiters, now only strings.
+
 ## 0.3.7
 
  - Catch localStorage errors.

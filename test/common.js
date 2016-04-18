@@ -156,7 +156,7 @@ describe('Performance', function(){ return; // performance tests
 describe('Gun', function(){
 	var t = {};
 	
-	describe('Utility', function(){
+	xdescribe('Utility', function(){
 		var u;
 		/* // causes logger to no longer log.
 		it('verbose console.log debugging', function(done) {
@@ -504,7 +504,7 @@ describe('Gun', function(){
 		});
 	});
 	
-	describe('ify', function(){
+	xdescribe('ify', function(){
 		var test, gun = Gun();
 		
 		it('null', function(done){
@@ -596,7 +596,7 @@ describe('Gun', function(){
 		expect(test.err.meta).to.be.ok(); // TODO: Fail: this passes, somehow? Fix ify code!
 	});
 	
-	describe('Event Promise Back In Time', function(){ return; // TODO: I think this can be removed entirely now.
+	xdescribe('Event Promise Back In Time', function(){ return; // TODO: I think this can be removed entirely now.
 		/*	
 			var ref = gun.put({field: 'value'}).key('field/value').get('field/value', function(){
 				expect()
@@ -702,7 +702,7 @@ describe('Gun', function(){
 		});
 	});
 	
-	describe('Schedule', function(){
+	xdescribe('Schedule', function(){
 		it('one', function(done){
 			Gun.schedule(Gun.time.is(), function(){
 				expect(true).to.be(true);
@@ -727,7 +727,7 @@ describe('Gun', function(){
 		});
 	});
 	
-	describe('Union', function(){
+	xdescribe('Union', function(){
 		var gun = Gun();
 		
 		it('fail', function(){
@@ -1051,7 +1051,7 @@ describe('Gun', function(){
 		});
 	});
 
-	describe('API', function(){
+	describe.only('API', function(){
 		var gopt = {wire:{put:function(n,cb){cb()},get:function(k,cb){cb()}}};
 		var gun = Gun();
 				
@@ -3798,7 +3798,7 @@ describe('Gun', function(){
 		});
 	});
 	
-	describe('Streams', function(){
+	xdescribe('Streams', function(){
 		var gun = Gun(), g = function(){
 			return Gun({wire: {get: ctx.get}});
 		}, ctx = {gen: 9, extra: 100, network: 2};
