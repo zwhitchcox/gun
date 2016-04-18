@@ -1,19 +1,22 @@
 {
   "name": "gun",
-  "version": "0.3.8",
-  "description": "Graph engine",
-  "main": "index.js",
+  "version": "0.4.0",
+  "description": "Realtime, offline-first, decentralized graph database",
+  "author": "Mark Nadal <Mark@gunDB.io> (http://gunDB.io/)",
+  "license": "(Zlib OR MIT OR Apache-2.0)",
+  "homepage": "http://gun.js.org/",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node examples/http.js 8080",
-    "test": "mocha"
+    "test": "mocha",
+		"build": "webpack --watch"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/amark/gun.git"
   },
   "keywords": [
-	"gun",
-	"gunDB",
+		"gun",
+		"gunDB",
     "graph",
     "document",
     "key",
@@ -32,22 +35,18 @@
     "localstorage",
     "S3"
   ],
-  "author": "Mark Nadal",
-  "license": "(Zlib OR MIT OR Apache-2.0)",
   "bugs": {
     "url": "https://github.com/amark/gun/issues"
   },
-  "homepage": "https://github.com/amark/gun#readme",
   "engines": {
     "node": ">=0.6.6",
     "iojs": ">=0.0.1"
   },
   "dependencies": {
-    "aws-sdk": "~>2.0.0",
-    "formidable": "~>1.0.15",
-    "ws": "~>1.0.1"
+    "eventemitter3": "^1.2.0"
   },
   "devDependencies": {
     "mocha": "~>1.9.0"
-  }
+  },
+  "license": "(Apache-2.0 OR Zlib OR MIT)"
 }

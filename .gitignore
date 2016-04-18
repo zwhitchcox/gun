@@ -1,4 +1,6 @@
-node_modules/*
+node_modules/
+index.html
+benchmark.js
 npm-debug.log
 *data.json
 *.db
