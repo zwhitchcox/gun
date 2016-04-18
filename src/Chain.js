@@ -9,21 +9,23 @@ function Chain(scope) {
 		this.children = {};
 		this.parent = this;
 		this.root = true;
+		this.value = this;
 		return this;
 	}
 
-	var parent, duplicate, str;
-	str = (this.ID = scope.ID).toString();
-	parent = this.parent = scope.parent || null;
+	this.ID = scope.ID;
+	var parent, key, str = scope.ID.toString();
+	parent = this.parent = scope.parent;
 
-	duplicate = parent.children[str];
-	if (duplicate) {
-		return duplicate;
-	} else {
-		parent.children[str] = this;
-	}
+	parent.children[str] = this;
 
+	parent.watch({
+		cb: scope.cbs.resolve
+	});
+	this._events = {};
 	this.value = scope.value;
+	this.vars = scope.vars || {};
+	this.cbs = scope.cbs;
 	this.split = scope.split || false;
 	this.children = {};
 
@@ -46,6 +48,16 @@ API.each = function (cb) {
 	return this;
 };
 
+API.walk = function (cb) {
+	var chain = this;
+	do {
+		if (cb(chain = chain.parent) === true) {
+			break;
+		}
+	} while (!chain.root);
+	return this;
+};
+
 API.send = function (data) {
 	if (this.split) {
 		this.resolved.push(data);
@@ -57,22 +69,28 @@ API.send = function (data) {
 };
 
 API.watch = function (scope) {
-	var cb = scope.cb;
+	var chain, res, cb = scope.cb;
+	chain = this;
 	function handle(res) {
-		scope.result = res;
-		cb(scope);
+		cb(chain, res);
 	}
 
 	if (!this.split && this.resolved) {
-		scope.result = this.resolved;
-		cb(scope);
+		cb(chain, this.resolved);
 	} else if (this.split) {
-		this.on('add', handle).resolved.forEach(handle);
+		this.on('resolved', handle).resolved.forEach(handle);
 	} else {
-		this.once('add', handle);
+		this.once('resolved', handle);
 	}
 
 	return this;
 };
+
+API.resolve = function (arg) {
+	this.cbs.resolve(this, arg);
+	return this;
+};
+
+
 
 module.exports = Chain;

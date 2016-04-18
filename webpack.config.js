@@ -7,11 +7,5 @@ module.exports = {
 	output: {
 		path: __dirname,
 		filename: 'gun.js'
-	},
-	module: {
-		loaders: [{
-			test: /\.json$/,
-			loader: 'json'
-		}]
 	}
 };

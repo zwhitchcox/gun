@@ -46,10 +46,9 @@ Gun.get = function (scope) {
 		scope.gun.__.emit('incoming', scope);
 		scope.cb(null, scope);
 		return true;
-	} else {
-		scope.opt = scope.opt || {};
-		scope.gun.__.emit('get', scope);
 	}
+	scope.opt = scope.opt || {};
+	scope.gun.__.emit('get', scope);
 	return false;
 };
 

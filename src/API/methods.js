@@ -14,15 +14,17 @@ Gun.prototype = {
 	constructor: Gun,
 
 	chain: function (scope) {
-		var gun, cached, chain = this._.chain;
-		cached = chain.has(scope.ID);
-		if (cached) {
-			return cached.value;
+		var gun, chain, Gun, parent = this._.chain;
+		chain = parent.has(scope.ID);
+		Gun = this.constructor;
+
+		if (!chain) {
+			scope.parent = scope.parent || parent;
+			gun = scope.value = new Gun(this, scope.split);
+			chain = gun._.chain = new Chain(scope);
 		}
-		scope.parent = chain;
-		scope.value = gun = new this.constructor(this, scope.split);
-		gun._.chain = new Chain(scope);
-		return gun;
+
+		return chain.value;
 	},
 
 	put: function (val, cb) {

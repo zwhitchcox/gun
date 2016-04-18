@@ -2,6 +2,16 @@
 'use strict';
 
 var Node, API, str = JSON.stringify;
+var mapping = {
+	soul: '#',
+	field: '.',
+	value: '=',
+	state: '>',
+	'#': '#',
+	'.': '.',
+	'=': '=',
+	'>': '>'
+};
 
 function Lex(lex) {
 	var type = typeof lex;
@@ -44,6 +54,16 @@ Lex.prototype = {
 			'=': this['='],
 			'>': this['>']
 		};
+	},
+
+	set: function (field, value) {
+		field = mapping[field];
+		if (this[field] === value) {
+			return this;
+		}
+		this.ID = null;
+		this[field] = value instanceof Object ? str(value) : value;
+		return this;
 	}
 };
 

@@ -110,10 +110,9 @@
 			scope.gun.__.emit('incoming', scope);
 			scope.cb(null, scope);
 			return true;
-		} else {
-			scope.opt = scope.opt || {};
-			scope.gun.__.emit('get', scope);
 		}
+		scope.opt = scope.opt || {};
+		scope.gun.__.emit('get', scope);
 		return false;
 	};
 
@@ -536,9 +535,10 @@
 	var universe = {};
 
 	function Node(obj, soul) {
-		var node, key, from, to, val, now = time();
-		soul = soul || (obj && obj._ && obj._['#']) || UID();
-		node = universe[soul];
+		if (soul === undefined) {
+			soul = (obj && obj._ && obj._['#']) || UID();
+		}
+		var node = universe[soul];
 		if (node) {
 			return obj instanceof Object ? node.merge(obj) : node;
 		}
@@ -548,7 +548,7 @@
 		this.raw = {
 			_: {
 				'#': soul,
-				'>': to = {}
+				'>': {}
 			}
 		};
 
@@ -732,6 +732,16 @@
 	'use strict';
 
 	var Node, API, str = JSON.stringify;
+	var mapping = {
+		soul: '#',
+		field: '.',
+		value: '=',
+		state: '>',
+		'#': '#',
+		'.': '.',
+		'=': '=',
+		'>': '>'
+	};
 
 	function Lex(lex) {
 		var type = typeof lex;
@@ -774,6 +784,16 @@
 				'=': this['='],
 				'>': this['>']
 			};
+		},
+
+		set: function (field, value) {
+			field = mapping[field];
+			if (this[field] === value) {
+				return this;
+			}
+			this.ID = null;
+			this[field] = value instanceof Object ? str(value) : value;
+			return this;
 		}
 	};
 
@@ -815,21 +835,23 @@
 			this.children = {};
 			this.parent = this;
 			this.root = true;
+			this.value = this;
 			return this;
 		}
 
-		var parent, duplicate, str;
-		str = (this.ID = scope.ID).toString();
-		parent = this.parent = scope.parent || null;
+		this.ID = scope.ID;
+		var parent, key, str = scope.ID.toString();
+		parent = this.parent = scope.parent;
 
-		duplicate = parent.children[str];
-		if (duplicate) {
-			return duplicate;
-		} else {
-			parent.children[str] = this;
-		}
+		parent.children[str] = this;
 
+		parent.watch({
+			cb: scope.cbs.resolve
+		});
+		this._events = {};
 		this.value = scope.value;
+		this.vars = scope.vars || {};
+		this.cbs = scope.cbs;
 		this.split = scope.split || false;
 		this.children = {};
 
@@ -852,6 +874,16 @@
 		return this;
 	};
 
+	API.walk = function (cb) {
+		var chain = this;
+		do {
+			if (cb(chain = chain.parent) === true) {
+				break;
+			}
+		} while (!chain.root);
+		return this;
+	};
+
 	API.send = function (data) {
 		if (this.split) {
 			this.resolved.push(data);
@@ -863,23 +895,29 @@
 	};
 
 	API.watch = function (scope) {
-		var cb = scope.cb;
+		var chain, res, cb = scope.cb;
+		chain = this;
 		function handle(res) {
-			scope.result = res;
-			cb(scope);
+			cb(chain, res);
 		}
 
 		if (!this.split && this.resolved) {
-			scope.result = this.resolved;
-			cb(scope);
+			cb(chain, this.resolved);
 		} else if (this.split) {
-			this.on('add', handle).resolved.forEach(handle);
+			this.on('resolved', handle).resolved.forEach(handle);
 		} else {
-			this.once('add', handle);
+			this.once('resolved', handle);
 		}
 
 		return this;
 	};
+
+	API.resolve = function (arg) {
+		this.cbs.resolve(this, arg);
+		return this;
+	};
+
+
 
 	module.exports = Chain;
 
@@ -932,15 +970,17 @@
 		constructor: Gun,
 
 		chain: function (scope) {
-			var gun, cached, chain = this._.chain;
-			cached = chain.has(scope.ID);
-			if (cached) {
-				return cached.value;
+			var gun, chain, Gun, parent = this._.chain;
+			chain = parent.has(scope.ID);
+			Gun = this.constructor;
+
+			if (!chain) {
+				scope.parent = scope.parent || parent;
+				gun = scope.value = new Gun(this, scope.split);
+				chain = gun._.chain = new Chain(scope);
 			}
-			scope.parent = chain;
-			scope.value = gun = new this.constructor(this, scope.split);
-			gun._.chain = new Chain(scope);
-			return gun;
+
+			return chain.value;
 		},
 
 		put: function (val, cb) {

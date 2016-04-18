@@ -9,9 +9,10 @@ var Lex;
 var universe = {};
 
 function Node(obj, soul) {
-	var node, key, from, to, val, now = time();
-	soul = soul || (obj && obj._ && obj._['#']) || UID();
-	node = universe[soul];
+	if (soul === undefined) {
+		soul = (obj && obj._ && obj._['#']) || UID();
+	}
+	var node = universe[soul];
 	if (node) {
 		return obj instanceof Object ? node.merge(obj) : node;
 	}
@@ -21,7 +22,7 @@ function Node(obj, soul) {
 	this.raw = {
 		_: {
 			'#': soul,
-			'>': to = {}
+			'>': {}
 		}
 	};
 
