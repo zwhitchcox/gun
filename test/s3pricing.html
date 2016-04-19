@@ -1,64 +1,88 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	</head>
-	<body>
-		<style>
-			.table li {
-				float: left;
-				min-width: 200px;
-				max-width: 400px;
+
+<head>
+	<title>S3 Price Calculator</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta charset="utf-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+</head>
+
+<body>
+	<style>
+		body {
+			margin: 0;
+			font-family: sans-serif;
+			font-size: 120%;
+			color: white;
+			background-color: #323232;
+		}
+		.input {
+			padding: 0.5em;
+			background-color: #4d79d8;
+			color: white;
+			font-size: 130%;
+			border-bottom: 0.1em solid #2d59b8;
+		}
+		.input > div {
+			padding: 0.5em 0;
+		}
+		footer {
+			padding: 10% 0;
+			font-size: 130%;
+			text-align: center;
+		}
+	</style>
+
+	<div class="input">
+		<div>
+			<label>
+				Batch "put" requests in groups of
+				<input type="number" value="15" id="persists">
+				seconds,
+			</label>
+		</div>
+
+		<div>
+			<label>
+				Each payload containing
+				<input type="number" value="100" id="objects">
+				objects.
+			</label>
+		</div>
+
+		<div>
+			Cost:
+			<span id="result"></span>
+			per month.
+		</div>
+	</div>
+
+	<footer>
+		This page is for throughput calculation, and assumes continuous load non-stop.
+	</footer>
+
+	<script>
+		$(function () {
+			var persists, objects, result, month = 2629743.83;
+			persists = $('#persists');
+			objects = $('#objects');
+			result = $('#result');
+
+			function recalc() {
+				var saved, data, total;
+				data = parseFloat(objects.val());
+				saved = parseFloat(persists.val());
+				total = ((month / saved) * data / 1000) * 0.005;
+				return result.text('$' + total.toFixed(2));
 			}
-			ul, li {
-				list-style: none;
-			}
-			.clear {
-				clear: both;
-			}
-			.none {
-				display: none;
-			}
-		</style>
-		<ul>
-			<li><ul class="table none">
-				<li>Seconds in month:</li>
-				<li><input type="number" value="2629743.83" id="sim"></li>
-			</ul></li>
-			<li class="clear"></li>
-			<li><ul class="table">
-				<li>Persist every seconds:</li>
-				<li><input type="number" value="15" id="se"></li>
-			</ul></li>
-			<li class="clear"></li>
-			<li><ul class="table">
-				<li>Over how many objects:</li>
-				<li><input type="number" value="100" id="o"></li>
-			</ul></li>
-			<li class="clear"></li>
-			<li><ul class="table">
-				<li>Cost $:</li>
-				<li><input type="number" value="" readonly id="r"></li>
-			</ul></li>
-		</ul>
-		<br>
-		<p>
-			This page is for throughput calculation, it assumes continuous load non-stop.
-		</p>
-		<script>
-			$(function(){
-				var sim = $('#sim')
-				,	se = $('#se')
-				,	o = $('#o')
-				,	r = $('#r')
-				,	n = function(n){ return parseFloat(n) }
-				$(document).on('keyup', function(){
-					r.val(
-						((( n(sim.val()) / n(se.val()) ) * n(o.val()) / 1000) * 0.005 ).toFixed(2)
-					);
-				})
-			})
-		</script>
-	</body>
+
+			persists.change(recalc);
+			objects.change(recalc);
+
+			recalc();
+		});
+	</script>
+</body>
+
 </html>
