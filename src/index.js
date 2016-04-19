@@ -1,6 +1,8 @@
 /*jslint node: true*/
-module.exports = {
-	Gun: require('./API'),
+
+var Gun = require('./API');
+var globals = {
+	Gun: Gun,
 	Chain: require('./Chain'),
 	Node: require('./Node'),
 	Graph: require('./Graph'),
@@ -9,4 +11,8 @@ module.exports = {
 	UID: require('./util/random')
 };
 
-Object.assign(window, module.exports);
+if (typeof window !== 'undefined' && window) {
+	Object.assign(window, globals);
+}
+
+module.exports = Gun;

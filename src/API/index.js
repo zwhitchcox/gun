@@ -6,7 +6,6 @@ var Node = require('../Node');
 var Emitter = require('eventemitter3');
 var Chain = require('../Chain');
 var Lex = require('../Lex');
-var count = localStorage.getItem('project plea');
 
 var emitter = new Emitter();
 

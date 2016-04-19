@@ -2,7 +2,7 @@
 	root = env.window? env.window : root;
 	env.window && root.localStorage && root.localStorage.clear();
 	//root.Gun = root.Gun || require('../gun');
-	root.Gun = root.Gun || require('../gun');
+	root.Gun = root.Gun || require('../src/');
 }(this));
 //Gun.log.squelch = true;
 var gleak = {globals: {}, check: function(){ // via tobyho

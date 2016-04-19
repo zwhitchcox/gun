@@ -14,6 +14,12 @@
     "type": "git",
     "url": "git+https://github.com/amark/gun.git"
   },
+  "dependencies": {
+    "eventemitter3": "^1.2.0"
+  },
+  "devDependencies": {
+    "mocha": "~>1.9.0"
+  },
   "keywords": [
 		"gun",
 		"gunDB",
@@ -41,12 +47,6 @@
   "engines": {
     "node": ">=0.6.6",
     "iojs": ">=0.0.1"
-  },
-  "dependencies": {
-    "eventemitter3": "^1.2.0"
-  },
-  "devDependencies": {
-    "mocha": "~>1.9.0"
   },
   "license": "(Apache-2.0 OR Zlib OR MIT)"
 }

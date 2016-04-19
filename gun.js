@@ -45,8 +45,10 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jslint node: true*/
-	module.exports = {
-		Gun: __webpack_require__(1),
+
+	var Gun = __webpack_require__(1);
+	var globals = {
+		Gun: Gun,
 		Chain: __webpack_require__(8),
 		Node: __webpack_require__(4),
 		Graph: __webpack_require__(2),
@@ -55,7 +57,11 @@
 		UID: __webpack_require__(5)
 	};
 
-	Object.assign(window, module.exports);
+	if (typeof window !== 'undefined' && window) {
+		Object.assign(window, globals);
+	}
+
+	module.exports = Gun;
 
 
 /***/ },
@@ -70,7 +76,6 @@
 	var Emitter = __webpack_require__(3);
 	var Chain = __webpack_require__(8);
 	var Lex = __webpack_require__(7);
-	var count = localStorage.getItem('project plea');
 
 	var emitter = new Emitter();
 

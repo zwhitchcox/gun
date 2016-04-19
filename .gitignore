@@ -1,9 +1,7 @@
 node_modules/
-index.html
+.DS_Store
 benchmark.js
 npm-debug.log
 *data.json
 *.db
-.idea/
 *.bak
-*.new
