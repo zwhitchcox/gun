@@ -674,14 +674,6 @@
 		return JSON.stringify(this);
 	};
 
-	API.valueOf = function () {
-		var node, num = -Infinity;
-		node = this;
-		this.each(function (val, field) {
-			num = Math.max(num, node.state(field));
-		});
-		return num;
-	};
 
 	module.exports = Node;
 	Lex = __webpack_require__(7);

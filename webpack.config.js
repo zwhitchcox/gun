@@ -2,10 +2,9 @@
 var path = require('path');
 
 module.exports = {
-	context: path.join(__dirname, 'src'),
-	entry: './index.js',
+	context: path.join(__dirname),
+	entry: './src/index.js',
 	output: {
-		path: __dirname,
 		filename: 'gun.js'
 	}
 };

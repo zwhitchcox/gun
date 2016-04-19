@@ -3,7 +3,7 @@
 		<title>GUN Tests</title>
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="./mocha.css" />
-		<script src="json2.js"></script>
+		<script src="json2.js"></script> <!-- include in build -->
 		<script src="mocha.js"></script>
 		<script>
 			mocha.setup({
@@ -13,12 +13,10 @@
 		</script>
 		<script src="expect.js"></script>
 		<script src="../gun.js"></script>
-		<script src="common.js"></script>
+<!--		<script src="common.js"></script>-->
+		<script src="tests.js"></script>
 	</head>
 	<body onload="mocha.run()">
-		<h1>GUN Tests</h1>
-		<strong>Warning:</strong>
-		you cannot run these tests in the background, this tab must be in active focus.
 		<div id="debug"></div>
 		<div id="mocha"></div>
 	</body>

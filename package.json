@@ -3,12 +3,13 @@
   "version": "0.4.0",
   "description": "Realtime, offline-first, decentralized graph database",
   "author": "Mark Nadal <Mark@gunDB.io> (http://gunDB.io/)",
-  "license": "(Zlib OR MIT OR Apache-2.0)",
+  "license": "(Apache-2.0 OR Zlib OR MIT)",
   "homepage": "http://gun.js.org/",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha",
-		"build": "webpack --watch"
+		"build-tests": "webpack --watch test/index.js --output-filename test/tests.js",
+    "test": "mocha test/index.js",
+    "build": "webpack --watch"
   },
   "repository": {
     "type": "git",
@@ -18,11 +19,11 @@
     "eventemitter3": "^1.2.0"
   },
   "devDependencies": {
-    "mocha": "~>1.9.0"
+    "mocha": "^2.4.5"
   },
   "keywords": [
-		"gun",
-		"gunDB",
+    "gun",
+    "gunDB",
     "graph",
     "document",
     "key",
@@ -47,6 +48,5 @@
   "engines": {
     "node": ">=0.6.6",
     "iojs": ">=0.0.1"
-  },
-  "license": "(Apache-2.0 OR Zlib OR MIT)"
+  }
 }

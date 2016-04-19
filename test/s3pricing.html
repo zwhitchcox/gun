@@ -17,6 +17,7 @@
 			color: white;
 			background-color: #323232;
 		}
+
 		.input {
 			padding: 0.5em;
 			background-color: #4d79d8;
@@ -24,9 +25,11 @@
 			font-size: 130%;
 			border-bottom: 0.1em solid #2d59b8;
 		}
+
 		.input > div {
 			padding: 0.5em 0;
 		}
+
 		footer {
 			padding: 10% 0;
 			font-size: 130%;
@@ -38,23 +41,20 @@
 		<div>
 			<label>
 				Batch "put" requests in groups of
-				<input type="number" value="15" id="persists">
-				seconds,
+				<input type="number" value="15" id="persists"> seconds,
 			</label>
 		</div>
 
 		<div>
 			<label>
 				Each payload containing
-				<input type="number" value="100" id="objects">
-				objects.
+				<input type="number" value="100" id="objects"> objects.
 			</label>
 		</div>
 
 		<div>
 			Cost:
-			<span id="result"></span>
-			per month.
+			<span id="result"></span> per month.
 		</div>
 	</div>
 
