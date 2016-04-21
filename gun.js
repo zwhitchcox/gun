@@ -765,10 +765,14 @@
 		toString: function () {
 			if (!this.ID) {
 				var soul, field, value, state;
-				soul = '#' + (this['#'] || '');
-				field = '.' + (this['.'] || '');
-				value = '=' + (this['='] || '');
-				state = '>' + (this['>'] || '');
+				soul = this['#'] instanceof Object ? str(this['#']) : this['#'];
+				soul = this['.'] instanceof Object ? str(this['.']) : this['.'];
+				soul = this['='] instanceof Object ? str(this['=']) : this['='];
+				soul = this['>'] instanceof Object ? str(this['>']) : this['>'];
+				soul = '#' + (soul || '');
+				field = '.' + (field || '');
+				value = '=' + (value || '');
+				state = '>' + (states || '');
 				this.ID = soul + field + value + state;
 			}
 			return this.ID;
