@@ -6,7 +6,7 @@ Save data into gun, syncing it with your connected peers.
 
 It has three parameters, and only the first is required:
 
- 1. the `data` to save
+ 1. `data` to save
  2. an optional `callback`, invoked on each acknowledgment
 
 `gun.get('key').put({hello: "world"}, function(ack){})`
