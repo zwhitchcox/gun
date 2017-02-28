@@ -1,6 +1,6 @@
 # gun.on(callback, options)
 
-{% video %}https://www.youtube.com/watch?v=UDZGVYLNLAU{% endvideo %}
+<a href="https://youtu.be/SEneRvDQysE" title="GUN on"><img src="http://img.youtube.com/vi/SEneRvDQysE/0.jpg" width="425px"></a><br>
 
 Subscribe to updates and changes on a node or property in realtime.
 

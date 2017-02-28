@@ -1,6 +1,6 @@
 # gun.val(callback, options)
 
-{% video %}https://www.youtube.com/watch?v=k-CkP43-uJo{% endvideo%}
+<a href="https://youtu.be/k-CkP43-uJo" title="GUN val"><img src="http://img.youtube.com/vi/k-CkP43-uJo/0.jpg" width="425px"></a><br>
 
 Get the current data without subscribing to updates.
 

@@ -1,12 +1,12 @@
 # gun.put(data, callback)
 
-{% video %}www.youtube.com/watch?v=QLg-Z-y5sVo{% endvideo %}
+<a href="https://youtu.be/QLg-Z-y5sVo" title="GUN put"><img src="http://img.youtube.com/vi/QLg-Z-y5sVo/0.jpg" width="425px"></a><br>
 
 Save data into gun, syncing it with your connected peers.
 
 It has three parameters, and only the first is required:
 
- 1. `data` to save
+ 1. the `data` to save
  2. an optional `callback`, invoked on each acknowledgment
 
 `gun.get('key').put({hello: "world"}, function(ack){})`
