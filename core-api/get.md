@@ -11,7 +11,7 @@ It takes three parameters:
 
 `gun.get('key').get('property', function(ack){})`
 
-You will usually be using [gun.on](#on) or [gun.val](#val) to actually retrieve your data, not this `callback` (it is intended for more low level control, for module and extensions).
+You will usually be using [gun.on](../api/on.md) or [gun.val](../api/val.md) to actually retrieve your data, not this `callback` (it is intended for more low level control, for module and extensions).
 
 ## Key
 The `key` is the ID or property name of the data that you saved from earlier (or that will be saved later).
@@ -31,7 +31,7 @@ gun.get('key').on(function(data, key){
  - `ack.put`, the raw data.
  - `ack.get`, the key, ID, or property name of the data.
 
-The callback is a listener for read errors, not found, and updates. It may be called multiple times for a single request, since gun uses a reactive streaming architecture. Generally, you'll find [`.not`](#not), [`.on`](#on), and [`.val`](#val) as more convenient for every day use. Skip to those!
+The callback is a listener for read errors, not found, and updates. It may be called multiple times for a single request, since gun uses a reactive streaming architecture. Generally, you'll find [`.not`](../api/not.md), [`.on`](../api/on.md), and [`.val`](../api/val.md) as more convenient for every day use. Skip to those!
 
 ```javascript
 gun.get(key, function(ack){
@@ -64,7 +64,7 @@ gun.get(key, function(ack){
 ## Chain context
 Chaining multiple `get`s together changes the context of the chain, allowing you to access, traverse, and navigate a graph, node, table, or document.
 
-> Note: For users upgrading versions, prior to v0.5.x `get` used to always return a context from the absolute root of the database. If you want to go back to the root, either save a reference `var root = Gun();` or now use [`.back(-1)`](#back).
+> Note: For users upgrading versions, prior to v0.5.x `get` used to always return a context from the absolute root of the database. If you want to go back to the root, either save a reference `var root = Gun();` or now use [`.back(-1)`](back.md).
 
 ```javascript
 gun.get('user').get('alice') /* same context as */ gun.get('users').path('alice')

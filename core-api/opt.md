@@ -2,7 +2,7 @@
 
 Change the configuration of the gun database instance.
 
-The `options` argument is the same object you pass to the [constructor](#Gun). The `options`'s properties replace those in the instance's configuration but `options.peers` are **added** to peers known to the gun instance.
+The `options` argument is the same object you pass to the [constructor](constructor.md). The `options`'s properties replace those in the instance's configuration but `options.peers` are **added** to peers known to the gun instance.
 
 ## Examples
 Create the gun instance.

@@ -7,7 +7,7 @@ If you need to know whether a property or key exists, you can check with `.not`.
 > **Warning:** `.not` has no guarantees, since data could theoretically exist on an unrelated peer that we have no knowledge of. If you only have one server, and data is synced through it, then you have a pretty reasonable assurance that a `not` found means that the data doesn't exist yet. Just be mindful of how you use it.
 
 ## Callback(key)
-If there's reason to believe the data doesn't exist, the callback will be invoked. This can be used as a check to prevent implicitly writing data (as described in [`.put`](#put)).
+If there's reason to believe the data doesn't exist, the callback will be invoked. This can be used as a check to prevent implicitly writing data (as described in [`.put`](../core-api/put)).
 
 ### Key
 The name of the property or key that could not be found.

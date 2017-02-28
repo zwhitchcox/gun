@@ -1,5 +1,7 @@
 # How Writes Are Handled
 
+## Partials
+
 Partials are a really important concept for more than just their convenience. There is actually a lot of math and concurrency benefits to them, but we will not explore that here. Instead, we will go over how it practically impacts your life and makes things easier.
 
 To illustrate, take the example:

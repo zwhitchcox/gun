@@ -635,7 +635,7 @@
 <li><code>callback</code></li>
 </ul>
 <p><code>gun.get(&apos;key&apos;).get(&apos;property&apos;, function(ack){})</code></p>
-<p>You will usually be using <a href="#on">gun.on</a> or <a href="#val">gun.val</a> to actually retrieve your data, not this <code>callback</code> (it is intended for more low level control, for module and extensions).</p>
+<p>You will usually be using <a href="../api/on.html">gun.on</a> or <a href="../api/val.html">gun.val</a> to actually retrieve your data, not this <code>callback</code> (it is intended for more low level control, for module and extensions).</p>
 <h2 id="key">Key</h2>
 <p>The <code>key</code> is the ID or property name of the data that you saved from earlier (or that will be saved later).</p>
 <blockquote>
@@ -652,7 +652,7 @@ gun.get(<span class="hljs-string">&apos;key&apos;</span>).on(<span class="hljs-f
 <li><code>ack.put</code>, the raw data.</li>
 <li><code>ack.get</code>, the key, ID, or property name of the data.</li>
 </ul>
-<p>The callback is a listener for read errors, not found, and updates. It may be called multiple times for a single request, since gun uses a reactive streaming architecture. Generally, you&apos;ll find <a href="#not"><code>.not</code></a>, <a href="#on"><code>.on</code></a>, and <a href="#val"><code>.val</code></a> as more convenient for every day use. Skip to those!</p>
+<p>The callback is a listener for read errors, not found, and updates. It may be called multiple times for a single request, since gun uses a reactive streaming architecture. Generally, you&apos;ll find <a href="../api/not.html"><code>.not</code></a>, <a href="../api/on.html"><code>.on</code></a>, and <a href="../api/val.html"><code>.val</code></a> as more convenient for every day use. Skip to those!</p>
 <pre><code class="lang-javascript">gun.get(key, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">ack</span>)</span>{
   <span class="hljs-comment">// called many times</span>
 })
@@ -677,7 +677,7 @@ gun.get(<span class="hljs-string">&apos;users&apos;</span>).map().on(ui.show.use
 <h2 id="chain-context">Chain context</h2>
 <p>Chaining multiple <code>get</code>s together changes the context of the chain, allowing you to access, traverse, and navigate a graph, node, table, or document.</p>
 <blockquote>
-<p>Note: For users upgrading versions, prior to v0.5.x <code>get</code> used to always return a context from the absolute root of the database. If you want to go back to the root, either save a reference <code>var root = Gun();</code> or now use <a href="#back"><code>.back(-1)</code></a>.</p>
+<p>Note: For users upgrading versions, prior to v0.5.x <code>get</code> used to always return a context from the absolute root of the database. If you want to go back to the root, either save a reference <code>var root = Gun();</code> or now use <a href="back.html"><code>.back(-1)</code></a>.</p>
 </blockquote>
 <pre><code class="lang-javascript">gun.get(<span class="hljs-string">&apos;user&apos;</span>).get(<span class="hljs-string">&apos;alice&apos;</span>) <span class="hljs-comment">/* same context as */</span> gun.get(<span class="hljs-string">&apos;users&apos;</span>).path(<span class="hljs-string">&apos;alice&apos;</span>)
 </code></pre>
@@ -726,7 +726,7 @@ gun.get(<span class="hljs-string">&apos;users&apos;</span>).map().on(ui.show.use
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"gun.get","level":"1.4.3","depth":2,"next":{"title":"gun.back","level":"1.4.4","depth":2,"path":"core-api/back.md","ref":"core-api/back.md","articles":[]},"previous":{"title":"gun.put","level":"1.4.2","depth":2,"path":"core-api/put.md","ref":"core-api/put.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","github","video2"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/gundb/gun"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"video2":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/zwhitchcox/gun/edit/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"GunDb","gitbook":"3.2.2"},"file":{"path":"core-api/get.md","mtime":"2017-02-28T21:06:31.712Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-28T21:09:09.359Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"gun.get","level":"1.4.3","depth":2,"next":{"title":"gun.back","level":"1.4.4","depth":2,"path":"core-api/back.md","ref":"core-api/back.md","articles":[]},"previous":{"title":"gun.put","level":"1.4.2","depth":2,"path":"core-api/put.md","ref":"core-api/put.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","github","video2"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/gundb/gun"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"video2":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/zwhitchcox/gun/edit/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"GunDb","gitbook":"3.2.2"},"file":{"path":"core-api/get.md","mtime":"2017-02-28T21:14:27.873Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-28T21:19:56.807Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

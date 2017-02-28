@@ -18,8 +18,8 @@ You do not need to re-save the entire object every time, gun will automatically 
 `.put` restricts the input to a specific subset:
 
  - `objects`:
-   [partial](Partials-and-Circular-References-(v0.2.x)),
-   [circular](Partials-and-Circular-References-(v0.2.x)#circular-references), and nested
+   [partial](../more-about-gun/how-writes-are-handled.md#partials),
+   [circular](../more-about-gun/how-writes-are-handled.md#circular-references), and nested
  - `strings`
  - `numbers`
  - `booleans`
@@ -27,7 +27,7 @@ You do not need to re-save the entire object every time, gun will automatically 
 
 Other values, like `undefined`, `NaN`, `Infinity`, `arrays`, will be rejected.
 
-> Traditional arrays are dangerous in real-time apps. Use [gun.set](#set) instead.
+> Traditional arrays are dangerous in real-time apps. Use [gun.set](../api/set) instead.
 
 > **Note:** when using `.put`, if any part of the chain does not exist yet, it will implicitly create it as an empty object.
 ```javascript

@@ -53,7 +53,7 @@ Navigating to a property
 */
 gun.get('user').path('name')
 ```
-Once you've focused on the `name` property, you can chain other methods like [`.put`](#put) or [`.on`](#on) to interact with it.
+Once you've focused on the `name` property, you can chain other methods like [`.put`](../core-api/put) or [`.on`](on) to interact with it.
 
 Moving through multiple properties
 ```javascript
