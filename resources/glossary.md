@@ -6,10 +6,10 @@ Gun borrows some terms from graph theory and mesh networking, then defines some 
 An object within a graph. It can contain primitive values, but not other objects (only pointers to other nodes). Also known as a [vertex](https://en.wikipedia.org/wiki/Vertex_(graph_theory)) in graph theory.
 
 #### Pseudo-merge/Union
-An intelligent merge between two objects. Unlike `Object.assign`, it uses the [HAM](https://github.com/amark/gun/wiki/Conflict-Resolution-with-Guns) conflict resolution engine to ensure updates are merged commutatively.
+An intelligent merge between two objects. Unlike `Object.assign`, it uses the [HAM](../more-about-gun/conflict-resolution) conflict resolution engine to ensure updates are merged commutatively.
 
 #### Pseudo-node/Key Node
-A special type of node in gun used for adding secondary indices (via the [`.key()`](https://github.com/amark/gun/wiki/API-(v0.3.x)#key) method). It provides a list of unique IDs to pseudo-merge into an aggregate node.
+A special type of node in gun used for adding secondary indices (via the [`.key()`](../api/key) method). It provides a list of unique IDs to pseudo-merge into an aggregate node.
 
 #### Soul
 A synonym for an object [Universally Unique Identifier](https://en.wikipedia.org/wiki/Universally_unique_identifier). Each node in gun has one (named "`#`" in the object metadata).
