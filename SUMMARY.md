@@ -31,6 +31,7 @@
 	* [Position on the CAP Theorem](more-about-gun/position-on-the-cap-theorem.md)
 	* [Sharding](more-about-gun/sharding.md)
 * [Projects](projects.md)
+* [Examples](https://github.com/gundb/gun/tree/master/examples)
 * [Modules](modules.md)
 * [Snippets (v0.6.x)](snippets-v06x.md)
 * Snippets (v0.3.x)(snippets-v03x.md)
