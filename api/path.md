@@ -1,6 +1,6 @@
 # gun.path(key)
 
-<a href="https://youtu.be/UDZGVYLNLAU" title="GUN path"><img src="http://img.youtube.com/vi/UDZGVYLNLAU/0.jpg" width="425px"></a><br>
+{% video %}https://www.youtube.com/watch?v=UDZGVYLNLAU{% endvideo %}
 
 Path does the same thing as `get` but has some conveniences built in.
 
