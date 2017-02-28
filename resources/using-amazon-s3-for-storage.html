@@ -1,0 +1,730 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Using Amazon S3 for Storage · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="security-authentication-authorization.html" />
+    
+    
+    <link rel="prev" href="glossary.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../crash-course.html">
+            
+                <a href="../crash-course.html">
+            
+                    
+                    Crash Course
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../getting-started.html">
+            
+                <a href="../getting-started.html">
+            
+                    
+                    Getting Started
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    Core API
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../core-api/constructor.html">
+            
+                <a href="../core-api/constructor.html">
+            
+                    
+                    Gun.constructor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../core-api/put.html">
+            
+                <a href="../core-api/put.html">
+            
+                    
+                    gun.put
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../core-api/get.html">
+            
+                <a href="../core-api/get.html">
+            
+                    
+                    gun.get
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../core-api/back.html">
+            
+                <a href="../core-api/back.html">
+            
+                    
+                    gun.back
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../core-api/opt.html">
+            
+                <a href="../core-api/opt.html">
+            
+                    
+                    gun.opt
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" >
+            
+                <span>
+            
+                    
+                    API
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../api/path.html">
+            
+                <a href="../api/path.html">
+            
+                    
+                    gun.path
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="../api/on.html">
+            
+                <a href="../api/on.html">
+            
+                    
+                    gun.on
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../api/val.html">
+            
+                <a href="../api/val.html">
+            
+                    
+                    gun.val
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../api/set.html">
+            
+                <a href="../api/set.html">
+            
+                    
+                    gun.set
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" data-path="../api/map.html">
+            
+                <a href="../api/map.html">
+            
+                    
+                    gun.map
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6" data-path="../api/not.html">
+            
+                <a href="../api/not.html">
+            
+                    
+                    gun.not
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.7" data-path="../api/init.html">
+            
+                <a href="../api/init.html">
+            
+                    
+                    gun.init
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.8" data-path="../api/key.html">
+            
+                <a href="../api/key.html">
+            
+                    
+                    gun.key
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" >
+            
+                <span>
+            
+                    
+                    Resources
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="guns-data-format.html">
+            
+                <a href="guns-data-format.html">
+            
+                    
+                    Gun's Data Format
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="glossary.html">
+            
+                <a href="glossary.html">
+            
+                    
+                    Glossary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.6.3" data-path="using-amazon-s3-for-storage.html">
+            
+                <a href="using-amazon-s3-for-storage.html">
+            
+                    
+                    Using Amazon S3 for Storage
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="security-authentication-authorization.html">
+            
+                <a href="security-authentication-authorization.html">
+            
+                    
+                    Security, Authentication, and Authorization
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" >
+            
+                <span>
+            
+                    
+                    More About Gun
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1" data-path="../more-about-gun/how-writes-are-handled.html">
+            
+                <a href="../more-about-gun/how-writes-are-handled.html">
+            
+                    
+                    How Writes Are Handled
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="../more-about-gun/the-mesh-network-protocol.html">
+            
+                <a href="../more-about-gun/the-mesh-network-protocol.html">
+            
+                    
+                    The Mesh Network Protocol
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="../more-about-gun/conflict-resolution.html">
+            
+                <a href="../more-about-gun/conflict-resolution.html">
+            
+                    
+                    Conflict Resolution
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" >
+            
+                <a target="_blank" href="http://gun.js.org/distributed/matters.html">
+            
+                    
+                    How the Algorithm Works
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.5" data-path="../more-about-gun/position-on-the-cap-theorem.html">
+            
+                <a href="../more-about-gun/position-on-the-cap-theorem.html">
+            
+                    
+                    Position on the CAP Theorem
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.6" data-path="../more-about-gun/sharding.html">
+            
+                <a href="../more-about-gun/sharding.html">
+            
+                    
+                    Sharding
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../projects.html">
+            
+                <a href="../projects.html">
+            
+                    
+                    Projects
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../modules.html">
+            
+                <a href="../modules.html">
+            
+                    
+                    Modules
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="../snippets-v06x.html">
+            
+                <a href="../snippets-v06x.html">
+            
+                    
+                    Snippets (v0.6.x)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" >
+            
+                <span>
+            
+                    
+                    Snippets (v0.3.x)(snippets-v03x.md)
+            
+                </span>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" >
+            
+                <a target="_blank" href="https://github.com/amark/gun/wiki/0.2.x-Table-of-Contents">
+            
+                    
+                    v0.2.x
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Using Amazon S3 for Storage</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="using-amazon-s3-for-storage">Using Amazon S3 for Storage</h1>
+<p>You need to use this Amazon S3 policy (replace both &quot;YOURBUCKETHERE&quot; with the S3 bucket you make/have for this app):</p>
+<pre><code class="lang-javascript">{
+    <span class="hljs-string">&quot;Version&quot;</span>: <span class="hljs-string">&quot;2012-10-17&quot;</span>,
+    <span class="hljs-string">&quot;Statement&quot;</span>: [
+        {
+            <span class="hljs-string">&quot;Effect&quot;</span>: <span class="hljs-string">&quot;Allow&quot;</span>,
+            <span class="hljs-string">&quot;Action&quot;</span>: [
+                <span class="hljs-string">&quot;s3:*&quot;</span>
+            ],
+            <span class="hljs-string">&quot;Resource&quot;</span>: [
+                <span class="hljs-string">&quot;arn:aws:s3:::YOURBUCKETHERE&quot;</span>,
+                <span class="hljs-string">&quot;arn:aws:s3:::YOURBUCKETHERE/*&quot;</span>
+            ]
+        }
+    ]
+}
+</code></pre>
+<p>For your Amazon IAM User (in Security Credential&apos;s admin dashboard, create a custom policy first then create a new user, select it and attach that policy to it) that is associated with that user&apos;s Access Key and Secret Access Key from when you initialize GUN on the server:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> gun = Gun({
+  file: <span class="hljs-string">&apos;data.json&apos;</span>, <span class="hljs-comment">// local testing and development</span>
+  s3: {
+    key: process.env.AWS_ACCESS_KEY_ID, <span class="hljs-comment">// AWS Access Key</span>
+    secret: process.env.AWS_SECRET_ACCESS_KEY, <span class="hljs-comment">// AWS Secret Token</span>
+    bucket: process.env.AWS_S3_BUCKET <span class="hljs-comment">// The bucket you want to save into</span>
+  }
+});
+</code></pre>
+<p>Remember that your app needs to have these ENVIRONMENT VARIABLES available to them.</p>
+<p>If you are using Heroku, this is pretty easy. In their dashboard go and edit your app&apos;s ENVIRONMENT VARIABLE CONFIGs to the actual key, token, and bucket.</p>
+<p>If you are running your own server, you probably have an upstart script or something similar that monitors your app and starts or restarts it if it crashes. You can set ENVIRONMENT VARIABLES there, exactly how depends upon your setup so please google around for that - when we have a good one, we&apos;ll update it here.</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="glossary.html" class="navigation navigation-prev " aria-label="Previous page: Glossary">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="security-authentication-authorization.html" class="navigation navigation-next " aria-label="Next page: Security, Authentication, and Authorization">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Using Amazon S3 for Storage","level":"1.6.3","depth":2,"next":{"title":"Security, Authentication, and Authorization","level":"1.6.4","depth":2,"path":"resources/security-authentication-authorization.md","ref":"resources/security-authentication-authorization.md","articles":[]},"previous":{"title":"Glossary","level":"1.6.2","depth":2,"path":"resources/glossary.md","ref":"resources/glossary.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"3.2.2","theme":"default","variables":{},"plugins":["edit-link"],"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/zwhitchcox/gun/edit/gh-pages"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"resources/using-amazon-s3-for-storage.md","mtime":"2017-02-28T19:24:41.880Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-28T19:40:22.563Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

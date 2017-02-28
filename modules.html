@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Introduction · GitBook</title>
+        <title>Modules · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.2">
@@ -57,8 +57,10 @@
     <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="crash-course.html" />
+    <link rel="next" href="snippets-v06x.html" />
     
+    
+    <link rel="prev" href="projects.html" />
     
 
     </head>
@@ -87,7 +89,7 @@
         
         
     
-        <li class="chapter active" data-level="1.1" data-path="./">
+        <li class="chapter " data-level="1.1" data-path="./">
             
                 <a href="./">
             
@@ -514,7 +516,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9" data-path="modules.html">
+        <li class="chapter active" data-level="1.9" data-path="modules.html">
             
                 <a href="modules.html">
             
@@ -596,7 +598,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="." >Introduction</a>
+        <a href="." >Modules</a>
     </h1>
 </div>
 
@@ -611,89 +613,25 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="
-----
---------
-----
-">
-    <a href="http://gundb.io" target="_blank">
-        <img src="https://cldup.com/TEy9yGh45l.svg" width="40%" alt="gun">
-    </a>
-</h1>
-
-<p><a href="https://www.npmjs.com/package/gun" target="_blank"><img src="https://img.shields.io/npm/dm/gun.svg" alt="npm"></a>
-<a href="https://travis-ci.org/amark/gun" target="_blank"><img src="https://img.shields.io/travis/amark/gun/master.svg" alt="Travis"></a>
-<a href="https://gitter.im/amark/gun" target="_blank"><img src="https://img.shields.io/gitter/room/amark/gun.js.svg" alt="Gitter"></a></p>
-<p>GUN is a realtime, distributed, offline-first, graph database engine. Lightweight and powerful, at just <strong>~9KB</strong> gzipped.</p>
-<p><a href="https://youtu.be/-i-11T5ZI9o" title="1 minute demo of fault tolerance" target="_blank"><img src="http://img.youtube.com/vi/-i-11T5ZI9o/0.jpg" width="425px"></a>
-<a href="https://youtu.be/-FN_J3etdvY" title="1 minute demo of fault tolerance" target="_blank"><img src="http://img.youtube.com/vi/-FN_J3etdvY/0.jpg" width="425px"></a></p>
-<h2 id="why">Why?</h2>
-<ul>
-<li><strong>Realtime</strong> - It may be trivial to get realtime updates with socket.io or something, but what you do not get is <em>state synchronization</em>. GUN does this for you out of the box, assuring that two users&apos; simultaneous updates won&apos;t concurrently break each other.</li>
-<li><strong>Distributed</strong> - GUN is peer-to-peer by design, meaning you have no centralized database server to maintain or that could crash. This lets you sleep through the night without worrying about database DevOps - we call this &quot;NoDB&quot;. From that, you can build decentralized, federated, or centralized apps.</li>
-<li><strong>Offline-first</strong> - GUN works even if your internet or cell reception doesn&apos;t. Users can still plug away and save data as normal, and then when the network comes back online GUN will automatically synchronize all the changes and handle any conflicts for you.</li>
-<li><strong>Graph</strong> - Most databases force you to bend over backwards to match their storage constraints. But graphs are different, they let you have any data structure you want. Whether that be traditional tables with relations, document oriented trees, or tons of circular references. You choose.</li>
-</ul>
-<h2 id="quickstart">Quickstart</h2>
-<p>Try the <a href="http://gun.js.org/think.html" target="_blank">interactive tutorial</a> in the browser (<strong>5min</strong> ~ average developer). Or run the NodeJS <a href="#demos">demo example apps</a> (<strong>5min</strong> ~ average developer).</p>
-<p>Jump right into the <a href="http://jsbin.com/miredog/edit?js,console" target="_blank">gun playground</a> and start testing whatever functions you want.</p>
-<p>Quick note: All active development is happening on <code>0.5</code> branch, which has the upcoming <strong>30M+ ops/sec</strong> performance improvements!</p>
-<h2 id="demos">Demos</h2>
-<ul>
-<li><a href="http://gunjs.herokuapp.com/" target="_blank">Online example applications</a></li>
-<li><p>The above examples are included in this repo. You can run them locally by running the following commands in your terminal or on your command line:</p>
-<blockquote>
-<p><strong>Note:</strong> If you don&apos;t have <a href="http://nodejs.org/" target="_blank">node</a> or <a href="https://www.npmjs.com/" target="_blank">npm</a>, read <a href="https://github.com/amark/gun/blob/master/examples/install.sh" target="_blank">this</a> first.</p>
-</blockquote>
-<pre><code class="lang-bash">npm install gun
-<span class="hljs-built_in">cd</span> node_modules/gun
-node examples/http.js 8080
-</code></pre>
-<p>Then visit <a href="http://localhost:8080" target="_blank">http://localhost:8080</a> in your browser. </p>
-<p>If that did not work it is probably because npm installed it to a global directory. To fix that try <code>mkdir node_modules</code> in your desired directory and re-run the above commands. You also might have to add <code>sudo</code> in front of the commands.</p>
-</li>
-</ul>
-<h3 id="videos">Videos</h3>
-<ul>
-<li><a href="https://www.youtube.com/watch?v=-i-11T5ZI9o&amp;feature=youtu.be" target="_blank">Fault tolerance</a> (01:01)</li>
-<li><a href="https://www.youtube.com/watch?v=cOO6wz1rZVY&amp;feature=youtu.be" target="_blank">Saving relational or document based data</a> (06:59)</li>
-<li><a href="https://youtu.be/qJNDplwJ8aQ" target="_blank">Everything you want to know about GUN</a> (57:50) 2x speed recommended.</li>
-<li><a href="https://www.youtube.com/channel/UCQAtpf-zi9Pp4__2nToOM8g/playlists" target="_blank">GUN&apos;s YouTube channel</a> also has videos.</li>
-</ul>
-<h3 id="projects"><a name="gun-projects"></a>Projects</h3>
-<ul>
-<li>GUN users are encouraged to add their projects to this <a href="https://github.com/amark/gun/wiki/projects" target="_blank">running projects list</a>.</li>
-</ul>
-<h2 id="docs--tradeoffs">Docs &amp; Tradeoffs</h2>
-<ul>
-<li><a href="https://github.com/amark/gun/wiki/getting-started-(v0.3.x" target="_blank">Getting Started with GUN</a>) Guide. </li>
-<li><a href="https://github.com/amark/gun/wiki/API-(v0.3.x" target="_blank">API documentation</a>) and <a href="https://github.com/amark/gun/blob/master/examples" target="_blank">examples&apos; source code</a>.</li>
-<li>GUN is an AP system which means you should not use it for banking apps, <a href="https://github.com/amark/gun/wiki/CAP-Theorem" target="_blank">learn more here</a>.</li>
-<li>Check out and add example code <a href="https://github.com/amark/gun/wiki/snippets-(v0.3.x" target="_blank">snippets</a>) &#xE2;&#x80;&#x94;including micro-modules&#xE2;&#x80;&#x94; to address specific situations.</li>
-</ul>
-<h2 id="modules"><a name="gun-modules"></a>Modules</h2>
-<p>GUN is designed to be as minimal as possible, with any additional functionality being provided via modules.  Please refer to the <a href="https://github.com/amark/gun/wiki/modules" target="_blank">modules</a> page for a list of existing extensions. Please refer to the <a href="https://github.com/gundb/gun-extensions/issues" target="_blank">gun-extensions</a> repo to see what extensions have been requested or to request an extension.</p>
-<h2 id="how-can-i-help-make-gun-even-more-awesome">How can I help make gun even more awesome?</h2>
-<ul>
-<li>Star this repo</li>
-<li>Follow us and share your appreciation via <a href="https://gitter.im/amark/gun" target="_blank">Gitter</a>, <a href="https://twitter.com/databasegun" target="_blank">Twitter</a>, <a href="https://www.linkedin.com/company/gun-inc" target="_blank">LinkedIn</a>, and <a href="https://www.facebook.com/databasegun" target="_blank">Facebook</a></li>
-<li><a href="https://github.com/amark/gun/wiki/projects" target="_blank">Share projects you&apos;ve written</a></li>
-<li><a href="https://waffle.io/amark/gun" target="_blank">Build extensions or squish bugs</a><pre><code>  - If you are working on an extension, familiarize yourself with [GUN&apos;s Module API](https://github.com/amark/gun/wiki/Building-Modules-for-Gun)
-</code></pre></li>
-</ul>
-<h2 id="license">License</h2>
-<p>Designed with &#xE2;&#x99;&#xA5; by Mark Nadal, the gun team, and many amazing contributors.  Liberally licensed under <a href="https://github.com/amark/gun/blob/master/LICENSE.md" target="_blank">Zlib / MIT / Apache 2.0</a>.</p>
-<h2 id="contributors">Contributors</h2>
-<p>Thanks to the following people who have contributed to GUN, via code, issues, or conversation (this list has quickly become tremendously behind! We&apos;ll probably turn this into a dedicated wiki page so you can add yourself):</p>
-<p><a href="https://github.com/agborkowski" target="_blank">agborkowski</a>; <a href="https://github.com/alexlafroscia" target="_blank">alexlafroscia</a>; <a href="https://github.com/anubiann00b" target="_blank">anubiann00b</a>; <a href="https://github.com/bromagosa" target="_blank">bromagosa</a>; <a href="https://github.com/coolaj86" target="_blank">coolaj86</a>; <a href="https://github.com/d-oliveros" target="_blank">d-oliveros</a>, <a href="https://github.com/danscan" target="_blank">danscan</a>; <strong><a href="https://github.com/forrestjt" target="_blank">forrestjt</a> (<a href="https://github.com/amark/gun/blob/master/lib/file.js" target="_blank">file.js</a>)</strong>; <a href="https://github.com/gedw99" target="_blank">gedw99</a>; <a href="https://github.com/HelloCodeMing" target="_blank">HelloCodeMing</a>; <strong><a href="https://github.com/josepedrodias" target="_blank">JosePedroDias</a> (<a href="http://acor.sl.pt:9966" target="_blank">graph visualizer</a>)</strong>; <strong><a href="https://github.com/jveres" target="_blank">jveres</a> (<a href="https://github.com/jveres/todomvc" target="_blank">todoMVC</a>)</strong>; <a href="https://github.com/ndarilek" target="_blank">ndarilek</a>; <a href="https://github.com/onetom" target="_blank">onetom</a>; <a href="https://github.com/phpnode" target="_blank">phpnode</a>; <a href="https://github.com/PsychoLlama" target="_blank">PsychoLlama</a>; <strong><a href="https://github.com/RangerMauve" target="_blank">RangerMauve</a> (<a href="https://github.com/gundb/gun-schema" target="_blank">schema</a>)</strong>; <strong><a href="https://github.com/swifty" target="_blank">robertheessels</a> (<a href="https://github.com/swifty/gun-p2p-auth" target="_blank">gun-p2p-auth</a>)</strong>; <a href="https://github.com/riston" target="_blank">riston</a>; <a href="https://github.com/rootsical" target="_blank">rootsical</a>; <a href="https://github.com/rrrene" target="_blank">rrrene</a>; <a href="https://github.com/sbeleidy" target="_blank">sbeleidy</a> <a href="https://github.com/ssr1ram" target="_blank">ssr1ram</a>; <strong><a href="https://github.com/stefdv" target="_blank">Stefdv</a> (<a href="http://stefdv.github.io/gun-collection/components/gun-collection/" target="_blank">Polymer/web components</a>)</strong>; <a href="https://github.com/Xe" target="_blank">Xe</a>; <a href="https://github.com/zot" target="_blank">zot</a>;
-<a href="https://github.com/ayurmedia" target="_blank">ayurmedia</a>;</p>
-<p>This list of contributors was manually compiled and alphabetically sorted. If we missed you, please submit an issue so we can get you added!</p>
-<h2 id="changelog"><a href="https://github.com/amark/gun/blob/master/CHANGELOG.md#03" target="_blank">Changelog</a></h2>
-<p>Also see the current <a href="https://github.com/amark/gun/releases" target="_blank">Release List</a> and <a href="https://github.com/amark/gun/tags" target="_blank">Tag List</a> for quick access to relevant versions.</p>
-<p>==========================
-<a name="stay-up-to-date"></a></p>
-<p><a href="https://gitter.im/amark/gun" target="_blank"><img alt="Gitter channel" src="https://badges.gitter.im/Join%20Chat.svg"></a>
-<a href="https://www.youtube.com/channel/UCQAtpf-zi9Pp4__2nToOM8g" target="_blank"><img src="https://img.shields.io/badge/You-Tube-red.svg" alt="YouTube"></a> <a href="https://www.linkedin.com/company/gun-inc" target="_blank"><img src="https://img.shields.io/badge/Linked-In-blue.svg" alt="LinkedIn"></a> <a href="https://twitter.com/databasegun" target="_blank"><img src="https://img.shields.io/twitter/follow/databasegun.svg?style=social" alt="Twitter Follow"></a></p>
+                                <h3 id="guntagger-httpswwwnpmjscompackageguntagger">[guntagger] (<a href="https://www.npmjs.com/package/guntagger" target="_blank">https://www.npmjs.com/package/guntagger</a>)</h3>
+<p>Tag and untag nodes to custom tags/labels
+~ By <a href="https://github.com/stefdv" target="_blank">Stefdv</a></p>
+<h3 id="gun-level"><a href="https://github.com/PsychoLlama/gun-level" target="_blank">gun-level</a></h3>
+<p>A LevelDB adapter that works with the levelDB module ecosystem.<br>~ By <a href="https://github.com/PsychoLlama" target="_blank">PsychoLlama</a></p>
+<h3 id="gun-schema"><a href="https://github.com/gundb/gun-schema" target="_blank">gun-schema</a></h3>
+<p>Schema validation module for node and the browser.<br>~ By <a href="https://github.com/RangerMauve" target="_blank">RangerMauve</a></p>
+<h3 id="gun-p2p-auth"><a href="https://github.com/swifty/gun-p2p-auth" target="_blank">gun-p2p-auth</a></h3>
+<p>A fully encrypted, peer-to-peer, auth component.<br>~ By <a href="https://github.com/robertheessels" target="_blank">robertheessels</a></p>
+<h3 id="labelmaker"><a href="https://github.com/PsychoLlama/labelmaker" target="_blank">labelmaker</a></h3>
+<p>Organize and index data into groups with tags.<br>~ By <a href="https://github.com/PsychoLlama" target="_blank">PsychoLlama</a></p>
+<h3 id="onward"><a href="https://github.com/gundb/onward" target="_blank">onward</a></h3>
+<p>Listen for changes on an entire document at once.<br>~ By <a href="https://github.com/amark" target="_blank">amark</a></p>
+<h3 id="reticle"><a href="https://github.com/PsychoLlama/Reticle" target="_blank">reticle</a></h3>
+<p>Namespace your data, preventing naming conflicts and adding clear separation between apps.<br>~ By <a href="https://github.com/PsychoLlama" target="_blank">PsychoLlama</a></p>
+<h3 id="synchronous"><a href="https://github.com/gundb/synchronous" target="_blank">synchronous</a></h3>
+<p>One way deep (document oriented) object data binding, similar to <a href="https://github.com/gundb/onward" target="_blank">onward</a>.<br>~ By <a href="https://github.com/amark" target="_blank">amark</a></p>
+<h3 id="gun-hue"><a href="https://github.com/PsychoLlama/gun-hue" target="_blank">gun-hue</a></h3>
+<p>Explore and change your hue lighting with gun!<br>~ By <a href="https://github.com/PsychoLlama" target="_blank">PsychoLlama</a></p>
 
                                 
                                 </section>
@@ -721,8 +659,12 @@ node examples/http.js 8080
 
             
                 
+                <a href="projects.html" class="navigation navigation-prev " aria-label="Previous page: Projects">
+                    <i class="fa fa-angle-left"></i>
+                </a>
                 
-                <a href="crash-course.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Crash Course">
+                
+                <a href="snippets-v06x.html" class="navigation navigation-next " aria-label="Next page: Snippets (v0.6.x)">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -733,7 +675,7 @@ node examples/http.js 8080
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Crash Course","level":"1.2","depth":1,"path":"crash-course.md","ref":"crash-course.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"3.2.2","theme":"default","variables":{},"plugins":["edit-link"],"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/zwhitchcox/gun/edit/gh-pages"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2017-02-28T18:50:55.473Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-28T19:40:22.563Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Modules","level":"1.9","depth":1,"next":{"title":"Snippets (v0.6.x)","level":"1.10","depth":1,"path":"snippets-v06x.md","ref":"snippets-v06x.md","articles":[]},"previous":{"title":"Projects","level":"1.8","depth":1,"path":"projects.md","ref":"projects.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"3.2.2","theme":"default","variables":{},"plugins":["edit-link"],"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/zwhitchcox/gun/edit/gh-pages"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"modules.md","mtime":"2017-02-28T19:34:32.848Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-28T19:40:22.563Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

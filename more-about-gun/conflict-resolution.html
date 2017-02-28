@@ -1,0 +1,815 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Conflict Resolution · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="the-mesh-network-protocol.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../crash-course.html">
+            
+                <a href="../crash-course.html">
+            
+                    
+                    Crash Course
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../getting-started.html">
+            
+                <a href="../getting-started.html">
+            
+                    
+                    Getting Started
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    Core API
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../core-api/constructor.html">
+            
+                <a href="../core-api/constructor.html">
+            
+                    
+                    Gun.constructor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../core-api/put.html">
+            
+                <a href="../core-api/put.html">
+            
+                    
+                    gun.put
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../core-api/get.html">
+            
+                <a href="../core-api/get.html">
+            
+                    
+                    gun.get
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../core-api/back.html">
+            
+                <a href="../core-api/back.html">
+            
+                    
+                    gun.back
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../core-api/opt.html">
+            
+                <a href="../core-api/opt.html">
+            
+                    
+                    gun.opt
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" >
+            
+                <span>
+            
+                    
+                    API
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../api/path.html">
+            
+                <a href="../api/path.html">
+            
+                    
+                    gun.path
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="../api/on.html">
+            
+                <a href="../api/on.html">
+            
+                    
+                    gun.on
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../api/val.html">
+            
+                <a href="../api/val.html">
+            
+                    
+                    gun.val
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../api/set.html">
+            
+                <a href="../api/set.html">
+            
+                    
+                    gun.set
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" data-path="../api/map.html">
+            
+                <a href="../api/map.html">
+            
+                    
+                    gun.map
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6" data-path="../api/not.html">
+            
+                <a href="../api/not.html">
+            
+                    
+                    gun.not
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.7" data-path="../api/init.html">
+            
+                <a href="../api/init.html">
+            
+                    
+                    gun.init
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.8" data-path="../api/key.html">
+            
+                <a href="../api/key.html">
+            
+                    
+                    gun.key
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" >
+            
+                <span>
+            
+                    
+                    Resources
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="../resources/guns-data-format.html">
+            
+                <a href="../resources/guns-data-format.html">
+            
+                    
+                    Gun's Data Format
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="../resources/glossary.html">
+            
+                <a href="../resources/glossary.html">
+            
+                    
+                    Glossary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="../resources/using-amazon-s3-for-storage.html">
+            
+                <a href="../resources/using-amazon-s3-for-storage.html">
+            
+                    
+                    Using Amazon S3 for Storage
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="../resources/security-authentication-authorization.html">
+            
+                <a href="../resources/security-authentication-authorization.html">
+            
+                    
+                    Security, Authentication, and Authorization
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" >
+            
+                <span>
+            
+                    
+                    More About Gun
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1" data-path="how-writes-are-handled.html">
+            
+                <a href="how-writes-are-handled.html">
+            
+                    
+                    How Writes Are Handled
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="the-mesh-network-protocol.html">
+            
+                <a href="the-mesh-network-protocol.html">
+            
+                    
+                    The Mesh Network Protocol
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.7.3" data-path="conflict-resolution.html">
+            
+                <a href="conflict-resolution.html">
+            
+                    
+                    Conflict Resolution
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" >
+            
+                <a target="_blank" href="http://gun.js.org/distributed/matters.html">
+            
+                    
+                    How the Algorithm Works
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.5" data-path="position-on-the-cap-theorem.html">
+            
+                <a href="position-on-the-cap-theorem.html">
+            
+                    
+                    Position on the CAP Theorem
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.6" data-path="sharding.html">
+            
+                <a href="sharding.html">
+            
+                    
+                    Sharding
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../projects.html">
+            
+                <a href="../projects.html">
+            
+                    
+                    Projects
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../modules.html">
+            
+                <a href="../modules.html">
+            
+                    
+                    Modules
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="../snippets-v06x.html">
+            
+                <a href="../snippets-v06x.html">
+            
+                    
+                    Snippets (v0.6.x)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" >
+            
+                <span>
+            
+                    
+                    Snippets (v0.3.x)(snippets-v03x.md)
+            
+                </span>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" >
+            
+                <a target="_blank" href="https://github.com/amark/gun/wiki/0.2.x-Table-of-Contents">
+            
+                    
+                    v0.2.x
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Conflict Resolution</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="conflict-resolution">Conflict Resolution</h1>
+<p>The conflict resolution algorithm (also called HAM) is at the center of everything gun does. It&apos;s how peers eventually arrive at the same state, and how offline edits are merged. Every change in the system goes through HAM.</p>
+<p>Before reading this, we recommend you read through this tech talk, which <a href="http://gun.js.org/distributed/matters.html" target="_blank">explains the high level concepts in easy to understand</a> terms. Also, check out the primer on our <a href="CAP-Theorem">CAP Theorem</a> tradeoffs.</p>
+<p>Finally, for those of you who know of Kyle Kingsbury (Aphyr), here are <a href="https://twitter.com/aphyr/status/646302398575587332" target="_blank">some good tweets about us</a> from him. We are building out Jepsen tests with <a href="https://github.com/gundb/panic-server" target="_blank">PANIC</a>, our distributed testing framework.</p>
+<h2 id="requirements">Requirements</h2>
+<p>These are the constraints HAM operates under.</p>
+<h3 id="offline-first">Offline-First</h3>
+<p>Favor high-availability over strong consistency, allowing users to make edits even when the machine is entirely offline (like a cellphone user without a network connection). This immediately rules out group consensus algorithms like  <a href="https://en.wikipedia.org/wiki/Paxos_(computer_science" target="_blank">Paxos</a>) or <a href="https://raft.github.io/" target="_blank">Raft</a>.</p>
+<h3 id="ordering">Ordering</h3>
+<p>The same state should be reached regardless of what order updates arrive in (update commutativity).</p>
+<h3 id="conflict-handling">Conflict Handling</h3>
+<p>When merge conflicts happen, every machine should independently choose the same value (Strong Eventual Consistency).</p>
+<h2 id="implementation">Implementation</h2>
+<p>Ultimately, we want to accept an update and merge it into our own data. Since gun&apos;s data structure is graph-oriented, updates will be in graph-format.</p>
+<p>Because graphs only contain nodes, and nodes only contain key-value pairs, if we know how to merge key-value pairs, we can merge nodes, and in turn we can merge graphs. This means we&apos;ll focus on merging key-value pairs.</p>
+<p>A key-value pair is atomic to HAM, meaning it won&apos;t try to merge primitives together, it&apos;ll just choose which to keep. Choosing is the tricky part, and requires an extra bit of metadata, called <code>state</code>. State is used to determine ordering of updates, and is always relative to the machine which receives it (including the machine creating the update).</p>
+<p>Let&apos;s consider an example:</p>
+<p>We have a node with one property, <code>&quot;name&quot;</code>, a value of <code>&quot;Alice&quot;</code>, and a state of <code>10</code>.</p>
+<pre><code class="lang-json">{
+    <span class="hljs-string">&quot;name&quot;</span>: {
+        <span class="hljs-string">&quot;value&quot;</span>: <span class="hljs-string">&quot;Alice&quot;</span>,
+        <span class="hljs-string">&quot;state&quot;</span>: <span class="hljs-number">10</span>
+    }
+}
+</code></pre>
+<p>We get an update that lists &quot;alice&quot; as <code>&quot;Allison&quot;</code> and state as <code>8</code>. Since the update state is less than our current state, we list it as only historically important, and don&apos;t include it in our data.</p>
+<blockquote>
+<p>Unless you&apos;re using a journaling plugin, historical updates are ignored.</p>
+</blockquote>
+<p>There&apos;s a bit more nuance to updates with greater state, so we&apos;ll discuss that in a bit. The next obvious question is what happens when we get an update with the same state as us, <em>but with a conflicting value?</em></p>
+<h3 id="conflicts">Conflicts</h3>
+<p>Well, according to the goals we listed, <strong>it doesn&apos;t matter</strong> what value we choose, so long as everyone chooses it. We just need to be consistent. Another advantage is that gun supports a subset of JSON, so we only need to handle conflicts in that subset.</p>
+<p>This allows us to define some simple rules that guarantee convergence, mostly through type and lexical comparisons. Here is a layman explanation, followed by more details:</p>
+<p><a href="https://youtu.be/qKIn9L2obug" target="_blank" title="GUN map"><img src="http://img.youtube.com/vi/c80vSf45H4k/0.jpg" width="425px"></a><br></p>
+<h5 id="both-are-lexically-equal">Both are lexically equal</h5>
+<p>Then there&apos;s no conflict, it doesn&apos;t matter which you choose.</p>
+<h5 id="they-are-lexically-unequal">They are lexically unequal</h5>
+<p>Compare their string values with <code>JSON.stringify</code>, choosing the greater of the two.</p>
+<h3 id="states">States</h3>
+<p>This is dangerous territory, and if handled wrong can expose crippling application vulnerabilities. For example, a devious user submits an update with a state of 10 zillion. Now, no one gets to write until their state reaches 10 zillion plus 1.</p>
+<p>That&apos;s generally frowned on. Check out this layman explainer:</p>
+<p><a href="https://youtu.be/UBnkhpcLQuM" target="_blank" title="GUN map"><img src="http://img.youtube.com/vi/UBnkhpcLQuM/0.jpg" width="425px"></a><br></p>
+<p>HAM handles this with machine relative vector. When the &quot;10 zillion&quot; update comes in, HAM simply waits until your machine reaches the state of 10 zillion before acknowledging it&apos;s existence. If an update isn&apos;t acknowledged, it never escapes volatile memory onto disk. We call this a deferred update.</p>
+<p>This is good, because if no other machines have reached that state, the attacker will have no advantage over any other machine in the system. Their update intentionally remains volatile, giving the attacker only two options - retry with a non-malicious state that is closer to other machines, or bare the responsibility of keeping the update safe themselves until other machines catch up.</p>
+<p>It turns out this vector can be calculated for any linear value. Numbers, decimals, alphabets, or even with timestamps - which should sound scary. Timestamps <a href="https://aphyr.com/posts/299-the-trouble-with-timestamps" target="_blank">are dangerous</a>, since:</p>
+<ul>
+<li>System time doesn&apos;t always move forward (NTP corrections).</li>
+<li>Clock synchronization isn&apos;t always reliable.</li>
+<li>Some clocks move faster than others.</li>
+<li>Your system time might be off by any amount (especially when considering user meddling).</li>
+</ul>
+<p>One of the constraints with HAM is that synchronization algorithms should not be required, including <a href="https://en.wikipedia.org/wiki/Network_Time_Protocol" target="_blank">NTP</a> and it&apos;s variants, so accurate clocks can never be assumed.</p>
+<p>Luckily, HAM doesn&apos;t care if your clock is accurate. It only cares about <em>machine relative</em> ordering, and whether an update should be part of history, current state, or ignored until some point in the future. For a layman explanation of this, check this video out:</p>
+<p><a href="https://youtu.be/gRoJqzko_mE" target="_blank" title="GUN map"><img src="http://img.youtube.com/vi/gRoJqzko_mE/0.jpg" width="425px"></a><br></p>
+<h3 id="state-boundaries">State Boundaries</h3>
+<p>Each value is compared to the state of the last update and the state of your device&apos;s current loose clock.</p>
+<p>Back to our <code>username</code> example:</p>
+<pre><code class="lang-json">{
+    <span class="hljs-string">&quot;name&quot;</span>: {
+        <span class="hljs-string">&quot;value&quot;</span>: <span class="hljs-string">&quot;Alice&quot;</span>,
+        <span class="hljs-string">&quot;state&quot;</span>: <span class="hljs-number">10</span>
+    }
+}
+</code></pre>
+<p>Say your system clock is at state <code>15</code>.</p>
+<blockquote>
+<p>We&apos;re using smaller numbers than <code>Date.now()</code> because they&apos;re easier to mentally compare and reason about, but they have the same mathematical properties.</p>
+</blockquote>
+<h4 id="historical-state">Historical State</h4>
+<p>Any update with a state less than the last update (<code>10</code>) is considered stale and no longer relevant - if wanted, it can be journaled.</p>
+<pre><code class="lang-javascript"><span class="hljs-comment">// This update is too old.</span>
+<span class="hljs-keyword">var</span> update = {
+    name: {
+        value: <span class="hljs-string">&quot;Allison&quot;</span>,
+        state: <span class="hljs-number">8</span>,
+    },
+}
+</code></pre>
+<h4 id="operating-state">Operating State</h4>
+<p>Any update with state greater than the last update (<code>10</code>), yet less than your process state (<code>15</code>) is immediately merged. The state of the last update now becomes what we just merged to (<code>12</code>).</p>
+<pre><code class="lang-javascript"><span class="hljs-comment">// Sweet spot!</span>
+<span class="hljs-comment">// This will be merged.</span>
+<span class="hljs-keyword">var</span> update = {
+    name: {
+        value: <span class="hljs-string">&quot;Alicia&quot;</span>,
+        state: <span class="hljs-number">12</span>,
+    },
+}
+</code></pre>
+<h4 id="deferred-state">Deferred State</h4>
+<p>Any update with a state greater than your system clock (<code>15</code>) is considered deferred, and won&apos;t be processed until your clock reaches that point. The further it is into the future, the larger vector it has in terms of distance before being processed.</p>
+<pre><code class="lang-javascript"><span class="hljs-comment">// Nope, ignore this until the</span>
+<span class="hljs-comment">// clock reaches state `22`.</span>
+<span class="hljs-keyword">var</span> update = {
+    name: {
+        value: <span class="hljs-string">&quot;Ally&quot;</span>,
+        state: <span class="hljs-number">22</span>,
+    },
+}
+</code></pre>
+<h3 id="applying-it">Applying It</h3>
+<p>Merging two nodes can be done by iterating over each field of an update, and deciding which field to choose: the one you already have, or the one proposed by the update.</p>
+<p>If an update node has a field that the source object doesn&apos;t, the source node&apos;s field state is assumed to be <code>-Infinity</code>, meaning you always add that new field.</p>
+<p>The same process can be repeated for graphs, iterating over each node in an update graph and merging it with the source.</p>
+<p>You can find the HAM implementation in <a href="https://github.com/amark/gun/blob/master/gun.js" target="_blank"><code>gun.js</code></a> under the name <code>function HAM</code>.</p>
+<h3 id="considerations">Considerations</h3>
+<p>HAM doesn&apos;t guarantee multi-process linearizability because in highly-available systems, you don&apos;t know when all updates have finished network propagation. Instead, it guarantees Strong Eventual Consistency (SEC). If linearizability is necessary, either use a consensus system like <a href="http://research.microsoft.com/en-us/um/people/lamport/pubs/paxos-simple.pdf" target="_blank">Paxos</a> (sacrificing availability), or explicitly build it into your data using linked lists, directed acyclic graphs (DAGs), or others.</p>
+<ul>
+<li>No Strong Consistency, linearizability, or serializability.</li>
+<li>Vulnerable to the <a href="https://en.wikipedia.org/wiki/Double-spending" target="_blank">Double Spending problem</a>.</li>
+</ul>
+<h2 id="questions">Questions</h2>
+<p>If you want more information about how the conflict engine works, you can message us <a href="http://gitter.im/amark/gun/" target="_blank">on Gitter</a> or post a question on Stack Overflow with the <code>#gun</code> tag.</p>
+<h2 id="further-reading">Further Reading</h2>
+<ul>
+<li><a href="https://github.com/amark/gun/wiki/CAP-Theorem" target="_blank">Where gun stands</a> on the CAP theorem.</li>
+<li>Some challenges to <a href="http://codedependents.com/2014/01/13/mathematical-purity-in-distributed-systems-crdts-without-fear/" target="_blank">distributed operations</a>.</li>
+<li><a href="http://highscalability.com/blog/2013/5/1/myth-eric-brewer-on-why-banks-are-base-not-acid-availability.html" target="_blank">Why banks are not ACID</a>.</li>
+<li><a href="https://aphyr.com/posts/299-the-trouble-with-timestamps" target="_blank">Concerns about timestamps</a> (Aphyr).</li>
+<li><a href="http://stackoverflow.com/questions/29381442/eventual-consistency-vs-strong-eventual-consistency-vs-strong-consistency" target="_blank">Eventual Consistency vs Strong Eventual Consistency vs Strong Consistency</a>.</li>
+</ul>
+<p>Again, we strongly recommend you check out the <a href="http://gun.js.org/distributed/matters.html" target="_blank">tech talk</a>.</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="the-mesh-network-protocol.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: The Mesh Network Protocol">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Conflict Resolution","level":"1.7.3","depth":2,"next":{"title":"How the Algorithm Works","level":"1.7.4","depth":2,"url":"http://gun.js.org/distributed/matters.html","ref":"http://gun.js.org/distributed/matters.html","articles":[]},"previous":{"title":"The Mesh Network Protocol","level":"1.7.2","depth":2,"path":"more-about-gun/the-mesh-network-protocol.md","ref":"more-about-gun/the-mesh-network-protocol.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"3.2.2","theme":"default","variables":{},"plugins":["edit-link"],"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/zwhitchcox/gun/edit/gh-pages"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"more-about-gun/conflict-resolution.md","mtime":"2017-02-28T19:32:29.546Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-28T19:40:22.563Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

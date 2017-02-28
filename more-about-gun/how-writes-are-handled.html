@@ -1,0 +1,742 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>How Writes Are Handled · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="the-mesh-network-protocol.html" />
+    
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../crash-course.html">
+            
+                <a href="../crash-course.html">
+            
+                    
+                    Crash Course
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../getting-started.html">
+            
+                <a href="../getting-started.html">
+            
+                    
+                    Getting Started
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    Core API
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../core-api/constructor.html">
+            
+                <a href="../core-api/constructor.html">
+            
+                    
+                    Gun.constructor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../core-api/put.html">
+            
+                <a href="../core-api/put.html">
+            
+                    
+                    gun.put
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../core-api/get.html">
+            
+                <a href="../core-api/get.html">
+            
+                    
+                    gun.get
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../core-api/back.html">
+            
+                <a href="../core-api/back.html">
+            
+                    
+                    gun.back
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../core-api/opt.html">
+            
+                <a href="../core-api/opt.html">
+            
+                    
+                    gun.opt
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" >
+            
+                <span>
+            
+                    
+                    API
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../api/path.html">
+            
+                <a href="../api/path.html">
+            
+                    
+                    gun.path
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="../api/on.html">
+            
+                <a href="../api/on.html">
+            
+                    
+                    gun.on
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../api/val.html">
+            
+                <a href="../api/val.html">
+            
+                    
+                    gun.val
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../api/set.html">
+            
+                <a href="../api/set.html">
+            
+                    
+                    gun.set
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" data-path="../api/map.html">
+            
+                <a href="../api/map.html">
+            
+                    
+                    gun.map
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6" data-path="../api/not.html">
+            
+                <a href="../api/not.html">
+            
+                    
+                    gun.not
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.7" data-path="../api/init.html">
+            
+                <a href="../api/init.html">
+            
+                    
+                    gun.init
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.8" data-path="../api/key.html">
+            
+                <a href="../api/key.html">
+            
+                    
+                    gun.key
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" >
+            
+                <span>
+            
+                    
+                    Resources
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="../resources/guns-data-format.html">
+            
+                <a href="../resources/guns-data-format.html">
+            
+                    
+                    Gun's Data Format
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="../resources/glossary.html">
+            
+                <a href="../resources/glossary.html">
+            
+                    
+                    Glossary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="../resources/using-amazon-s3-for-storage.html">
+            
+                <a href="../resources/using-amazon-s3-for-storage.html">
+            
+                    
+                    Using Amazon S3 for Storage
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="../resources/security-authentication-authorization.html">
+            
+                <a href="../resources/security-authentication-authorization.html">
+            
+                    
+                    Security, Authentication, and Authorization
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" >
+            
+                <span>
+            
+                    
+                    More About Gun
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.7.1" data-path="how-writes-are-handled.html">
+            
+                <a href="how-writes-are-handled.html">
+            
+                    
+                    How Writes Are Handled
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="the-mesh-network-protocol.html">
+            
+                <a href="the-mesh-network-protocol.html">
+            
+                    
+                    The Mesh Network Protocol
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="conflict-resolution.html">
+            
+                <a href="conflict-resolution.html">
+            
+                    
+                    Conflict Resolution
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" >
+            
+                <a target="_blank" href="http://gun.js.org/distributed/matters.html">
+            
+                    
+                    How the Algorithm Works
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.5" data-path="position-on-the-cap-theorem.html">
+            
+                <a href="position-on-the-cap-theorem.html">
+            
+                    
+                    Position on the CAP Theorem
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.6" data-path="sharding.html">
+            
+                <a href="sharding.html">
+            
+                    
+                    Sharding
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../projects.html">
+            
+                <a href="../projects.html">
+            
+                    
+                    Projects
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../modules.html">
+            
+                <a href="../modules.html">
+            
+                    
+                    Modules
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="../snippets-v06x.html">
+            
+                <a href="../snippets-v06x.html">
+            
+                    
+                    Snippets (v0.6.x)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" >
+            
+                <span>
+            
+                    
+                    Snippets (v0.3.x)(snippets-v03x.md)
+            
+                </span>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" >
+            
+                <a target="_blank" href="https://github.com/amark/gun/wiki/0.2.x-Table-of-Contents">
+            
+                    
+                    v0.2.x
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >How Writes Are Handled</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="how-writes-are-handled">How Writes Are Handled</h1>
+<p>Partials are a really important concept for more than just their convenience. There is actually a lot of math and concurrency benefits to them, but we will not explore that here. Instead, we will go over how it practically impacts your life and makes things easier.</p>
+<p>To illustrate, take the example:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> mark = gun.put({
+  username: <span class="hljs-string">&quot;marknadal&quot;</span>,
+  name: <span class="hljs-string">&quot;Mark Nadal&quot;</span>,
+  email: <span class="hljs-string">&quot;mark@gunDB.io&quot;</span>
+});
+</code></pre>
+<p>In most databases, if you were to then do:</p>
+<pre><code class="lang-javascript">mark.put({
+  hacker: <span class="hljs-literal">true</span>,
+  country: <span class="hljs-string">&quot;USA&quot;</span>
+});
+</code></pre>
+<p>It would completely wipe out all your data previously there and replace it with that new object. This is fundamentally bad beyond just it not being the behavior you intended, it can also cause race conditions. Which is why most other databases are centralized around one master.</p>
+<p>But we are not like that, not only because we want a bunch of your users to simultaneously interact with data, but also because that is the pattern you <em>expect</em>. No need to constantly do some <code>.update({find: &apos;foobar&apos;}, {$set: {just: &quot;my stinking location&quot;}})</code> command.</p>
+<p>Additionally, if you did want such behavior, it is much more explicit to declare <code>.update({find: &apos;foobar&apos;}, null).update({find: &apos;foobar&apos;}, {some: &quot;new object&quot;})</code>. As a result, gun accepts partial updates by default and preserves your data unless you explicitly <code>null</code> it out.</p>
+<p>Partials let you work with your data without having to redownload the whole snapshot every time. Which is a common work around for dealing with cache invalidation in other databases. Even still, it is a poor one because it does not properly control for the concurrency during the latency of the expensive round trip of the data.</p>
+<p><strong>In conclusion</strong>, <em>partials rock</em>. Enjoy the freedom and flexibility of using them.</p>
+<h2 id="circular-references">Circular References</h2>
+<p>Similarly, you might be familiar with doing something like:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> mark = {
+  name: <span class="hljs-string">&quot;Mark Nadal&quot;</span>,
+  gender: <span class="hljs-string">&quot;male&quot;</span>
+};
+<span class="hljs-keyword">var</span> amber = {
+  name: <span class="hljs-string">&quot;Amber Nadal&quot;</span>,
+  gender: <span class="hljs-string">&quot;female&quot;</span>,
+  husband: mark
+};
+mark.wife = amber;
+</code></pre>
+<p>And then somewhere down the road you attempt to <code>JSON.stringify(mark)</code> and you get some nasty circular reference error. This is also silly, if the algorithm is smart enough to catch infinite recursions then it is trivial to serialize it properly. GUN does this for you, using the power of graphs. It is nothing fancy, it is the same thing that the web does - two webpages can link to each other.</p>
+<p>Unfortunately, JSON was designed with a documented oriented structure in mind, otherwise known as a tree. This was also a fatal flaw of many NoSQL databases. Working with JSON is great for developers, since our minds easily grasp the behavior of documents. But storing data as a tree creates a nightmare of usability if and when the developer wants to do anything remotely more advanced.</p>
+<p>GUN makes this easy, all you have to do is use that <code>mark</code> object you created earlier:</p>
+<pre><code class="lang-javascript">gun.put(mark).key(<span class="hljs-string">&apos;user/marknadal&apos;</span>);
+</code></pre>
+<p>This will save both <code>mark</code> and <code>amber</code>. However it does not create an index for Amber, so we should do that also:</p>
+<pre><code class="lang-javascript">gun.get(<span class="hljs-string">&apos;user/marknadal&apos;</span>).path(<span class="hljs-string">&apos;wife&apos;</span>).key(<span class="hljs-string">&apos;user/ambernadal&apos;</span>);
+</code></pre>
+<p>This lets us do some crazy fun inception things like:</p>
+<pre><code class="lang-javascript">gun.get(<span class="hljs-string">&apos;user/ambernadal&apos;</span>)
+  .path(<span class="hljs-string">&apos;husband.wife.husband.wife.name&apos;</span>)
+  .val(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">name</span>)</span>{
+    <span class="hljs-built_in">console</span>.log(name); <span class="hljs-comment">// &quot;Amber Nadal&quot;</span>
+});
+</code></pre>
+<p><strong>In conclusion</strong>, <em>graphs rock</em>. Enjoy the using both relational and documented structured data.</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                
+                <a href="the-mesh-network-protocol.html" class="navigation navigation-next navigation-unique" aria-label="Next page: The Mesh Network Protocol">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"How Writes Are Handled","level":"1.7.1","depth":2,"next":{"title":"The Mesh Network Protocol","level":"1.7.2","depth":2,"path":"more-about-gun/the-mesh-network-protocol.md","ref":"more-about-gun/the-mesh-network-protocol.md","articles":[]},"previous":{"title":"More About Gun","level":"1.7","depth":1,"ref":"","articles":[{"title":"How Writes Are Handled","level":"1.7.1","depth":2,"path":"more-about-gun/how-writes-are-handled.md","ref":"more-about-gun/how-writes-are-handled.md","articles":[]},{"title":"The Mesh Network Protocol","level":"1.7.2","depth":2,"path":"more-about-gun/the-mesh-network-protocol.md","ref":"more-about-gun/the-mesh-network-protocol.md","articles":[]},{"title":"Conflict Resolution","level":"1.7.3","depth":2,"path":"more-about-gun/conflict-resolution.md","ref":"more-about-gun/conflict-resolution.md","articles":[]},{"title":"How the Algorithm Works","level":"1.7.4","depth":2,"url":"http://gun.js.org/distributed/matters.html","ref":"http://gun.js.org/distributed/matters.html","articles":[]},{"title":"Position on the CAP Theorem","level":"1.7.5","depth":2,"path":"more-about-gun/position-on-the-cap-theorem.md","ref":"more-about-gun/position-on-the-cap-theorem.md","articles":[]},{"title":"Sharding","level":"1.7.6","depth":2,"path":"more-about-gun/sharding.md","ref":"more-about-gun/sharding.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"3.2.2","theme":"default","variables":{},"plugins":["edit-link"],"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/zwhitchcox/gun/edit/gh-pages"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"more-about-gun/how-writes-are-handled.md","mtime":"2017-02-28T19:31:31.020Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-28T19:40:22.563Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

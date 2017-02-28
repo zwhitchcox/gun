@@ -1,0 +1,760 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Security, Authentication, and Authorization · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="using-amazon-s3-for-storage.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../crash-course.html">
+            
+                <a href="../crash-course.html">
+            
+                    
+                    Crash Course
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../getting-started.html">
+            
+                <a href="../getting-started.html">
+            
+                    
+                    Getting Started
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    Core API
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../core-api/constructor.html">
+            
+                <a href="../core-api/constructor.html">
+            
+                    
+                    Gun.constructor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../core-api/put.html">
+            
+                <a href="../core-api/put.html">
+            
+                    
+                    gun.put
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../core-api/get.html">
+            
+                <a href="../core-api/get.html">
+            
+                    
+                    gun.get
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../core-api/back.html">
+            
+                <a href="../core-api/back.html">
+            
+                    
+                    gun.back
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../core-api/opt.html">
+            
+                <a href="../core-api/opt.html">
+            
+                    
+                    gun.opt
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" >
+            
+                <span>
+            
+                    
+                    API
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../api/path.html">
+            
+                <a href="../api/path.html">
+            
+                    
+                    gun.path
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="../api/on.html">
+            
+                <a href="../api/on.html">
+            
+                    
+                    gun.on
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../api/val.html">
+            
+                <a href="../api/val.html">
+            
+                    
+                    gun.val
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../api/set.html">
+            
+                <a href="../api/set.html">
+            
+                    
+                    gun.set
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" data-path="../api/map.html">
+            
+                <a href="../api/map.html">
+            
+                    
+                    gun.map
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6" data-path="../api/not.html">
+            
+                <a href="../api/not.html">
+            
+                    
+                    gun.not
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.7" data-path="../api/init.html">
+            
+                <a href="../api/init.html">
+            
+                    
+                    gun.init
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.8" data-path="../api/key.html">
+            
+                <a href="../api/key.html">
+            
+                    
+                    gun.key
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" >
+            
+                <span>
+            
+                    
+                    Resources
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="guns-data-format.html">
+            
+                <a href="guns-data-format.html">
+            
+                    
+                    Gun's Data Format
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="glossary.html">
+            
+                <a href="glossary.html">
+            
+                    
+                    Glossary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="using-amazon-s3-for-storage.html">
+            
+                <a href="using-amazon-s3-for-storage.html">
+            
+                    
+                    Using Amazon S3 for Storage
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.6.4" data-path="security-authentication-authorization.html">
+            
+                <a href="security-authentication-authorization.html">
+            
+                    
+                    Security, Authentication, and Authorization
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" >
+            
+                <span>
+            
+                    
+                    More About Gun
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1" data-path="../more-about-gun/how-writes-are-handled.html">
+            
+                <a href="../more-about-gun/how-writes-are-handled.html">
+            
+                    
+                    How Writes Are Handled
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="../more-about-gun/the-mesh-network-protocol.html">
+            
+                <a href="../more-about-gun/the-mesh-network-protocol.html">
+            
+                    
+                    The Mesh Network Protocol
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="../more-about-gun/conflict-resolution.html">
+            
+                <a href="../more-about-gun/conflict-resolution.html">
+            
+                    
+                    Conflict Resolution
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" >
+            
+                <a target="_blank" href="http://gun.js.org/distributed/matters.html">
+            
+                    
+                    How the Algorithm Works
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.5" data-path="../more-about-gun/position-on-the-cap-theorem.html">
+            
+                <a href="../more-about-gun/position-on-the-cap-theorem.html">
+            
+                    
+                    Position on the CAP Theorem
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.6" data-path="../more-about-gun/sharding.html">
+            
+                <a href="../more-about-gun/sharding.html">
+            
+                    
+                    Sharding
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../projects.html">
+            
+                <a href="../projects.html">
+            
+                    
+                    Projects
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../modules.html">
+            
+                <a href="../modules.html">
+            
+                    
+                    Modules
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="../snippets-v06x.html">
+            
+                <a href="../snippets-v06x.html">
+            
+                    
+                    Snippets (v0.6.x)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" >
+            
+                <span>
+            
+                    
+                    Snippets (v0.3.x)(snippets-v03x.md)
+            
+                </span>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" >
+            
+                <a target="_blank" href="https://github.com/amark/gun/wiki/0.2.x-Table-of-Contents">
+            
+                    
+                    v0.2.x
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Security, Authentication, and Authorization</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="security-authentication-authorization">Security, Authentication, Authorization</h1>
+<p>This page will be filled in at some point. But for now you can read the discussion and explanation on security starting here:</p>
+<p><a href="https://gitter.im/amark/gun?at=5744bec963e41bd84bf024be" target="_blank">https://gitter.im/amark/gun?at=5744bec963e41bd84bf024be</a></p>
+<p>To upvote prioritizing this wiki please join the gitter channel and tell us.</p>
+<h2 id="introduction">Introduction</h2>
+<p>We had a discussion on gitter on how to handle security in GUN, a peer-to-peer database. Before we start, let&apos;s present some figures we are going to work with. We have:</p>
+<ul>
+<li><strong>Frodo</strong> a nice person who totally trusts Gandalf and shares things with Samwise.</li>
+<li><strong>Gandalf</strong> trusted friend of Frodo.</li>
+<li><strong>Samwise</strong> trusted by Frodo but not for everything.</li>
+<li><strong>Sauron</strong> not trusted by anyone, has eyes everywhere.</li>
+<li><strong>Gollum</strong> doing what he can but often making a mess around him.</li>
+</ul>
+<p>The security question contains multiple parts:</p>
+<p><strong>How do we avoid someone masquerading as someone else ?</strong></p>
+<p>The chat example is easy to understand: we do not want messages that seem to originated from Gandalf to actually be from Sauron. A game is another issue where player 1 (Sauron) could send position updates to player 2 (Frodo) and win by cheating.</p>
+<p><strong>How do we protect sensitive data from being read by unauthorised people ?</strong></p>
+<p>The plan of action discussed by Frodo and Gandalf should not be seen by Sauron, right ? Real-world issues are countless but we can list a few: medical information, a book in the making, notes on your sex life, etc.</p>
+<p><strong>How do we share sensitive data with a group ?</strong></p>
+<p>Gandalf and Frodo started exchanging messages and then Samwise joins the group and they want him to be able to read all their past and present exchanges.</p>
+<p><strong>How do we avoid app spamming ?</strong></p>
+<p>If the database is not linked to a central (filtering and authenticating) authority, how do we avoid someone filling it up with junk data such as: &quot;My Precious, My Precious, My Precious, My Precious, My Precious, My Precious, My Precious, My Precious, My Precious, My Precious, My Precious&quot; ? Or simply someone writing <code>null</code> to every part of the database until the peer-to-peer sync erases all the data in everyone&apos;s copy.</p>
+<p>In a gaming scenario, how do we avoid DOS (Denial Of Service) attacks like this ?</p>
+<h2 id="some-key-concepts">Some key concepts</h2>
+<p><strong>Asymmetric or public-key cryptography</strong></p>
+<p>A public key allows anybody to encrypt something but only the private key can be used to decrypt. How and why this works is like a fairy tail with lots of strange animals (<a href="https://en.wikipedia.org/wiki/Elliptic_curve_cryptography" target="_blank">elliptic curve</a> is one of them).</p>
+<pre><code>data + public key ==&gt; unreadable junk
+unreadable junk + private key ==&gt; data
+</code></pre><p><strong>Digital signature</strong></p>
+<p>This is the process by which a user can verify that a message really originated from a given user. Say Frodo receives a letter from Gandalf, he wants to be sure Gandalf actually wrote every single word of the letter. Digital signatures work like this:</p>
+<pre><code>message + private key ==&gt; signature (short junk like piece of text)
+message + signature + public key ==&gt; true / false
+</code></pre><h2 id="answers-">Answers !</h2>
+<p>Now that we have our playground setup, let&apos;s try to answer some of our initial questions.</p>
+<h3 id="how-to-avoid-someone-masquerading-as-someone-else-">How to avoid someone masquerading as someone else ?</h3>
+<p>Gandalf and Frodo want to post news in the Shire about their adventures and they want to make sure the readers can check if these messages are legit.</p>
+<p>Each of them hides in their home, sits down and throws stuff around randomly while shaking the key pair generator. They must shake and to random stuff otherwise someone might find a way to generate the same keys from the pair generator. Now each of them has his own public and private key pair:</p>
+<pre><code>Gandalf: gandalf.pub, gandalf.priv
+Frodo: frodo.pub, frodo.priv
+</code></pre><p>Before leaving the Shire, Gandalf and Frodo give their public keys (gandalf.pub, frodo.pub) to everyone. They also publish these keys in the big book of known keys. And to make sure everyone recognises the link between these specific public keys and themselves, they create some selfies (showing the keys as QR codes on their T-Shirts). Feeling joyful, they even make a song using the first ten letters of their public keys.</p>
+<p>During their perilous adventures, they send back news and jokes to the Shire by signing the message (see Digital Signature) with their private keys. This is what happens when Gandalf signs a message and someone in the Shire checks it for authenticity (remember, here the message is not encrypted):</p>
+<pre><code>Gandalf: (message, gandalf.priv) ==&gt; (message, signature) ==&gt; Shire
+Shire:   (message, signature)    ==&gt; check (message, signature, gandalf.pub) ==&gt; true / false
+</code></pre><h3 id="how-do-we-protect-sensitive-data-from-being-read-by-unauthorised-people-">How do we protect sensitive data from being read by unauthorised people ?</h3>
+<p>If the scenario is simply Gandalf sending a private message to Frodo, this is what he does:</p>
+<pre><code>Gandalf: (message, frodo.pub) ==&gt; unreadable junk
+Frodo:   (unreadable junk, frodo.priv) ==&gt; Gandalf&apos;s message
+</code></pre><p>This is the basic principle of asymmetric cryptography. This is what https is all about. But there is a catch: Gandalf must be certain that he is using Frodo&apos;s public key. In this case, it&apos;s ok since they met and exchanged the keys. But when Samwise joins the batch, Gandalf does not have his public key. How can he get it, making sure Sauron does not intercept messages and exchanges keys (man in the middle attack):</p>
+<pre><code>Gandalf: &quot;Samwise, send me your public key, I have a message for you&quot;
+Samwise: &quot;Sure&quot;
+(samwise.pub) ==&gt; Sauron hooked on the network ==&gt; (sauron.pub) ==&gt; Gandalf
+Gandalf: &quot;Thanks, here is the message&quot;
+(message, sauron.pub) ==&gt; junk ==&gt; Sauron (junk, sauron.priv) ==&gt; message (Sauron reads the message)
+                                          (message, samwise.pub) ==&gt; junk ==&gt; Samwise
+</code></pre><p>As we see, Sauron is intercepting all communications and decrypting, reencrypting all messages. One way to solve this is to use a &quot;known authority&quot; to sign the public key. Frodo could do it by signing a message containing Samwise&apos;s public key:</p>
+<pre><code>Frodo: (&quot;Hi Gandalf, this is Samwise&apos;s public key: LKJASFASLFIO...&quot;, frodo.priv) ==&gt; signed message
+</code></pre><p>Another solution is to use social media to post the public key (since it would be hard for an attacker to control all of a users social network accounts, post the fake key there and not having the user notice).</p>
+<h3 id="how-do-we-share-sensitive-data-with-a-group-">How do we share sensitive data with a group ?</h3>
+<p>This is where the RING comes into play ! If we want to encrypt communication within a possibly large group of people, we cannot encrypt each and every message with every user&apos;s public key. So what we do is we generate a public/private key pair, just for this project. Let&apos;s call this project.pub and project.priv.</p>
+<p>When writing messages to the group, authorised users encrypt the messages with the project.pub key. When they need to read, they use the project.priv key.</p>
+<p>In order to grant access to the project to a newcomer (Samwise), Frodo or Gandalf simply add the project keys to Samwise&apos;s keyring. How do they do this ?</p>
+<pre><code>Gandalf: (project.priv, samwise.pub) ==&gt; project-samwise.junk ==&gt; public storage of Samwise keyring
+Samwise: (project-samwise.junk, samwise.priv) ==&gt; project.priv
+</code></pre><p>To revoke access, a new key pair must be created and content has to be reencrypted with the new project keys.</p>
+<p>Notice that we do not need to encrypt the project.pub key. And even though the data is now encrypted, it should still be signed (to know who wrote what in the group).</p>
+<h3 id="how-do-we-avoid-app-spamming-">How do we avoid app spamming ?</h3>
+<p>TODO...</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="using-amazon-s3-for-storage.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Using Amazon S3 for Storage">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Security, Authentication, and Authorization","level":"1.6.4","depth":2,"next":{"title":"More About Gun","level":"1.7","depth":1,"ref":"","articles":[{"title":"How Writes Are Handled","level":"1.7.1","depth":2,"path":"more-about-gun/how-writes-are-handled.md","ref":"more-about-gun/how-writes-are-handled.md","articles":[]},{"title":"The Mesh Network Protocol","level":"1.7.2","depth":2,"path":"more-about-gun/the-mesh-network-protocol.md","ref":"more-about-gun/the-mesh-network-protocol.md","articles":[]},{"title":"Conflict Resolution","level":"1.7.3","depth":2,"path":"more-about-gun/conflict-resolution.md","ref":"more-about-gun/conflict-resolution.md","articles":[]},{"title":"How the Algorithm Works","level":"1.7.4","depth":2,"url":"http://gun.js.org/distributed/matters.html","ref":"http://gun.js.org/distributed/matters.html","articles":[]},{"title":"Position on the CAP Theorem","level":"1.7.5","depth":2,"path":"more-about-gun/position-on-the-cap-theorem.md","ref":"more-about-gun/position-on-the-cap-theorem.md","articles":[]},{"title":"Sharding","level":"1.7.6","depth":2,"path":"more-about-gun/sharding.md","ref":"more-about-gun/sharding.md","articles":[]}]},"previous":{"title":"Using Amazon S3 for Storage","level":"1.6.3","depth":2,"path":"resources/using-amazon-s3-for-storage.md","ref":"resources/using-amazon-s3-for-storage.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"3.2.2","theme":"default","variables":{},"plugins":["edit-link"],"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/zwhitchcox/gun/edit/gh-pages"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"resources/security-authentication-authorization.md","mtime":"2017-02-28T19:25:35.972Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-28T19:40:22.563Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

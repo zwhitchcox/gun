@@ -1,0 +1,834 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>The Mesh Network Protocol · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="conflict-resolution.html" />
+    
+    
+    <link rel="prev" href="how-writes-are-handled.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../crash-course.html">
+            
+                <a href="../crash-course.html">
+            
+                    
+                    Crash Course
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../getting-started.html">
+            
+                <a href="../getting-started.html">
+            
+                    
+                    Getting Started
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    Core API
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../core-api/constructor.html">
+            
+                <a href="../core-api/constructor.html">
+            
+                    
+                    Gun.constructor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../core-api/put.html">
+            
+                <a href="../core-api/put.html">
+            
+                    
+                    gun.put
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../core-api/get.html">
+            
+                <a href="../core-api/get.html">
+            
+                    
+                    gun.get
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../core-api/back.html">
+            
+                <a href="../core-api/back.html">
+            
+                    
+                    gun.back
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../core-api/opt.html">
+            
+                <a href="../core-api/opt.html">
+            
+                    
+                    gun.opt
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" >
+            
+                <span>
+            
+                    
+                    API
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../api/path.html">
+            
+                <a href="../api/path.html">
+            
+                    
+                    gun.path
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="../api/on.html">
+            
+                <a href="../api/on.html">
+            
+                    
+                    gun.on
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../api/val.html">
+            
+                <a href="../api/val.html">
+            
+                    
+                    gun.val
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../api/set.html">
+            
+                <a href="../api/set.html">
+            
+                    
+                    gun.set
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" data-path="../api/map.html">
+            
+                <a href="../api/map.html">
+            
+                    
+                    gun.map
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6" data-path="../api/not.html">
+            
+                <a href="../api/not.html">
+            
+                    
+                    gun.not
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.7" data-path="../api/init.html">
+            
+                <a href="../api/init.html">
+            
+                    
+                    gun.init
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.8" data-path="../api/key.html">
+            
+                <a href="../api/key.html">
+            
+                    
+                    gun.key
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" >
+            
+                <span>
+            
+                    
+                    Resources
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="../resources/guns-data-format.html">
+            
+                <a href="../resources/guns-data-format.html">
+            
+                    
+                    Gun's Data Format
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="../resources/glossary.html">
+            
+                <a href="../resources/glossary.html">
+            
+                    
+                    Glossary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="../resources/using-amazon-s3-for-storage.html">
+            
+                <a href="../resources/using-amazon-s3-for-storage.html">
+            
+                    
+                    Using Amazon S3 for Storage
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="../resources/security-authentication-authorization.html">
+            
+                <a href="../resources/security-authentication-authorization.html">
+            
+                    
+                    Security, Authentication, and Authorization
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" >
+            
+                <span>
+            
+                    
+                    More About Gun
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1" data-path="how-writes-are-handled.html">
+            
+                <a href="how-writes-are-handled.html">
+            
+                    
+                    How Writes Are Handled
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.7.2" data-path="the-mesh-network-protocol.html">
+            
+                <a href="the-mesh-network-protocol.html">
+            
+                    
+                    The Mesh Network Protocol
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="conflict-resolution.html">
+            
+                <a href="conflict-resolution.html">
+            
+                    
+                    Conflict Resolution
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" >
+            
+                <a target="_blank" href="http://gun.js.org/distributed/matters.html">
+            
+                    
+                    How the Algorithm Works
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.5" data-path="position-on-the-cap-theorem.html">
+            
+                <a href="position-on-the-cap-theorem.html">
+            
+                    
+                    Position on the CAP Theorem
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.6" data-path="sharding.html">
+            
+                <a href="sharding.html">
+            
+                    
+                    Sharding
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../projects.html">
+            
+                <a href="../projects.html">
+            
+                    
+                    Projects
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../modules.html">
+            
+                <a href="../modules.html">
+            
+                    
+                    Modules
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="../snippets-v06x.html">
+            
+                <a href="../snippets-v06x.html">
+            
+                    
+                    Snippets (v0.6.x)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" >
+            
+                <span>
+            
+                    
+                    Snippets (v0.3.x)(snippets-v03x.md)
+            
+                </span>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" >
+            
+                <a target="_blank" href="https://github.com/amark/gun/wiki/0.2.x-Table-of-Contents">
+            
+                    
+                    v0.2.x
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >The Mesh Network Protocol</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="the-mesh-network-protocol">The Mesh Network Protocol</h1>
+<p>From the <a href="https://gitter.im/amark/gun?at=573ca3741794136a7d09e7d9" target="_blank">gitter</a>:</p>
+<p>GUN&apos;s messaging algorithm is based off a full mesh network</p>
+<p>but it works out nicely and self-mitigates against rebroadcasting the same message too many times.</p>
+<p>I&apos;m going to use very specific examples</p>
+<p>let me find a table really quickly</p>
+<p>first example is the common example:</p>
+<p>Alice is connected to Server.</p>
+<p>Bob is connected to Server.</p>
+<p>via Server, Alice is connected to Bob and vice versa.</p>
+<p>The default network is VERY meshy, because the goal is that you can (later) intelligently only connect to fingers to mitigate things. The important part is creating an emergent system that works in all cases as the base case, and then can be fine-tuned/optimized for specific cases.</p>
+<p>so let&apos;s say Alice saves some data</p>
+<p>she&apos;s only connected to 1 peer</p>
+<p>so she blasts that delta (change set) out to the Server</p>
+<p>it is in a message envelope</p>
+<p>which contains an ID for that message.</p>
+<p>the server receives the message</p>
+<p>and checks to see if the ID exists in a small fixed-size in-memory list.</p>
+<p>the ID does not exist.</p>
+<p>therefore the Server then broadcasts it out to all the peers it is connected to. (NOTE: Intentional! However for security purposes you might not want this, so that is why you&apos;d add an authorization filter. But we&apos;re not talking about this. We&apos;re talking about the case case).</p>
+<p>that means Server broadcasts BACK to Alice and to Bob.</p>
+<p>Alice now receives her own message</p>
+<p>but she doesn&apos;t know it is her own</p>
+<p>(well, she could, but base case is that she doesn&apos;t have to)</p>
+<p>Alice checks to see if the message ID is in her small fixed-size in-memory list.</p>
+<p>it is (cause she had added that ID to the list when she originally sent the message)</p>
+<p>because it already exists in her list</p>
+<p>she does 2 things</p>
+<p>1) bumps the ID to the top of the list (this is a fixed-size list, so the oldest data gets flushed/removed away to save memory). Bumping the ID to the top is very important because it represents the liveliness of the data, and for lively data you want to reduce re-broadcasts.</p>
+<p>2) she does NOT rebroadcast.</p>
+<p>the message rebroadcasting has now terminated with Alice.</p>
+<p>for the peers she&apos;s connected to</p>
+<p>HOWEVER, the Server had also sent that same message to Bob</p>
+<p>Bob receives it</p>
+<p>checks his msg ID list</p>
+<p>it isn&apos;t there</p>
+<p>therefore he rebroadcasts it to the peers he&apos;s connected to.</p>
+<p>the msg ID goes BACK up to the Server.</p>
+<p>the Server checks its ID list and sees it already exists and does 2 things:</p>
+<p>1) bumps the ID to the top of the list to keep it &quot;alive&quot; for deduplication.</p>
+<p>2) Deduplicates by NOT rebroadcasting.</p>
+<p>now every peer in the network has successfully received the message while also mitigate rebroadcast storms. This algorithm works quite nicely, but can very very easily be upgraded and optimized for specific use cases and fine tuning. Like.... if you want the network traffic to NOT be anonymous, you can tag the IDs of the peers in the msg envelope so that way receive peers do an exclusion from the peer list they rebroadcast to (this cuts the echo out) however can expose identity (which might be okay for some apps). You can also limit rebroadcasts to X number of peers, like have peers only ever rebroadcast to 6 peers even if they&apos;re connected to a 100. Or only have every peer have 6 connections. Etc.</p>
+<p>However, we&apos;re not done yet!</p>
+<p>all we&apos;ve done is UDP level fire-and-forget</p>
+<p>but Alice SAVED data</p>
+<p>she needs to know the data got saved.</p>
+<p>the echo of her ID is not an ACK.</p>
+<p>hehe</p>
+<p>so when the Server processes the message (and depending upon clock drift, the messages might be shoved into historical/operating/future states and processed at &quot;different states&quot;)...</p>
+<p>if the server successfully saves the data it then sends a NEW message</p>
+<p>with a NEW ID</p>
+<p>but with a reply-to field of the OLD ID.</p>
+<p>this message (without intelligence/identity optimization) gets broadcasted to all the peers it is connected to</p>
+<p>Alice and Bob</p>
+<p>Alice receives the message and sees that it is a reply-to her original save ID (which she has stored in a separate list)</p>
+<p>she now has an ACK from 1 peer that her data got replicated</p>
+<p>technically the algorithm though says that she also rebroadcast this reply message to all her peers (since the deduplication/mitigation happens first, not last). If so, she rebroadcasts the message to all her peers (in this case only the Server) which the server receives and sees that the msg ID is in its already-existing msg ID list. And thus doesn&apos;t rebroadcast. There are no acks to acks.</p>
+<p>however it would be trivial to make it slightly more intelligent that Alice knowing it is her own message (from her other list) that she could stop rebroadcasting then and there.</p>
+<p>Meanwhile.... Bob also receives the Server ack</p>
+<p>sees it isn&apos;t in his message list (but adds it to it) and rebroadcasts again (back to the Server) which receives it and sees that it is in the message list and halts.</p>
+<p>now the Server&apos;s ACK has successfully been sent to all peers (NOTE: this is assuming that the network has been reliable this whole time!!! ooo-ooo-aaahh--aahhh! Fun CAP Theorem stuff. Don&apos;t worry that is covered too).</p>
+<p>but now we have to deal with BOB&apos;s ACK to Alice&apos;s original save request which he received via the middle peer of the Server.</p>
+<p>BOB then saves the data (well in the real world, browser peers will only save the data to their localStorage only if it is a key they are already subscribed too. But again lets stick to the base-case)</p>
+<p>and after a successful save ACKS back a new MSG ID with a reply-to to the OLD msg ID.</p>
+<p>the only peer he is connected to is the Server, which doesn&apos;t have it in its message list so it rebroadcasts it to everybody (including back to Bob which does have it and then bumps&amp;halts), and to Alice... who also rebroadcasts it (back to the Server which now does have it and then bumps&amp;halt) and Alice also sees that it is a ACK to her save requests and now knows that she&apos;s gotten 2 replications.</p>
+<p>finally</p>
+<p>we&apos;re done.</p>
+<p>that is ONE scenario, with limited peers, a star configuration (peers connected to a middleman of the server), and with no network hiccups.</p>
+<p>Fortunately this algorithm works for every configuration which is great, however it is not always the most intelligent or savvy for all setups. But thankfully again, it can be fine tuned to get better performance.... but as a base-case it mitigates message flooding and infinite-loops.</p>
+<p>I think so! Please do, cause I should get this up on the docs.</p>
+<p>NOW, to handle network hiccups. I&apos;m not going to go over the full thing again, I&apos;m just going to explain the rules.</p>
+<p>the peer that created the data and wants it replicated is SOLEY responsible for retries if it hasn&apos;t received ACKs that it wants.</p>
+<p>No other peer is responsible for retrying messages.</p>
+<p>So it is very very very important for the peer trying to replicate data out that the hold onto that data as much as possible until they at least get an ACK. What this means is that it is important that the peer (no matter how &quot;weak&quot; it is, like a browser) does store their un-ACKed data at least, at minimum, in something like localStorage (which only has 5mb).</p>
+<p>so it has a responsbility to prioritize persistence until it gets ACKs, and even if it does get ACKs it should still probably store a replica of the data (in case the other peers fail/corrupt).</p>
+<p>but saying that the initiating peer has the retry responsibility simplifies things greatly.</p>
+<p>so if it doesn&apos;t get an ack... it can retry. In which case, the retry runs through the same algorithm.</p>
+<p>Now, network hiccups.</p>
+<p>*sorry peers crashing/rebooting</p>
+<p>^retries are covered with network hiccups.</p>
+<p>what happens if we have new peers join while this is happening?</p>
+<p>what happens if a peer crashes and restarts?</p>
+<p>worse case is that the Server crashes</p>
+<p>and its fixed-size msg ID list was in memory only</p>
+<p>so when it comes back online it has forgotten which messages have already been in a broadcast storm</p>
+<p>so two quick cases:</p>
+<p>if the server crashes AFTER the whole process is done and comes back online. Than whoopty-doo, the message rebroadcasting has already been sent to all peers and been mitigated.</p>
+<p>It doesn&apos;t really matter that it has lost its history, cause that message won&apos;t resurface.</p>
+<p>HOWEVER, if the server crashes WHILE its connected peers are still running this</p>
+<p>the connected peers then &quot;echo back&quot; the msg ID that it (the server) just sent to them....</p>
+<p>the Server goes ahead and rebroadcasts it AGAIN (while adding it to its seen list)</p>
+<p>but that is okay</p>
+<p>because all of the peers it is connected to have already seen it so they halt it.</p>
+<p>unless of course if 2 of the neighbor peers crash while this is happening... then one of them might not know that it has seen it and rebroadcast. But the moral of the story is that the rebroadcast storms are neighbor-walled actually.</p>
+<p>which is a good thing.</p>
+<p>so for instance (new example)</p>
+<p>if I have a peer which is connected to 3 other people</p>
+<p>and each 3 other people are connected to a DIFFERENT 2 other people.</p>
+<p>ugggh, hmm.</p>
+<p>how do I explain this</p>
+<p>imagine a wave</p>
+<p>like a literal water droplet dropping into water</p>
+<p>it creates a wave rippling outwards</p>
+<p>the wave doesn&apos;t reverse back in</p>
+<p>because it interferes with itself (this is also what happens at the particle level with photons in quantum mechanics)</p>
+<p>the interference BACK into the center of the wave... mitigates the wave from spreading where it has already been seen</p>
+<p>but where it hasn&apos;t been seen.... it keeps rippling out</p>
+<p>so back to the example...</p>
+<p>Server is in the center of 3 other peers (Alice, Bob, Carl)</p>
+<p>Server rebroadcasts the message out to Alice Bob Carl</p>
+<p>it crashes and restarts before Alice Bob Carl echo back</p>
+<p>so it thinks it hasn&apos;t seen the message yet</p>
+<p>so it rebroadcasts back out to Alice Bob and Carl</p>
+<p>but since all of Server&apos;s neighbor peers have already seen the message, they DON&quot;T re-emit it again. So it gets halted. It didn&apos;t really matter that the server crashed and restarted. This is the importance of the priority bump on the msg ID... to indicate the liveliness of the message storm.</p>
+<p>so let&apos;s say Alice was connected to Dave &amp; Fred</p>
+<p>Bob was connected to Evan &amp; Gabe</p>
+<p>Carl was connected to Hugh &amp; Ian.</p>
+<p>the FIRST time that Server rebroadcasted to Alice&amp;Bob&amp;Carl. Server crash&amp;restarts before A&amp;B&amp;C echo back....</p>
+<p>the echo back from A&amp;B&amp;C is also the rebroadcast that A&amp;B&amp;C did to THEIR neighbor peers. Which receive the message and echo back.</p>
+<p>but the echo back of the 2-degrees-separated don&apos;t come back to Server, cause A&amp;B&amp;C mitigate it (since they&apos;ve already seen it since they delivered it to D&amp;E&amp;F&amp;G&amp;H&amp;I)</p>
+<p>this works nicely too</p>
+<p>because even if server (and my use of &quot;server&quot; here is just a name. It has not special meaning.... let&apos;s say that they are ALL servers)</p>
+<p>because even if server crashes AND Gabe crashes</p>
+<p>if they restart and have forgotten they&apos;ve seen the ID</p>
+<p>they&apos;ll rebroadcast</p>
+<p>but their neighbors will mitigate</p>
+<p>so Server&apos;s forgotten-and-rebroadcasted message won&apos;t get to Gabe again. And Gabe&apos;s forgotten-and-rebroadcasted wont&apos; get back to Server&apos;s.</p>
+<p>This is great. Because it literally behaves as a wave.</p>
+<p>Ahmed Fasih @fasiha 10:57</p>
+<p>:clap: It seems complicated but it&apos;s actually the simplest possible thing</p>
+<p>Mark Nadal @amark 10:57</p>
+<p>and that feature happens because of the msg ID priority bump that keeps the msg ID&apos;s lively broadcast storm from constantly being mitigated.... until it truly does die off and becomes so &quot;old&quot; in the fixed-size msg ID list that it gets purged. At which point it is safe to purge because there is not broadcast storm.</p>
+<p>done</p>
+<p>yupe, and most emergent for smarter and more intelligent behavior!</p>
+<p>(the smarter/intelligent behavior can be added on top)</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="how-writes-are-handled.html" class="navigation navigation-prev " aria-label="Previous page: How Writes Are Handled">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="conflict-resolution.html" class="navigation navigation-next " aria-label="Next page: Conflict Resolution">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"The Mesh Network Protocol","level":"1.7.2","depth":2,"next":{"title":"Conflict Resolution","level":"1.7.3","depth":2,"path":"more-about-gun/conflict-resolution.md","ref":"more-about-gun/conflict-resolution.md","articles":[]},"previous":{"title":"How Writes Are Handled","level":"1.7.1","depth":2,"path":"more-about-gun/how-writes-are-handled.md","ref":"more-about-gun/how-writes-are-handled.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"3.2.2","theme":"default","variables":{},"plugins":["edit-link"],"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/zwhitchcox/gun/edit/gh-pages"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"more-about-gun/the-mesh-network-protocol.md","mtime":"2017-02-28T19:31:56.797Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-28T19:40:22.563Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
