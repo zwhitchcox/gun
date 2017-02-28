@@ -1,10 +1,13 @@
 {
     "gitbook": "3.2.2",
-    "plugins": ["edit-link"],
+    "plugins": ["edit-link", "github"],
     "pluginsConfig": {
             "edit-link": {
                 "base": "https://github.com/zwhitchcox/gun/edit/gh-pages",
                 "label": "Edit This Page"
+            },
+            "github": {
+                "url": "https://github.com/gundb/gun"
             }
     }
 }
