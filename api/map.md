@@ -1,7 +1,6 @@
 # gun.map(callback)
 
-<a href="https://youtu.be/F2FSMsxMSic" title="GUN map"><img src="http://img.youtube.com/vi/F2FSMsxMSic/0.jpg" width="425px"></a><br>
-
+{% video %}https://www.youtube.com/watch?v=F2FSMsxMSic{% endvideo %}
 Map iterates over each property and item on a node, passing it down the chain, behaving like a forEach on your data. It also subscribes to every item as well and listens for newly inserted items. It accepts one argument:
 
  - a `callback` function that transforms the data as it passes through. If the data is transformed to `undefined` it gets filtered out of the chain.

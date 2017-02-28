@@ -2,7 +2,7 @@
 
 Where to read data from.
 
-<a href="https://youtu.be/wNrIrrLffs4" title="GUN get"><img src="http://img.youtube.com/vi/wNrIrrLffs4/0.jpg" width="425px"></a><br>
+{% video %}https://www.youtube.com/watch?v=wNrIrrLffs4{% endvideo %}
 
 It takes three parameters:
 
