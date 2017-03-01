@@ -136,7 +136,7 @@ Both `PUT` and `GET` expect acknowledgements, as you might guess. But this is wh
 
 ## Conflict Resolution - THIS SECTION IS NOT FINISHED AND WILL PROBABLY BE ENTIRELY REWRITTEN
 
-Any GUN library in any language must first start with the Hypothetical Amnesia Machine, which is is the conflict resolution algorithm. Also check out the wiki page on [Conflict Resolution with Guns](Conflict-Resolution-with-Guns).
+Any GUN library in any language must first start with the Hypothetical Amnesia Machine, which is is the conflict resolution algorithm. Also check out the wiki page on [Conflict Resolution](conflict-resolution).
 
 Parameters:
 
