@@ -22,7 +22,6 @@
   * [Gun's Data Format](resources/guns-data-format.md)
   * [Glossary](resources/glossary.md)
   * [Using Amazon S3 for Storage](resources/using-amazon-s3-for-storage.md)
-  * [Security, Authentication, and Authorization](resources/security-authentication-authorization.md)
 * More About Gun
 	* [How Writes Are Handled](more-about-gun/how-writes-are-handled.md)
 	* [The Mesh Network Protocol](more-about-gun/the-mesh-network-protocol.md)
