@@ -5,10 +5,11 @@ https://gitter.im/amark/gun?at=5744bec963e41bd84bf024be
 
 To upvote prioritizing this wiki please join the gitter channel and tell us.
 
+The following is general information about security and not necessarily specific to gun or a guide for implementation in gun. Read if you want a high level overview of the concepts.
+
 ## Introduction
 
 We had a discussion on gitter on how to handle security in GUN, a peer-to-peer database. Before we start, let's present some figures we are going to work with. We have:
-
 * **Frodo** a nice person who totally trusts Gandalf and shares things with Samwise.
 * **Gandalf** trusted friend of Frodo.
 * **Samwise** trusted by Frodo but not for everything.
