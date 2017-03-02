@@ -49,7 +49,7 @@ Well, according to the goals we listed, **it doesn't matter** what value we choo
 
 This allows us to define some simple rules that guarantee convergence, mostly through type and lexical comparisons. Here is a layman explanation, followed by more details:
 
-<a href="https://youtu.be/qKIn9L2obug" target="_blank" title="GUN map"><img src="http://img.youtube.com/vi/c80vSf45H4k/0.jpg" width="425px"></a><br>
+{% video %}https://www.youtube.com/watch?v=UBnkhpcLQuM{% endvideo%}
 
 ##### Both are lexically equal
 Then there's no conflict, it doesn't matter which you choose.
@@ -62,7 +62,7 @@ This is dangerous territory, and if handled wrong can expose crippling applicati
 
 That's generally frowned on. Check out this layman explainer:
 
-<a href="https://youtu.be/UBnkhpcLQuM" target="_blank" title="GUN map"><img src="http://img.youtube.com/vi/UBnkhpcLQuM/0.jpg" width="425px"></a><br>
+{% video %}https://www.youtube.com/watch?v=gRoJqzko_mE{% endvideo %}
 
 HAM handles this with machine relative vector. When the "10 zillion" update comes in, HAM simply waits until your machine reaches the state of 10 zillion before acknowledging it's existence. If an update isn't acknowledged, it never escapes volatile memory onto disk. We call this a deferred update.
 
