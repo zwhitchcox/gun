@@ -8,7 +8,7 @@
   - "Arrive" (permission to publish pending)
   - "Hackie" (permission to publish pending)
   - [creeper.im - Send public messages to nearby people.](https://creeper.im)
-  - [GoShareData] - An enterprise system for data sharing database data with colleagues (https://github.com/zubairq/GoShareData)
+  - [GoShareData](https://github.com/zubairq/GoShareData) - An enterprise system for data sharing database data with colleagues
 
 ## Interested
 
